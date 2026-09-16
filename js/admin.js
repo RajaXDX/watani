@@ -392,7 +392,7 @@ function renderBackupInfo() {
 function exportBank() {
   Sound.click();
   const data = {
-    app: 'ektashef-watanak-m3-raja',
+    app: 'watani',
     version: 1,
     exportedAt: new Date().toISOString(),
     categories: CATEGORIES,
@@ -404,7 +404,7 @@ function exportBank() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `ektashef-watanak-${new Date().toISOString().slice(0, 10)}.json`;
+  a.download = `watani-${new Date().toISOString().slice(0, 10)}.json`;
   document.body.appendChild(a);
   a.click();
   a.remove();
