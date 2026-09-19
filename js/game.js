@@ -529,7 +529,8 @@ function openQuestion(ci, row) {
     $('qbody').innerHTML = '<div class="errbox">ما فيه سؤال محفوظ لهذي الخانة</div>';
     $('cornersBar').style.display = 'none';
   } else {
-    const isImg = (src) => typeof src === 'string' && /^data:image\//.test(src);
+    // صورة مرفوعة من اللوحة (data URL) أو ملف داخل assets/ مثل شعارات البنك الأصلي
+    const isImg = (src) => typeof src === 'string' && /^(data:image\/|assets\/[\w\/.-]+$)/.test(src);
     $('qbody').innerHTML = `
       ${isImg(item.img)
         ? `<div class="qimg has-photo" id="qmedia"><img src="${escapeHtml(item.img)}" alt=""></div>`

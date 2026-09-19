@@ -669,6 +669,7 @@ header {
   max-height: 42vh;
   border-radius: 10px;
   object-fit: contain;
+  background: #fff;   /* الشعارات الشفافة (PNG) ما تختفي على الخلفية الداكنة */
 }
 
 .img-row { align-items: center; }
