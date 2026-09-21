@@ -166,11 +166,13 @@ header {
 
 .hero-slogan {
   display: block;
-  width: min(100%, 460px);
+  width: min(100% - 110px, 460px); /* يترك مكاناً لزر ⚙️ */
   height: auto;
-  margin: 0 auto 6px;
+  margin: 0 auto 18px;
   filter: drop-shadow(0 6px 18px rgba(0, 0, 0, .35));
 }
+
+body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
 
 .hero-title {
   font-family: 'Cairo', sans-serif;
