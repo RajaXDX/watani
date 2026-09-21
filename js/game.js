@@ -978,6 +978,32 @@ function renderNationalDayCount() {
   else el.textContent = `باقي ${days} يوماً على ٢٣ سبتمبر`;
 }
 
+/* ============================= العمل بدون إنترنت ============================= */
+// sw.js يحفظ الملفات؛ هنا نعطيه كل ما حمّلته الصفحة + صور الأسئلة كلها
+function registerOffline() {
+  if (!('serviceWorker' in navigator) || location.protocol === 'file:') return;
+
+  window.addEventListener('load', async () => {
+    try {
+      await navigator.serviceWorker.register('sw.js');
+      const reg = await navigator.serviceWorker.ready;
+
+      const urls = new Set(['./', 'manifest.webmanifest']);
+      performance.getEntriesByType('resource').forEach(e => {
+        if (new URL(e.name).origin === location.origin) urls.add(e.name);
+      });
+      [DEFAULT_QBANK, QBANK].forEach(bank => Object.values(bank || {}).forEach(cat =>
+        DIFFKEY.forEach(k => (cat?.[k] || []).forEach(item => {
+          [item.img, item.aImg].forEach(src => {
+            if (typeof src === 'string' && src.startsWith('assets/')) urls.add(src);
+          });
+        }))));
+
+      reg.active?.postMessage({ type: 'precache', urls: [...urls] });
+    } catch (e) { /* المتصفح ما يدعمه — اللعبة تشتغل عادي بالنت */ }
+  });
+}
+
 /* ============================= الصوت ============================= */
 function renderMuteButton() {
   const b = $('btnMute');
@@ -1019,6 +1045,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderTeamSetup();
   renderResumeButton();
   renderMuteButton();
+  registerOffline();
 
   $('btnResume').onclick = resumeGame;
   $('btnUndo').onclick = undoLast;
