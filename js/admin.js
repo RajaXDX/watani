@@ -462,6 +462,7 @@ async function restoreDefaults() {
   saveJSON(K_BANK, QBANK);
   saveJSON(K_POINTS, POINTS);
   saveJSON(K_SEEN, DEFAULT_CATEGORIES.map(c => c.id));
+  saveJSON(K_BANK_VER, DEFAULT_BANK_VERSION);
 
   selectedCats = [];
   cancelEdit();

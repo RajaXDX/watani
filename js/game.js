@@ -240,6 +240,38 @@ function normName(s) {
   }
 })();
 
+/* ---- أسئلة أصلية تُضاف لفئات موجودة ----
+   السؤال الذي يحمل since: N يُدمج مرة واحدة في البنك المحفوظ الأقدم من الإصدار N
+   (المفتاح nd_bank_version)، ولو حذفه صاحب الجهاز بعدها ما يرجع. */
+const K_BANK_VER = 'nd_bank_version';
+
+(function mergeNewQuestions() {
+  const hasSaved = !!loadJSON(K_BANK, null);
+  const ver = Number(loadJSON(K_BANK_VER, 0)) || (hasSaved ? 1 : DEFAULT_BANK_VERSION);
+  if (ver >= DEFAULT_BANK_VERSION) {
+    if (!hasSaved) saveJSON(K_BANK_VER, DEFAULT_BANK_VERSION);
+    return;
+  }
+
+  let changed = false;
+  Object.keys(DEFAULT_QBANK).forEach(id => {
+    const cat = QBANK[id];
+    if (!cat || typeof cat !== 'object') return;   // فئة محذوفة أو لم تُدمج
+    DIFFKEY.forEach(k => {
+      (DEFAULT_QBANK[id][k] || []).forEach(item => {
+        if (!(item.since > ver)) return;
+        if (!Array.isArray(cat[k])) cat[k] = [];
+        if (cat[k].some(x => normName(x.q) === normName(item.q))) return;
+        cat[k].push(clone(item));
+        changed = true;
+      });
+    });
+  });
+
+  saveJSON(K_BANK_VER, DEFAULT_BANK_VERSION);
+  if (changed) saveJSON(K_BANK, QBANK);
+})();
+
 /* ============================= الحالة ============================= */
 let teamSetup = {
   A: { name: 'الفريق الأول', lifelines: [] },
