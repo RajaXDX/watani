@@ -172,7 +172,7 @@ header {
   display: block;
   flex: 0 0 auto;
   width: auto;
-  height: clamp(54px, 11vw, 82px);
+  height: clamp(38px, 7.5vw, 58px);
   filter: drop-shadow(0 6px 18px rgba(0, 0, 0, .35));
 }
 
