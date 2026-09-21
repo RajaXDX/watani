@@ -69,8 +69,8 @@ button { font-family: inherit; }
   width: 100%;
   background: url('../assets/sadu.webp?v=1') repeat-x center / auto 100%;
 }
-.sadu { height: clamp(20px, 3vw, 28px); }
-.sadu-strip { height: clamp(26px, 4vw, 36px); }
+.sadu { height: clamp(12px, 1.8vw, 16px); }
+.sadu-strip { height: clamp(14px, 2.2vw, 20px); }
 
 /* ============================= الترويسة ============================= */
 header {
