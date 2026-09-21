@@ -22,6 +22,22 @@
   --error: #E74C3C;
 }
 
+/* الخط السعودي الرسمي — مستضاف محلياً في assets/fonts (عادي وعريض) */
+@font-face {
+  font-family: 'Saudi';
+  src: url('../assets/fonts/SaudiWeb-Regular.woff2') format('woff2'),
+       url('../assets/fonts/SaudiWeb-Regular.woff') format('woff');
+  font-weight: 400 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Saudi';
+  src: url('../assets/fonts/SaudiWeb-Bold.woff2') format('woff2'),
+       url('../assets/fonts/SaudiWeb-Bold.woff') format('woff');
+  font-weight: 700 900;
+  font-display: swap;
+}
+
 * { box-sizing: border-box; }
 
 html, body { margin: 0; padding: 0; min-height: 100%; }
@@ -29,7 +45,7 @@ html, body { margin: 0; padding: 0; min-height: 100%; }
 body {
   background: radial-gradient(1200px 700px at 50% -10%, #173F2F 0%, var(--night) 55%, #060F0B 100%);
   color: var(--text);
-  font-family: 'Tajawal', 'Segoe UI', Tahoma, sans-serif;
+  font-family: 'Saudi', 'Segoe UI', Tahoma, sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
 }
@@ -94,7 +110,7 @@ header {
 }
 
 .brand {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 900;
   font-size: clamp(23px, 4.6vw, 42px);
   letter-spacing: 0;
@@ -127,7 +143,7 @@ header {
 }
 
 .nd-pill {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 700;
   font-size: 12.5px;
   padding: 5px 14px;
@@ -176,7 +192,7 @@ header {
 body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
 
 .hero-title {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 900;
   font-size: clamp(26px, 5vw, 40px);
   color: var(--sand);
@@ -192,7 +208,7 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
   align-items: center;
   justify-content: center;
   gap: 10px;
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 800;
   font-size: 17px;
   padding: 15px 26px;
@@ -249,7 +265,7 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
 .stat-icon { font-size: 22px; }
 .stat-label { color: var(--muted); font-size: 12px; }
 .stat-value {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 900;
   font-size: 21px;
   color: var(--gold);
@@ -257,7 +273,7 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
 
 /* ============================= عناوين الخطوات ============================= */
 .step-title {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 900;
   font-size: clamp(22px, 3.6vw, 30px);
   text-align: center;
@@ -303,7 +319,7 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
 
 .team-setup label {
   display: block;
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 800;
   font-size: 15px;
   margin-bottom: 8px;
@@ -317,7 +333,7 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
   border: 1px solid rgba(212, 175, 55, 0.3);
   background: rgba(0, 0, 0, 0.28);
   color: var(--text);
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-size: 15px;
 }
 
@@ -359,7 +375,7 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
   margin-top: 10px;
   font-size: 12.5px;
   color: var(--muted);
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 700;
 }
 
@@ -368,7 +384,7 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
   margin-top: 18px;
   font-size: 14px;
   color: var(--muted);
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 700;
 }
 
@@ -405,7 +421,7 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
 .cat-ic { font-size: 30px; }
 
 .cat-name {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 800;
   font-size: 14.5px;
   color: var(--sand);
@@ -437,14 +453,14 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
 .team-card.B.active { border-color: var(--teamB); box-shadow: 0 0 0 2px rgba(201, 162, 75, 0.35); }
 
 .team-name {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 800;
   font-size: 15px;
   color: var(--sand);
 }
 
 .team-score {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 900;
   font-size: 34px;
   color: var(--gold);
@@ -474,7 +490,7 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
 .turn-banner {
   text-align: center;
   margin: 14px auto 4px;
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 700;
   font-size: 15px;
   color: var(--sand);
@@ -516,7 +532,7 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
 .board { display: grid; gap: 10px; }
 
 .cat-header {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 800;
   font-size: clamp(11px, 1.4vw, 14px);
   background: linear-gradient(180deg, var(--panel-2), var(--panel));
@@ -540,7 +556,7 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
   background: linear-gradient(180deg, #0E2B20, #0A2118);
   border: 1px solid rgba(212, 175, 55, 0.18);
   border-radius: 8px;
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 900;
   font-size: clamp(16px, 2.2vw, 24px);
   color: var(--gold-soft);
@@ -622,14 +638,14 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
 }
 
 .qcat {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 800;
   color: var(--gold);
   font-size: 15px;
 }
 
 .qpoints {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 900;
   color: var(--sand);
   background: rgba(212, 175, 55, 0.15);
@@ -653,7 +669,7 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
 .ll-ic { font-size: 17px; margin-inline-end: 4px; }
 .ll-desc { color: var(--muted); font-size: 13px; margin-top: 4px; }
 .ll-timer {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 800;
   color: var(--gold);
   margin-top: 4px;
@@ -702,7 +718,7 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
 }
 
 .qtext {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 700;
   font-size: clamp(18px, 2.5vw, 25px);
   text-align: center;
@@ -715,7 +731,7 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
 
 .atext {
   display: none;
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 800;
   font-size: clamp(17px, 2.3vw, 23px);
   text-align: center;
@@ -733,7 +749,7 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
 .errbox {
   text-align: center;
   color: var(--clay);
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 700;
   padding: 24px 0;
 }
@@ -749,7 +765,7 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
 }
 
 .timer-view {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 900;
   font-size: 18px;
   color: var(--gold);
@@ -761,7 +777,7 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
 
 /* ---- أزرار النافذة ---- */
 .btn {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 800;
   font-size: 14.5px;
   padding: 10px 18px;
@@ -819,7 +835,7 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
 .corner-label {
   font-size: 12px;
   color: var(--muted);
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 700;
 }
 
@@ -853,7 +869,7 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
 .end-trophy { font-size: 64px; line-height: 1; }
 
 .end-title {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 900;
   font-size: clamp(24px, 4vw, 34px);
   color: var(--gold);
@@ -861,7 +877,7 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
 }
 
 .winner-name {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 900;
   font-size: clamp(22px, 3.6vw, 30px);
   margin-top: 8px;
@@ -889,14 +905,14 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
 .end-score-card.lead { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.22); }
 
 .end-team-name {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 800;
   font-size: 14.5px;
   color: var(--sand);
 }
 
 .end-team-score {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 900;
   font-size: 32px;
   color: var(--gold);
@@ -964,7 +980,7 @@ footer p { margin: 4px 0; }
   color: var(--muted);
   border-radius: 11px;
   padding: 9px 14px;
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 700;
   font-size: 13.5px;
   cursor: pointer;
@@ -992,7 +1008,7 @@ footer p { margin: 4px 0; }
 .admin-section.active { display: block; }
 
 .admin-section h3 {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 800;
   font-size: 16px;
   color: var(--gold);
@@ -1000,7 +1016,7 @@ footer p { margin: 4px 0; }
 }
 
 .admin-section h4 {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 800;
   font-size: 14.5px;
   color: var(--sand);
@@ -1042,7 +1058,7 @@ footer p { margin: 4px 0; }
   border: 1px solid rgba(212, 175, 55, 0.3);
   background: rgba(0, 0, 0, 0.28);
   color: var(--text);
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-size: 14.5px;
   width: 100%;
 }
@@ -1080,7 +1096,7 @@ footer p { margin: 4px 0; }
 .bank-item-body { flex: 1; min-width: 0; }
 
 .bank-q {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 700;
   font-size: 14px;
   color: var(--sand);
@@ -1111,7 +1127,7 @@ footer p { margin: 4px 0; }
   margin-top: 12px;
   font-size: 12.5px;
   color: var(--muted);
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 700;
 }
 
@@ -1154,7 +1170,7 @@ footer p { margin: 4px 0; }
 }
 
 .points-inputs label {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 700;
   font-size: 14px;
   color: var(--sand);
@@ -1165,7 +1181,7 @@ footer p { margin: 4px 0; }
   margin-top: 14px;
   font-size: 13px;
   color: var(--gold);
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 700;
 }
 
@@ -1220,7 +1236,7 @@ footer p { margin: 4px 0; }
 }
 
 .about-tab {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 700;
   font-size: 13px;
   color: var(--muted);
@@ -1272,7 +1288,7 @@ footer p { margin: 4px 0; }
   display: flex;
   align-items: center;
   gap: 10px;
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Saudi', sans-serif;
   font-weight: 800;
   font-size: 17px;
   color: var(--gold);
@@ -1346,7 +1362,7 @@ footer p { margin: 4px 0; }
 }
 .about-card:hover { border-color: var(--gold); }
 .ac-ic { font-size: 26px; margin-bottom: 8px; }
-.ac-name { font-family: 'Cairo', sans-serif; font-weight: 800; font-size: 15px; color: var(--gold); margin-bottom: 7px; }
+.ac-name { font-family: 'Saudi', sans-serif; font-weight: 800; font-size: 15px; color: var(--gold); margin-bottom: 7px; }
 .about-card p { margin: 0; font-size: 13px; line-height: 1.9; color: var(--text); }
 .about-card b { color: var(--gold); }
 
@@ -1358,9 +1374,9 @@ footer p { margin: 4px 0; }
   padding: 15px 16px;
 }
 .lang-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 9px; }
-.lang-name { font-family: 'Cairo', sans-serif; font-weight: 800; font-size: 16px; color: var(--sand); }
+.lang-name { font-family: 'Saudi', sans-serif; font-weight: 800; font-size: 16px; color: var(--sand); }
 .lang-meta { display: flex; align-items: baseline; gap: 9px; }
-.lang-pct { font-family: 'Cairo', sans-serif; font-weight: 900; font-size: 17px; color: var(--gold); line-height: 1; }
+.lang-pct { font-family: 'Saudi', sans-serif; font-weight: 900; font-size: 17px; color: var(--gold); line-height: 1; }
 .lang-num { font-weight: 600; font-size: 12px; color: var(--muted); }
 .lang-bar { height: 8px; border-radius: 999px; background: var(--surface); overflow: hidden; margin-bottom: 10px; }
 .lang-bar i {
@@ -1385,10 +1401,10 @@ footer p { margin: 4px 0; }
   padding: 14px 8px;
   text-align: center;
 }
-.as-num { font-family: 'Cairo', sans-serif; font-weight: 900; font-size: 26px; color: var(--gold); line-height: 1.2; }
+.as-num { font-family: 'Saudi', sans-serif; font-weight: 900; font-size: 26px; color: var(--gold); line-height: 1.2; }
 .as-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
 
-.about-block-title { font-family: 'Cairo', sans-serif; font-weight: 800; font-size: 15px; color: var(--gold); margin-bottom: 12px; }
+.about-block-title { font-family: 'Saudi', sans-serif; font-weight: 800; font-size: 15px; color: var(--gold); margin-bottom: 12px; }
 
 /* الجدول يمرّر داخل صندوقه وحده حتى لا تمرّ الصفحة كلها أفقياً على الجوال */
 .about-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -1428,6 +1444,7 @@ footer p { margin: 4px 0; }
   .admin-content { padding: 15px 13px; }
   .admin-tab { flex: 1 1 calc(50% - 4px); font-size: 12.5px; padding: 8px 10px; }
   .admin-gear { top: 14px; inset-inline-start: 12px; padding: 6px 9px; font-size: 16px; }
+  .brand { flex-basis: 100%; }   /* الشعار في سطر والعنوان تحته، بعيد عن زر ⚙️ */
   .icon-input { max-width: 100%; }
   .points-inputs { grid-template-columns: 70px 1fr; }
 }

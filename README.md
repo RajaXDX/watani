@@ -125,6 +125,7 @@ js/about.js       شاشة «عن اللعبة» — تُبنى من QBANK وCAT
 assets/emblem.svg شعار المملكة الرسمي
 assets/logos/     صور فئة الشعارات (سهل · متوسط · صعب)
 assets/photos/    صور أسئلة المدن والملوك والأمراء
+assets/fonts/     الخط السعودي الرسمي (عادي وعريض، woff2 و woff)
 ```
 
 شعار المملكة في الترويسة ملف SVG متّجه (`assets/emblem.svg`) يبقى حادّاً على أي
