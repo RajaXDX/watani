@@ -1,9 +1,11 @@
 /* =========================================================================
    اكتشف وطنك مع الإمام عاصم — بنك الأسئلة (لوحة الإدارة)
 
-   بلا كلمة مرور بقرار صريح: اللعبة محلية بالكامل والبيانات في متصفح هذا
-   الجهاز وحده. كلمة مرور هنا كانت ستمنع صاحب الجهاز من بياناته هو، ولا تمنع
-   أحداً غيره من شيء.
+   مقفولة بحساب إدارة «تحدي رجا»: نفس اسم المستخدم وكلمة المرور، والتحقق عند
+   Supabase (دالة is_admin وجدول admins) — ولا كلمة مرور مكتوبة في الكود.
+   الدخول يبقى في الذاكرة فقط: يُطلب كل مرة تنفتح اللوحة، وما يلمس جلسة
+   «تحدي رجا» المحفوظة (الموقعان على نفس النطاق rajaxdx.github.io).
+   التعديلات نفسها تبقى في متصفح هذا الجهاز كما كانت.
    ========================================================================= */
 
 'use strict';
@@ -61,9 +63,121 @@ async function onImagePicked(slot, file) {
   }
 }
 
+/* ============================= دخول الإدارة =============================
+   نفس حسابات «تحدي رجا» (raja-challenge/js/auth.js): اسم المستخدم يتحوّل
+   لبريد داخلي من بصمته، أو يُكتب البريد مباشرة. */
+const SUPABASE_URL = 'https://rqcltlleqpppeywxbkpo.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_Wtm3EsnJl5CGa8or1egt1g_ZLj_qw6N';   // مفتاح عام بطبيعته
+const ACCOUNT_EMAIL_DOMAIN = 'raja-players.com';
+
+let supa = null;
+
+// المكتبة ثقيلة (~٢٠٠ كيلو) فما تنحمّل إلا لما أحد يضغط ⚙️
+function loadSupabase() {
+  if (supa) return Promise.resolve(supa);
+  return new Promise((resolve, reject) => {
+    const done = () => {
+      supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+      });
+      resolve(supa);
+    };
+    if (window.supabase?.createClient) { done(); return; }
+    const s = document.createElement('script');
+    s.src = 'assets/vendor/supabase.js';
+    s.onload = done;
+    s.onerror = () => reject(new Error('supabase'));
+    document.head.appendChild(s);
+  });
+}
+
+async function usernameToEmail(name) {
+  const clean = String(name || '').trim().toLowerCase().replace(/\s+/g, ' ');
+  const bytes = new TextEncoder().encode('raja:' + clean);
+  const digest = await crypto.subtle.digest('SHA-256', bytes);
+  const hex = [...new Uint8Array(digest)].map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 32);
+  return `u${hex}@${ACCOUNT_EMAIL_DOMAIN}`;
+}
+
+// نافذة الدخول: اسم المستخدم (أو البريد) وكلمة المرور، في نفس نافذة التنبيهات
+function uiLogin(message) {
+  return new Promise(resolve => {
+    $('modalText').innerHTML = `
+      <div class="login-title">🔒 بنك الأسئلة مقفول</div>
+      <div class="login-sub">ادخل بحساب إدارة «تحدي رجا»</div>
+      ${message ? `<div class="login-error">${escapeHtml(message)}</div>` : ''}
+      <form class="login-form" id="loginForm" autocomplete="on">
+        <input type="text" id="loginUser" placeholder="اسم المستخدم أو البريد" autocomplete="username" required>
+        <input type="password" id="loginPass" placeholder="كلمة المرور" autocomplete="current-password" required>
+        <button type="submit" hidden></button>
+      </form>`;
+    const actions = $('modalActions');
+    actions.innerHTML = '';
+
+    const finish = val => { modalClose(); resolve(val); };
+    const submit = () => {
+      const user = $('loginUser').value.trim(), pass = $('loginPass').value;
+      if (!user || !pass) { (user ? $('loginPass') : $('loginUser')).focus(); return; }
+      finish({ user, pass });
+    };
+
+    const no = document.createElement('button');
+    no.className = 'btn-main btn-ghost';
+    no.textContent = 'إلغاء';
+    no.onclick = () => finish(null);
+
+    const yes = document.createElement('button');
+    yes.className = 'btn-main btn-primary';
+    yes.textContent = 'دخول';
+    yes.onclick = submit;
+
+    $('loginForm').onsubmit = e => { e.preventDefault(); submit(); };
+    actions.append(no, yes);
+    $('modal').classList.add('show');
+    $('loginUser').focus();
+  });
+}
+
+async function authenticateAdmin() {
+  let message = '';
+  for (;;) {
+    const cred = await uiLogin(message);
+    if (!cred) return false;
+
+    let client;
+    try { client = await loadSupabase(); }
+    catch (e) { await uiAlert('⚠️ الدخول يحتاج إنترنت — تأكد من الاتصال وجرّب مرة ثانية.'); return false; }
+
+    try {
+      const raw = cred.user;
+      let { error } = await client.auth.signInWithPassword({
+        email: raw.includes('@') ? raw.toLowerCase() : await usernameToEmail(raw),
+        password: cred.pass,
+      });
+      // اسم مستخدم لحساب مسجّل ببريد حقيقي: نجرّب المسار الآخر مثل «تحدي رجا»
+      if (error && !raw.includes('@')) {
+        ({ error } = await client.auth.signInWithPassword({ email: raw.toLowerCase(), password: cred.pass }));
+      }
+      if (error) { message = '❌ اسم المستخدم أو كلمة المرور غير صحيحة'; continue; }
+
+      const { data: isAdmin, error: rpcError } = await client.rpc('is_admin');
+      // نحتاج الجواب فقط، لا جلسة باقية. scope: 'local' ضروري: الافتراضي
+      // 'global' يُخرج الحساب من كل أجهزته — ومنها «تحدي رجا» نفسها.
+      await client.auth.signOut({ scope: 'local' }).catch(() => {});
+      if (rpcError || isAdmin !== true) { message = '❌ هذا الحساب ليس حساب إدارة'; continue; }
+      return true;
+    } catch (e) {
+      await uiAlert('⚠️ تعذّر الاتصال بخدمة الدخول — تأكد من الإنترنت.');
+      return false;
+    }
+  }
+}
+
 /* ============================= فتح وإغلاق ============================= */
-function openAdmin() {
+async function openAdmin() {
   Sound.select();
+  // تنقفل مع كل إغلاق: المعلم يدخل، وبعده ما يقدر طالب يفتحها بدون الحساب
+  if (!await authenticateAdmin()) return;
   const active = document.querySelector('.screen.active');
   adminReturnScreen = active ? active.id : 'screen-home';
   showScreen('screen-admin');

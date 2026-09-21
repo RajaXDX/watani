@@ -852,6 +852,22 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
 }
 
 .modal-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.login-title { font-family: 'Saudi', sans-serif; font-weight: 700; font-size: 19px; color: var(--gold); }
+.login-sub { color: var(--muted); font-size: 14px; margin-top: 4px; }
+.login-error { color: var(--error); font-size: 14px; margin-top: 10px; }
+.login-form { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+.login-form input {
+  padding: 11px 13px;
+  border-radius: 10px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--text);
+  font-family: 'Saudi', sans-serif;
+  font-size: 15px;
+  width: 100%;
+  text-align: start;
+}
+.login-form input:focus { outline: none; border-color: var(--gold); }
 .modal-actions .btn-main { min-width: 110px; font-size: 15px; padding: 11px 20px; }
 
 /* ============================= النهاية ============================= */
