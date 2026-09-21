@@ -10,7 +10,7 @@
   <link rel="preload" href="assets/fonts/SaudiWeb-Bold.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/SaudiWeb-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <!-- ?v= رقم الإصدار: غيّره عند أي تعديل حتى تصل النسخة الجديدة للمتصفحات -->
-  <link rel="stylesheet" href="css/style.css?v=19">
+  <link rel="stylesheet" href="css/style.css?v=20">
 </head>
 <body>
 
@@ -18,6 +18,7 @@
 
 <header>
   <button class="admin-gear" id="btnAdmin" type="button" title="بنك الأسئلة">⚙️</button>
+  <button class="admin-gear mute-btn" id="btnMute" type="button" title="كتم الصوت" aria-pressed="false">🔊</button>
   <div class="brand-row">
     <!-- شعار المملكة: سيفان ونخلة — الصورة الرسمية كما هي (assets/emblem.svg) -->
     <img class="brand-mark" src="assets/emblem.svg?v=1" width="780" height="864"
@@ -43,6 +44,14 @@
     <div class="hero-section">
       <h2 class="hero-title">كل عام والوطن بخير 🌴</h2>
       <p class="hero-subtitle">٦ فئات × ١٨ سؤالاً في الجولة — والفريق اللي يجمع نقاط أكثر يكسب</p>
+    </div>
+
+    <!-- جولة محفوظة لم تكتمل (js/game.js: saveGame) -->
+    <div class="resume-box" id="resumeBox" hidden>
+      <button class="btn-main btn-primary" id="btnResume" type="button">
+        <span class="btn-icon">▶️</span><span>كمّل الجولة</span>
+      </button>
+      <div class="resume-info" id="resumeInfo"></div>
     </div>
 
     <div class="home-buttons">
@@ -125,7 +134,10 @@
       </div>
     </div>
     <div class="turn-banner" id="turnBanner"></div>
-    <button class="reset-btn" id="btnResetGame">↺ لعبة جديدة</button>
+    <div class="game-actions">
+      <button class="reset-btn" id="btnUndo" type="button" disabled>↩️ تراجع</button>
+      <button class="reset-btn" id="btnResetGame" type="button">↺ لعبة جديدة</button>
+    </div>
   </div>
 
   <div class="board-wrap"><div class="board" id="board"></div></div>
@@ -140,6 +152,7 @@
     <div class="end-scores" id="endScores"></div>
     <div class="nav-buttons">
       <button class="btn-main btn-ghost" id="btnEndHome">← الرئيسية</button>
+      <button class="btn-main btn-ghost" id="btnEndUndo" type="button" disabled>↩️ تراجع</button>
       <button class="btn-main btn-secondary" id="btnShare">📤 شارك النتيجة</button>
       <button class="btn-main btn-primary" id="btnPlayAgain">🔄 لعبة جديدة</button>
     </div>
@@ -488,7 +501,7 @@
 </footer>
 
 <script src="js/questions.js?v=11"></script>
-<script src="js/game.js?v=10"></script>
+<script src="js/game.js?v=11"></script>
 <script src="js/admin.js?v=9"></script>
 <script src="js/about.js?v=1"></script>
 

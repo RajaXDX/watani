@@ -512,7 +512,11 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
   transition: all 0.15s;
 }
 
-.reset-btn:hover { color: var(--sand); border-color: var(--gold); }
+.reset-btn:hover:not(:disabled) { color: var(--sand); border-color: var(--gold); }
+.reset-btn:disabled { opacity: 0.4; cursor: default; }
+
+.game-actions { display: flex; justify-content: center; gap: 8px; margin-top: 10px; }
+.game-actions .reset-btn { margin: 0; }
 
 .board-wrap { max-width: 1180px; margin: 18px auto 40px; }
 
@@ -935,6 +939,16 @@ footer p { margin: 4px 0; }
 }
 
 .admin-gear:hover { background: rgba(212, 175, 55, 0.15); transform: scale(1.05); }
+
+/* زر الصوت: نفس شكل ⚙️ في الطرف المقابل */
+.mute-btn { inset-inline-start: auto; inset-inline-end: 20px; }
+
+/* ---- كمّل الجولة ---- */
+.resume-box { margin: 26px 0 -14px; }
+.resume-box[hidden] { display: none; }
+.resume-box .btn-main { width: 100%; }
+.resume-info { color: var(--muted); font-size: 14px; margin-top: 8px; }
+.resume-info b { color: var(--gold); }
 
 .admin-header {
   display: flex;
@@ -1431,6 +1445,7 @@ footer p { margin: 4px 0; }
   .admin-content { padding: 15px 13px; }
   .admin-tab { flex: 1 1 calc(50% - 4px); font-size: 12.5px; padding: 8px 10px; }
   .admin-gear { top: 14px; inset-inline-start: 12px; padding: 6px 9px; font-size: 16px; }
+  .mute-btn { inset-inline-start: auto; inset-inline-end: 12px; }
   .brand { flex-basis: 100%; }   /* الشعار في سطر والعنوان تحته، بعيد عن زر ⚙️ */
   .icon-input { max-width: 100%; }
   .points-inputs { grid-template-columns: 70px 1fr; }

@@ -8,6 +8,8 @@
 /* ============================= الأصوات ============================= */
 const Sound = (function () {
   let ctx = null;
+  let muted = false;
+  try { muted = localStorage.getItem('nd_muted') === '1'; } catch (e) { /* التخزين معطّل */ }
 
   function getCtx() {
     if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -16,6 +18,7 @@ const Sound = (function () {
   }
 
   function tone(freq, start, dur, type, gainVal) {
+    if (muted) return;
     try {
       const c = getCtx();
       const osc = c.createOscillator();
@@ -35,6 +38,11 @@ const Sound = (function () {
   }
 
   return {
+    get muted() { return muted; },
+    setMuted(v) {
+      muted = !!v;
+      try { localStorage.setItem('nd_muted', muted ? '1' : '0'); } catch (e) { /* التخزين معطّل */ }
+    },
     click()  { tone(520, 0, 0.08, 'triangle', 0.12); },
     select() { tone(440, 0, 0.06, 'square', 0.06); },
     open()   { tone(420, 0, 0.09, 'sine', 0.10); tone(620, 0.07, 0.12, 'sine', 0.10); },
@@ -289,6 +297,70 @@ let activeTeam = null;      // صاحب الدور
 let activeLifeline = null;  // { team, key }
 let friendCallTimer = null;
 let qTimer = null;
+let undoStack = [];          // لقطات قبل كل سؤال انحسب — للتراجع
+let pendingSnap = null;     // لقطة الحالة لحظة فتح السؤال الحالي
+
+/* ---- حفظ الجولة الجارية ----
+   تُحفظ بعد كل تغيير، فلو تحدّثت الصفحة أو انقفل المتصفح ترجع من الرئيسية.
+   السؤال المفتوح لحظتها ما يُحفظ — يرجع للوحة ويُفتح من جديد. */
+const K_GAME = 'nd_game';
+const HISTORY_MAX = 30;
+
+function snapshot() {
+  return clone({ scores, stateUsed, lifelineUsed, activeTeam });
+}
+
+function saveGame() {
+  try {
+    localStorage.setItem(K_GAME, JSON.stringify({
+      teamSetup, boardCats, stateUsed, questionCache, scores, lifelineUsed, activeTeam, undoStack,
+    }));
+  } catch (e) { /* التخزين ممتلئ أو معطّل — اللعبة تكمل بدون حفظ */ }
+}
+
+function clearSavedGame() {
+  try { localStorage.removeItem(K_GAME); } catch (e) { /* التخزين معطّل */ }
+}
+
+function loadSavedGame() {
+  const g = loadJSON(K_GAME, null);
+  if (!g || !Array.isArray(g.boardCats) || !Array.isArray(g.stateUsed) || !g.scores) return null;
+  if (g.stateUsed.length !== g.boardCats.length) return null;
+  if (g.stateUsed.every(col => col.every(Boolean))) return null;   // جولة منتهية
+  return g;
+}
+
+function resumeGame() {
+  const g = loadSavedGame();
+  if (!g) { renderResumeButton(); return; }
+  Sound.start();
+  teamSetup = g.teamSetup || teamSetup;
+  boardCats = g.boardCats;
+  stateUsed = g.stateUsed;
+  questionCache = g.questionCache || {};
+  scores = g.scores;
+  lifelineUsed = g.lifelineUsed || { A: [], B: [] };
+  activeTeam = g.activeTeam === 'B' ? 'B' : 'A';
+  undoStack = Array.isArray(g.undoStack) ? g.undoStack : [];
+  current = null;
+  activeLifeline = null;
+  pendingSnap = null;
+  updateGameUI();
+  renderBoard();
+  showScreen('screen-game');
+}
+
+function renderResumeButton() {
+  const g = loadSavedGame();
+  $('resumeBox').hidden = !g;
+  // زر أخضر واحد بارز: «كمّل» لو فيه جولة، وإلا «لعبة جديدة»
+  $('btnNewGame').classList.toggle('btn-primary', !g);
+  $('btnNewGame').classList.toggle('btn-secondary', !!g);
+  if (!g) return;
+  const name = t => escapeHtml(g.teamSetup?.[t]?.name || (t === 'A' ? 'الفريق الأول' : 'الفريق الثاني'));
+  const left = g.stateUsed.flat().filter(u => !u).length;
+  $('resumeInfo').innerHTML = `🟢 ${name('A')} <b>${g.scores.A}</b> · 🟡 ${name('B')} <b>${g.scores.B}</b> — باقي ${left} سؤال`;
+}
 
 /* ============================= إعداد الفرق ============================= */
 function renderTeamSetup() {
@@ -456,10 +528,13 @@ function startGame() {
   current = null;
   activeLifeline = null;
   activeTeam = Math.random() < 0.5 ? 'A' : 'B';
+  undoStack = [];
+  pendingSnap = null;
 
   updateGameUI();
   renderBoard();
   showScreen('screen-game');
+  saveGame();
 
   uiAlert(`🎲 القرعة اختارت ${getTeamName(activeTeam)} ليبدأ.\n\nاضغطوا على أي خانة في اللوحة لفتح السؤال.`);
 }
@@ -478,6 +553,7 @@ function updateGameUI() {
 }
 
 function renderTurnIndicator() {
+  renderUndoButtons();
   const banner = $('turnBanner');
   banner.innerHTML = `<span class="turn-dot ${activeTeam}"></span> الدور على <b>${escapeHtml(getTeamName(activeTeam))}</b>`;
   $('teamCardA').classList.toggle('active', activeTeam === 'A');
@@ -549,9 +625,10 @@ function openQuestion(ci, row) {
   Sound.open();
   const cat = boardCats[ci];
   current = { ci, row, cat };
+  pendingSnap = snapshot();
 
   const key = `${ci}-${row}`;
-  if (!questionCache[key]) questionCache[key] = pickQuestion(cat.id, row);
+  if (!questionCache[key]) { questionCache[key] = pickQuestion(cat.id, row); saveGame(); }
   const item = questionCache[key];
 
   $('qcat').innerHTML = `${cat.ic} ${escapeHtml(cat.name)}`;
@@ -659,6 +736,7 @@ async function useLifeline(team, key) {
   Sound.select();
   lifelineUsed[team].push(key);
   activeLifeline = { team, key };
+  saveGame();
 
   renderLifelineDisplay();
   renderLifelineBanner();
@@ -744,6 +822,7 @@ function award(team, opts = {}) {
   if (!current) return;
 
   const pts = POINTS[current.row];
+  const before = pendingSnap || snapshot();
 
   // «الفخ»: إذا أجاب الفريق الآخر صحيحاً، تذهب النقاط لصاحب الفخ
   if (team && activeLifeline?.key === 'fakh' && team !== activeLifeline.team) {
@@ -760,12 +839,50 @@ function award(team, opts = {}) {
     Sound.skip();
   }
 
+  undoStack.push({ ...before, team, pts, cat: current.cat.name });
+  if (undoStack.length > HISTORY_MAX) undoStack.shift();
+
   stateUsed[current.ci][current.row] = true;
   closeQuestion();
   renderBoard();
 
   if (!opts.keepTurn) switchTurn();
+  else renderUndoButtons();
+  saveGame();
   if (isGameFinished()) showEndScreen();
+}
+
+/* ---- التراجع عن آخر سؤال ----
+   يرجّع النقاط والخانة والدور ووسائل المساعدة كما كانت قبل فتح السؤال. */
+function renderUndoButtons() {
+  const last = undoStack[undoStack.length - 1];
+  ['btnUndo', 'btnEndUndo'].forEach(id => {
+    const b = $(id);
+    b.disabled = !last;
+    b.title = last
+      ? `تراجع عن: ${last.cat} — ${last.team ? `${last.pts} لـ ${getTeamName(last.team)}` : 'بدون نقاط'}`
+      : 'ما فيه شي تتراجع عنه';
+  });
+}
+
+async function undoLast() {
+  const last = undoStack[undoStack.length - 1];
+  if (!last) return;
+  Sound.click();
+  const what = last.team ? `${last.pts} نقطة لـ ${getTeamName(last.team)}` : 'بدون نقاط';
+  if (!await uiConfirm(`↩️ تراجع عن آخر سؤال؟\n\n${last.cat} — ${what}\n\nالخانة ترجع مفتوحة والدور يرجع لصاحبه.`)) return;
+
+  undoStack.pop();
+  scores = last.scores;
+  stateUsed = last.stateUsed;
+  lifelineUsed = last.lifelineUsed;
+  activeTeam = last.activeTeam;
+
+  updateGameUI();
+  renderBoard();
+  saveGame();
+  if (!$('screen-game').classList.contains('active')) showScreen('screen-game');
+  Sound.skip();
 }
 
 function closeQuestion() {
@@ -774,6 +891,7 @@ function closeQuestion() {
   clearInterval(qTimer);
   qTimer = null;
   current = null;
+  pendingSnap = null;
   clearActiveLifeline();
 }
 
@@ -813,6 +931,7 @@ function showEndScreen() {
   `;
 
   showScreen('screen-end');
+  renderUndoButtons();
   Sound.win();
 }
 
@@ -859,8 +978,16 @@ function renderNationalDayCount() {
   else el.textContent = `باقي ${days} يوماً على ٢٣ سبتمبر`;
 }
 
+/* ============================= الصوت ============================= */
+function renderMuteButton() {
+  const b = $('btnMute');
+  b.textContent = Sound.muted ? '🔇' : '🔊';
+  b.title = Sound.muted ? 'تشغيل الصوت' : 'كتم الصوت';
+  b.setAttribute('aria-pressed', String(Sound.muted));
+}
+
 /* ============================= التنقّل ============================= */
-function goHome() { Sound.click(); showScreen('screen-home'); }
+function goHome() { Sound.click(); renderResumeButton(); showScreen('screen-home'); }
 
 function goSetup() {
   Sound.click();
@@ -890,6 +1017,13 @@ document.addEventListener('DOMContentLoaded', () => {
   updateHomeStats();
   renderNationalDayCount();
   renderTeamSetup();
+  renderResumeButton();
+  renderMuteButton();
+
+  $('btnResume').onclick = resumeGame;
+  $('btnUndo').onclick = undoLast;
+  $('btnEndUndo').onclick = undoLast;
+  $('btnMute').onclick = () => { Sound.setMuted(!Sound.muted); renderMuteButton(); Sound.click(); };
 
   $('btnNewGame').onclick = goSetup;
   $('btnSetupBack').onclick = goHome;
@@ -907,6 +1041,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   $('btnResetGame').onclick = async () => {
     if (await uiConfirm('بدء لعبة جديدة؟ بيروح كل التقدم الحالي.')) {
+      clearSavedGame();
       selectedCats = [];
       goSetup();
     }
