@@ -58,7 +58,7 @@ function renderAboutBank() {
     [3, 'مستويات لكل فئة'],
     [18, 'سؤالاً في الجولة'],
   ].map(([n, label]) => `
-    <div class="about-stat"><div class="as-num">${n}</div><div class="as-label">${label}</div></div>
+    <div class="about-stat"><div class="as-num">${ar(n)}</div><div class="as-label">${label}</div></div>
   `).join('');
 
   const colTotals = DIFFKEY.map((_, i) => rows.reduce((a, r) => a + r.counts[i], 0));
@@ -67,7 +67,7 @@ function renderAboutBank() {
     <thead>
       <tr>
         <th>الفئة</th>
-        ${DIFFNAME.map((name, i) => `<th>${name}<span class="th-pts">${POINTS[i]}</span></th>`).join('')}
+        ${DIFFNAME.map((name, i) => `<th>${name}<span class="th-pts">${ar(POINTS[i])}</span></th>`).join('')}
         <th>المجموع</th>
       </tr>
     </thead>
@@ -75,16 +75,16 @@ function renderAboutBank() {
       ${rows.map(r => `
         <tr>
           <td class="ct-name"><span class="ct-ic">${escapeHtml(r.c.ic)}</span>${escapeHtml(r.c.name)}</td>
-          ${r.counts.map(n => `<td class="${n ? '' : 'ct-zero'}">${n}</td>`).join('')}
-          <td class="ct-total">${r.total}</td>
+          ${r.counts.map(n => `<td class="${n ? '' : 'ct-zero'}">${ar(n)}</td>`).join('')}
+          <td class="ct-total">${ar(r.total)}</td>
         </tr>
       `).join('')}
     </tbody>
     <tfoot>
       <tr>
-        <td>${CATEGORIES.length} فئة</td>
-        ${colTotals.map(n => `<td>${n}</td>`).join('')}
-        <td class="ct-total">${total}</td>
+        <td>${catCount(CATEGORIES.length)}</td>
+        ${colTotals.map(n => `<td>${ar(n)}</td>`).join('')}
+        <td class="ct-total">${ar(total)}</td>
       </tr>
     </tfoot>
   `;

@@ -684,6 +684,53 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
   min-height: 18px;
 }
 
+/* وسائل المساعدة داخل نافذة السؤال — النافذة تغطّي بطاقات الفرق */
+.qlifelines {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 14px;
+  margin: 10px 0 2px;
+}
+
+.qlifelines[hidden] { display: none; }
+
+.qll-team {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.qll-team.A { border-color: rgba(63, 167, 150, 0.45); }
+.qll-team.B { border-color: rgba(201, 162, 75, 0.45); }
+
+.qll-name {
+  font-size: 12.5px;
+  color: var(--muted);
+  margin-inline-end: 2px;
+}
+
+.qll-btn {
+  font-family: inherit;
+  font-size: 12.5px;
+  color: var(--sand);
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 999px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.qll-btn .ic { font-size: 14px; margin-inline-end: 4px; }
+.qll-btn:hover:not(:disabled) { background: rgba(212, 175, 55, 0.25); transform: translateY(-1px); }
+.qll-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
 .qimg {
   display: flex;
   align-items: center;
@@ -1480,6 +1527,11 @@ footer p { margin: 4px 0; }
   .admin-gear { top: 14px; inset-inline-start: 12px; padding: 6px 9px; font-size: 16px; }
   .mute-btn { inset-inline-start: auto; inset-inline-end: 12px; }
   .brand-block { flex-basis: 100%; }   /* الشعار في سطر والعنوان تحته، بعيد عن زر ⚙️ */
+  /* الوسائل داخل النافذة: فريق في كل سطر حتى ما تزحم السؤال */
+  .qlifelines { gap: 6px; margin: 8px 0 2px; }
+  .qll-team { flex: 1 1 100%; padding: 5px 8px; gap: 5px; }
+  .qll-name { font-size: 11.5px; width: 100%; }
+  .qll-btn { font-size: 11.5px; padding: 4px 8px; flex: 1 1 auto; }
   .icon-input { max-width: 100%; }
   .points-inputs { grid-template-columns: 70px 1fr; }
 }

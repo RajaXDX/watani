@@ -66,6 +66,26 @@ function escapeHtml(text) {
     .replace(/'/g, '&#39;');
 }
 
+/* ---- الأرقام والعدد ----
+   كل رقم يظهر للاعبين بالأرقام العربية، وتمييزه يتبع صيغة العدد:
+   واحد · اثنان · ٣-١٠ جمع · ١١ فما فوق مفرد منصوب. */
+const AR_DIGITS = '٠١٢٣٤٥٦٧٨٩';
+const ar = (n) => String(n ?? '').replace(/[0-9]/g, d => AR_DIGITS[+d]);
+
+// forms = [صفر, مفرد, مثنى, جمع (٣-١٠), تمييز (١١+)]
+function arCount(n, forms) {
+  const v = Math.abs(Math.trunc(Number(n) || 0));
+  if (v === 0) return forms[0];
+  if (v === 1) return forms[1];
+  if (v === 2) return forms[2];
+  return `${ar(v)} ${v <= 10 ? forms[3] : forms[4]}`;
+}
+
+const Q_FORMS = ['بلا أسئلة', 'سؤال واحد', 'سؤالان', 'أسئلة', 'سؤالاً'];
+const CAT_FORMS = ['بلا فئات', 'فئة واحدة', 'فئتان', 'فئات', 'فئة'];
+const qCount = (n) => arCount(n, Q_FORMS);
+const catCount = (n) => arCount(n, CAT_FORMS);
+
 function shuffle(arr) {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
@@ -359,7 +379,7 @@ function renderResumeButton() {
   if (!g) return;
   const name = t => escapeHtml(g.teamSetup?.[t]?.name || (t === 'A' ? 'الفريق الأول' : 'الفريق الثاني'));
   const left = g.stateUsed.flat().filter(u => !u).length;
-  $('resumeInfo').innerHTML = `🟢 ${name('A')} <b>${g.scores.A}</b> · 🟡 ${name('B')} <b>${g.scores.B}</b> — باقي ${left} سؤال`;
+  $('resumeInfo').innerHTML = `🟢 ${name('A')} <b>${ar(g.scores.A)}</b> · 🟡 ${name('B')} <b>${ar(g.scores.B)}</b> — باقي ${qCount(left)}`;
 }
 
 /* ============================= إعداد الفرق ============================= */
@@ -435,15 +455,15 @@ function updateSetupStatus() {
   const el = $('setupStatus');
   el.textContent = ready
     ? '✅ الفريقان جاهزان'
-    : `اختر ٣ وسائل لكل فريق — الأول ${a}/٣ · الثاني ${b}/٣`;
+    : `اختر ٣ وسائل لكل فريق — الأول ${ar(a)}/٣ · الثاني ${ar(b)}/٣`;
   el.classList.toggle('ok', ready);
   $('btnSetupNext').disabled = !ready;
 }
 
 /* ============================= اختيار الفئات ============================= */
 function updateHomeStats() {
-  $('totalQuestions').textContent = countAllQuestions();
-  $('totalCategories').textContent = CATEGORIES.length;
+  $('totalQuestions').textContent = ar(countAllQuestions());
+  $('totalCategories').textContent = ar(CATEGORIES.length);
 }
 
 function renderCatGrid() {
@@ -466,9 +486,9 @@ function renderCatGrid() {
     card.type = 'button';
     card.className = `cat-card${sel ? ' sel' : ''}`;
     card.innerHTML = `
-      <div class="cat-ic">${c.ic}</div>
+      <div class="cat-ic">${escapeHtml(c.ic)}</div>
       <div class="cat-name">${escapeHtml(c.name)}</div>
-      <div class="cat-count">${count} سؤال</div>
+      <div class="cat-count">${qCount(count)}</div>
     `;
     card.onclick = () => toggleCategory(c, card);
     grid.appendChild(card);
@@ -501,7 +521,7 @@ function updateSelStatus() {
   const el = $('selStatus');
   el.textContent = n === 0
     ? 'اختر فئة واحدة على الأقل'
-    : `${n} من ٦ فئات · ${n * 3} سؤالاً في اللوحة`;
+    : `${ar(n)} من ٦ فئات · ${qCount(n * 3)} في اللوحة`;
   $('btnStartGame').disabled = n === 0;
 }
 
@@ -546,8 +566,8 @@ function getTeamName(team) {
 function updateGameUI() {
   $('gameNameA').textContent = `🟢 ${getTeamName('A')}`;
   $('gameNameB').textContent = `🟡 ${getTeamName('B')}`;
-  $('scoreA').textContent = scores.A;
-  $('scoreB').textContent = scores.B;
+  $('scoreA').textContent = ar(scores.A);
+  $('scoreB').textContent = ar(scores.B);
   renderTurnIndicator();
   renderLifelineDisplay();
 }
@@ -585,6 +605,48 @@ function renderLifelineDisplay() {
       wrap.appendChild(el);
     });
   });
+
+  renderQuestionLifelines();
+}
+
+/* نسخة الوسائل داخل نافذة السؤال —
+   النافذة تغطّي الشاشة كلها، فأيقونات بطاقات الفرق ما تنضغط وهي مفتوحة. */
+function renderQuestionLifelines() {
+  const wrap = $('qLifelines');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+
+  const left = (t) => (teamSetup[t]?.lifelines || []).filter(k => !(lifelineUsed[t] || []).includes(k));
+  const teams = current ? ['A', 'B'].filter(t => left(t).length) : [];
+
+  wrap.hidden = teams.length === 0;
+  if (!teams.length) return;
+
+  teams.forEach(team => {
+    const group = document.createElement('div');
+    group.className = `qll-team ${team}`;
+
+    const name = document.createElement('span');
+    name.className = 'qll-name';
+    name.textContent = `${team === 'A' ? '🟢' : '🟡'} ${getTeamName(team)}`;
+    group.appendChild(name);
+
+    left(team).forEach(key => {
+      const l = LIFELINES.find(x => x.key === key);
+      if (!l) return;
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'qll-btn';
+      btn.innerHTML = `<span class="ic">${l.ic}</span>${escapeHtml(l.name)}`;
+      btn.title = l.desc;
+      btn.disabled = !!activeLifeline;
+      btn.onclick = () => useLifeline(team, key);
+      group.appendChild(btn);
+    });
+
+    wrap.appendChild(group);
+  });
 }
 
 /* ============================= اللوحة ============================= */
@@ -596,7 +658,7 @@ function renderBoard() {
   boardCats.forEach(c => {
     const h = document.createElement('div');
     h.className = 'cat-header';
-    h.innerHTML = `<span class="ic">${c.ic}</span><span>${escapeHtml(c.name)}</span>`;
+    h.innerHTML = `<span class="ic">${escapeHtml(c.ic)}</span><span>${escapeHtml(c.name)}</span>`;
     board.appendChild(h);
   });
 
@@ -606,8 +668,8 @@ function renderBoard() {
       const cell = document.createElement('button');
       cell.type = 'button';
       cell.className = `cell${used ? ' used' : ''}`;
-      cell.textContent = used ? '✓' : String(POINTS[row]);
-      cell.setAttribute('aria-label', `${c.name} — ${POINTS[row]} نقطة`);
+      cell.textContent = used ? '✓' : ar(POINTS[row]);
+      cell.setAttribute('aria-label', `${c.name} — ${ar(POINTS[row])} نقطة`);
       if (used) cell.disabled = true;
       else cell.onclick = () => openQuestion(ci, row);
       board.appendChild(cell);
@@ -631,13 +693,17 @@ function openQuestion(ci, row) {
   if (!questionCache[key]) { questionCache[key] = pickQuestion(cat.id, row); saveGame(); }
   const item = questionCache[key];
 
-  $('qcat').innerHTML = `${cat.ic} ${escapeHtml(cat.name)}`;
-  $('qpoints').textContent = `${POINTS[row]} نقطة`;
+  $('qcat').innerHTML = `${escapeHtml(cat.ic)} ${escapeHtml(cat.name)}`;
+  $('qpoints').textContent = `${ar(POINTS[row])} نقطة`;
 
   if (!item) {
-    $('qbody').innerHTML = '<div class="errbox">ما فيه سؤال محفوظ لهذي الخانة</div>';
-    $('cornersBar').style.display = 'none';
+    // بلا سؤال: يبقى «بدون نقاط» حتى تُقفل الخانة وتكمل الجولة لنهايتها
+    $('qbody').innerHTML = '<div class="errbox">ما فيه سؤال محفوظ لهذي الخانة — أقفلها بـ«بدون نقاط»، أو أضف لها سؤالاً من ⚙️ بنك الأسئلة.</div>';
+    $('cornersBar').style.display = 'flex';
+    $('answerCorner').style.display = 'none';
+    $('awardButtons').innerHTML = '';
   } else {
+    $('answerCorner').style.display = '';
     // صورة مرفوعة من اللوحة (data URL) أو ملف داخل assets/ مثل شعارات البنك الأصلي
     const isImg = (src) => typeof src === 'string' && /^(data:image\/|assets\/[\w\/.-]+$)/.test(src);
     $('qbody').innerHTML = `
@@ -657,6 +723,7 @@ function openQuestion(ci, row) {
 
   resetQuestionTimer();
   renderLifelineBanner();
+  renderQuestionLifelines();
   $('overlay').classList.add('show');
 }
 
@@ -684,7 +751,7 @@ function resetQuestionTimer() {
   qTimer = null;
   $('timerView').textContent = '';
   $('timerView').classList.remove('low');
-  $('btnTimer').textContent = `⏱️ ابدأ العدّاد (٦٠ ثانية)`;
+  $('btnTimer').textContent = `⏱️ ابدأ العدّاد (${ar(QTIMER_SECONDS)} ثانية)`;
   $('btnTimer').disabled = false;
 }
 
@@ -696,7 +763,7 @@ function startQuestionTimer() {
   $('btnTimer').textContent = '⏱️ العدّاد شغّال';
 
   const tick = () => {
-    view.textContent = `${left} ثانية`;
+    view.textContent = `${ar(left)} ثانية`;
     view.classList.toggle('low', left <= 10);
     if (left <= 0) {
       clearInterval(qTimer);
@@ -772,7 +839,7 @@ function startFriendCall() {
   const tick = () => {
     const el = $('lifelineTimer');
     if (!el) return;
-    el.textContent = `⏱️ ${left} ثانية`;
+    el.textContent = `⏱️ ${ar(left)} ثانية`;
     if (left <= 0) {
       clearInterval(friendCallTimer);
       friendCallTimer = null;
@@ -827,13 +894,13 @@ function award(team, opts = {}) {
   // «الفخ»: إذا أجاب الفريق الآخر صحيحاً، تذهب النقاط لصاحب الفخ
   if (team && activeLifeline?.key === 'fakh' && team !== activeLifeline.team) {
     const trapper = activeLifeline.team;
-    uiAlert(`🪤 وقع ${getTeamName(team)} في فخ ${getTeamName(trapper)}!\nالنقاط (${pts}) تذهب لـ ${getTeamName(trapper)}.`);
+    uiAlert(`🪤 وقع ${getTeamName(team)} في فخ ${getTeamName(trapper)}!\nالنقاط (${ar(pts)}) تذهب لـ ${getTeamName(trapper)}.`);
     team = trapper;
   }
 
   if (team) {
     scores[team] += pts;
-    $(`score${team}`).textContent = scores[team];
+    $(`score${team}`).textContent = ar(scores[team]);
     Sound.award();
   } else {
     Sound.skip();
@@ -843,7 +910,7 @@ function award(team, opts = {}) {
   if (undoStack.length > HISTORY_MAX) undoStack.shift();
 
   stateUsed[current.ci][current.row] = true;
-  closeQuestion();
+  closeQuestion({ scored: true });
   renderBoard();
 
   if (!opts.keepTurn) switchTurn();
@@ -860,7 +927,7 @@ function renderUndoButtons() {
     const b = $(id);
     b.disabled = !last;
     b.title = last
-      ? `تراجع عن: ${last.cat} — ${last.team ? `${last.pts} لـ ${getTeamName(last.team)}` : 'بدون نقاط'}`
+      ? `تراجع عن: ${last.cat} — ${last.team ? `${ar(last.pts)} لـ ${getTeamName(last.team)}` : 'بدون نقاط'}`
       : 'ما فيه شي تتراجع عنه';
   });
 }
@@ -869,7 +936,7 @@ async function undoLast() {
   const last = undoStack[undoStack.length - 1];
   if (!last) return;
   Sound.click();
-  const what = last.team ? `${last.pts} نقطة لـ ${getTeamName(last.team)}` : 'بدون نقاط';
+  const what = last.team ? `${ar(last.pts)} نقطة لـ ${getTeamName(last.team)}` : 'بدون نقاط';
   if (!await uiConfirm(`↩️ تراجع عن آخر سؤال؟\n\n${last.cat} — ${what}\n\nالخانة ترجع مفتوحة والدور يرجع لصاحبه.`)) return;
 
   undoStack.pop();
@@ -885,14 +952,22 @@ async function undoLast() {
   Sound.skip();
 }
 
-function closeQuestion() {
+function closeQuestion(opts = {}) {
+  // إغلاق بلا احتساب: السؤال ما انلعب، فالوسيلة المفعّلة ترجع لصاحبه
+  const restore = !opts.scored && !!activeLifeline && !!pendingSnap;
+  if (restore) lifelineUsed = clone(pendingSnap.lifelineUsed);
+
   $('overlay').classList.remove('show');
   $('cornersBar').style.display = '';
+  $('answerCorner').style.display = '';
   clearInterval(qTimer);
   qTimer = null;
   current = null;
   pendingSnap = null;
   clearActiveLifeline();
+
+  if (restore) { renderLifelineDisplay(); saveGame(); }
+  else renderQuestionLifelines();
 }
 
 function isGameFinished() {
@@ -907,7 +982,7 @@ function showEndScreen() {
   if (a === b) {
     $('endTrophy').textContent = '🤝';
     $('endTitle').textContent = 'تعادل!';
-    $('endWinner').innerHTML = `<span class="tie-text">الفريقان تعادلا بـ ${a} نقطة</span>`;
+    $('endWinner').innerHTML = `<span class="tie-text">الفريقان تعادلا بـ ${ar(a)} نقطة</span>`;
   } else {
     const winTeam = a > b ? 'A' : 'B';
     const winName = a > b ? nameA : nameB;
@@ -915,18 +990,18 @@ function showEndScreen() {
     $('endTitle').textContent = 'الفائز';
     $('endWinner').innerHTML = `
       <div class="winner-name ${winTeam}">${winTeam === 'A' ? '🟢' : '🟡'} ${escapeHtml(winName)}</div>
-      <div class="winner-margin">بفارق ${Math.abs(a - b)} نقطة</div>
+      <div class="winner-margin">بفارق ${ar(Math.abs(a - b))} نقطة</div>
     `;
   }
 
   $('endScores').innerHTML = `
     <div class="end-score-card A ${a >= b ? 'lead' : ''}">
       <div class="end-team-name">🟢 ${escapeHtml(nameA)}</div>
-      <div class="end-team-score">${a}</div>
+      <div class="end-team-score">${ar(a)}</div>
     </div>
     <div class="end-score-card B ${b >= a ? 'lead' : ''}">
       <div class="end-team-name">🟡 ${escapeHtml(nameB)}</div>
-      <div class="end-team-score">${b}</div>
+      <div class="end-team-score">${ar(b)}</div>
     </div>
   `;
 
@@ -941,7 +1016,7 @@ function buildResultText() {
   const header = a === b
     ? '🤝 تعادل في «اكتشف وطنك مع الإمام عاصم»!'
     : `🏆 فاز ${a > b ? nameA : nameB} في «اكتشف وطنك مع الإمام عاصم»!`;
-  return `${header}\n\n🟢 ${nameA}: ${a}\n🟡 ${nameB}: ${b}\n\n🇸🇦 كل عام والوطن بخير`;
+  return `${header}\n\n🟢 ${nameA}: ${ar(a)}\n🟡 ${nameB}: ${ar(b)}\n\n🇸🇦 كل عام والوطن بخير`;
 }
 
 async function shareResult() {
@@ -975,7 +1050,7 @@ function renderNationalDayCount() {
   if (days === 0) el.textContent = '🇸🇦 اليوم هو اليوم الوطني';
   else if (days === 1) el.textContent = 'باقي يوم واحد على ٢٣ سبتمبر';
   else if (days === 2) el.textContent = 'باقي يومان على ٢٣ سبتمبر';
-  else el.textContent = `باقي ${days} يوماً على ٢٣ سبتمبر`;
+  else el.textContent = `باقي ${ar(days)} يوماً على ٢٣ سبتمبر`;
 }
 
 /* ============================= العمل بدون إنترنت ============================= */

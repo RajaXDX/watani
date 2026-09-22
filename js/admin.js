@@ -234,11 +234,11 @@ function populateSelects() {
     DIFFKEY.forEach((k, i) => {
       const o = document.createElement('option');
       o.value = k;
-      o.textContent = `${DIFFNAME[i]} (${POINTS[i]})`;
+      o.textContent = `${DIFFNAME[i]} (${ar(POINTS[i])})`;
       diffSel.appendChild(o);
     });
   } else {
-    [...diffSel.options].forEach((o, i) => { o.textContent = `${DIFFNAME[i]} (${POINTS[i]})`; });
+    [...diffSel.options].forEach((o, i) => { o.textContent = `${DIFFNAME[i]} (${ar(POINTS[i])})`; });
   }
 }
 
@@ -393,8 +393,8 @@ function renderBankList() {
   const cat = CATEGORIES.find(c => c.id === catId);
   const diffIdx = DIFFKEY.indexOf(diff);
   $('bankCount').textContent = cat
-    ? `${list.length} سؤال في «${cat.name}» — مستوى ${DIFFNAME[diffIdx]} · الإجمالي ${countAllQuestions()} سؤالاً`
-    : `الإجمالي ${countAllQuestions()} سؤالاً`;
+    ? `${qCount(list.length)} في «${cat.name}» — مستوى ${DIFFNAME[diffIdx]} · الإجمالي ${qCount(countAllQuestions())}`
+    : `الإجمالي ${qCount(countAllQuestions())}`;
 }
 
 /* ============================= الفئات ============================= */
@@ -418,7 +418,7 @@ function renderAdminCategories() {
     label.textContent = `${c.ic} ${c.name}`;
     const count = document.createElement('b');
     count.className = 'cat-q-count';
-    count.textContent = countCategoryQuestions(c.id);
+    count.textContent = ar(countCategoryQuestions(c.id));
     label.appendChild(count);
 
     const del = document.createElement('button');
@@ -461,7 +461,8 @@ async function deleteCategory(id) {
   if (!cat) return;
 
   const n = countCategoryQuestions(id);
-  if (!await uiConfirm(`حذف فئة «${cat.name}»؟\n\nبتروح معها ${n} سؤالاً، ولا رجعة فيها.`)) return;
+  const what = n === 0 ? 'وهي فاضية أصلاً' : `وبتروح معها ${qCount(n)}`;
+  if (!await uiConfirm(`حذف فئة «${cat.name}»؟\n\n${what}، ولا رجعة فيها.`)) return;
 
   CATEGORIES = CATEGORIES.filter(c => c.id !== id);
   delete QBANK[id];
@@ -478,16 +479,25 @@ async function deleteCategory(id) {
 }
 
 /* ============================= النقاط ============================= */
-function savePoints() {
-  const e = parseInt($('ptEasy').value, 10);
-  const m = parseInt($('ptMed').value, 10);
-  const h = parseInt($('ptHard').value, 10);
+// خانة بصفر أو بنقاط سالبة ما لها معنى في اللوحة، فنحصرها في ١..٩٩٩٩
+const PT_MIN = 1, PT_MAX = 9999;
+function readPoints(id, fallback) {
+  const v = parseInt($(id).value, 10);
+  if (!Number.isFinite(v)) return fallback;
+  return Math.min(PT_MAX, Math.max(PT_MIN, v));
+}
 
+function savePoints() {
   POINTS = [
-    Number.isFinite(e) ? e : 100,
-    Number.isFinite(m) ? m : 250,
-    Number.isFinite(h) ? h : 400,
+    readPoints('ptEasy', 100),
+    readPoints('ptMed', 250),
+    readPoints('ptHard', 400),
   ];
+
+  // نرجّع المصحَّح للحقول حتى يشوف صاحب اللوحة القيمة اللي انحفظت
+  $('ptEasy').value = POINTS[0];
+  $('ptMed').value = POINTS[1];
+  $('ptHard').value = POINTS[2];
 
   saveJSON(K_POINTS, POINTS);
   Sound.award();
@@ -499,8 +509,9 @@ function savePoints() {
 
 /* ============================= نسخة احتياطية ============================= */
 function renderBackupInfo() {
-  $('backupInfo').textContent =
-    `عندك ${countAllQuestions()} سؤالاً في ${CATEGORIES.length} فئة.`;
+  $('backupInfo').textContent = CATEGORIES.length === 0
+    ? 'البنك فاضي — أضف فئة من تبويب «الفئات»، أو رجّع أسئلة اليوم الوطني الأصلية.'
+    : `عندك ${qCount(countAllQuestions())} في ${catCount(CATEGORIES.length)}.`;
 }
 
 function exportBank() {
@@ -542,10 +553,16 @@ function importBank(file) {
       return;
     }
 
+    // فئة بلا معرّف أو اسم تكسر اللوحة لاحقاً، فنرفض الملف من الآن
+    if (!data.categories.every(c => c && typeof c.id === 'string' && c.id && typeof c.name === 'string' && c.name)) {
+      uiAlert('في الملف فئة بلا معرّف أو اسم — تأكد إنه ملف صدّرته اللعبة نفسها.');
+      return;
+    }
+
     const n = Object.values(data.bank).reduce(
       (sum, c) => sum + DIFFKEY.reduce((t, k) => t + ((c && c[k]) || []).length, 0), 0);
 
-    if (!await uiConfirm(`استيراد ${n} سؤالاً في ${data.categories.length} فئة؟\n\nبيستبدل الفئات والأسئلة الحالية.`)) return;
+    if (!await uiConfirm(`استيراد ${catCount(data.categories.length)} فيها ${qCount(n)}؟\n\nبيستبدل الفئات والأسئلة الحالية.`)) return;
 
     CATEGORIES = data.categories;
     QBANK = data.bank;
@@ -582,7 +599,7 @@ async function restoreDefaults() {
   cancelEdit();
   Sound.award();
   initAdmin();
-  uiAlert(`✅ رجعت الفئات الأصلية: ${CATEGORIES.length} فئات و${countAllQuestions()} سؤالاً`);
+  uiAlert(`✅ رجعت الأصل: ${catCount(CATEGORIES.length)} و${qCount(countAllQuestions())}`);
 }
 
 async function wipeEverything() {
