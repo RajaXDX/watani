@@ -53,14 +53,13 @@ body {
 button { font-family: inherit; }
 
 /* العناصر القابلة للنقر أزرار حقيقية حتى تعمل بلوحة المفاتيح */
-.lifeline-chip, .cat-card, .cell, .team-lifelines .ic {
+.cat-card, .cell {
   font-family: inherit;
   color: inherit;
   appearance: none;
   -webkit-appearance: none;
 }
 .cat-card, .cell { width: 100%; }
-.team-lifelines .ic { background: transparent; line-height: 1; }
 :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
 /* ============================= زخرفة السدو ============================= */
@@ -326,46 +325,6 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
 
 .team-setup input:focus { outline: none; border-color: var(--gold); }
 
-.lifelines-label {
-  margin: 16px 0 8px;
-  font-size: 13px;
-  color: var(--muted);
-}
-
-.lifelines { display: flex; flex-wrap: wrap; gap: 8px; }
-
-.lifeline-chip {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(212, 175, 55, 0.28);
-  background: rgba(0, 0, 0, 0.2);
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.15s;
-  user-select: none;
-}
-
-.lifeline-chip:hover { border-color: var(--gold); }
-
-.lifeline-chip.sel {
-  background: rgba(0, 108, 53, 0.4);
-  border-color: var(--flag-bright);
-  color: #DFF3E6;
-}
-
-.lifeline-chip .ic { font-size: 15px; }
-
-.lifeline-count {
-  margin-top: 10px;
-  font-size: 12.5px;
-  color: var(--muted);
-  font-family: 'Saudi', sans-serif;
-  font-weight: 700;
-}
-
 .setup-status, .selection-status {
   text-align: center;
   margin-top: 18px;
@@ -454,25 +413,23 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
   line-height: 1.2;
 }
 
-.team-lifelines { display: flex; justify-content: center; gap: 8px; min-height: 26px; }
-
-.team-lifelines .ic {
-  font-size: 18px;
-  cursor: pointer;
-  padding: 2px 5px;
+/* ---- زيادة ونقص النقاط يدوياً ---- */
+/* الرقم السالب يطلع «٥٠-» داخل صفحة RTL — نعزله باتجاه LTR */
+.team-score, .end-team-score, .resume-info b, .score-adj { direction: ltr; unicode-bidi: isolate; }
+.score-adjust { display: flex; justify-content: center; gap: 8px; min-height: 26px; }
+.score-adj {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: var(--sand);
+  font-family: 'Saudi', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
   border-radius: 8px;
-  border: 1px solid rgba(212, 175, 55, 0.25);
-  transition: all 0.15s;
+  padding: 3px 10px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
 }
-
-.team-lifelines .ic:hover { background: rgba(212, 175, 55, 0.15); }
-
-.team-lifelines .ic.used {
-  opacity: 0.28;
-  cursor: default;
-  filter: grayscale(1);
-  border-color: transparent;
-}
+.score-adj:hover { background: rgba(212, 175, 55, 0.15); border-color: var(--gold); }
 
 .turn-banner {
   text-align: center;
@@ -645,26 +602,6 @@ body:not(:has(#screen-home.active)) .hero-slogan { display: none; }
   border-radius: 999px;
   font-size: 15px;
   white-space: nowrap;
-}
-
-.lifeline-banner {
-  background: rgba(0, 108, 53, 0.22);
-  border: 1px dashed rgba(23, 166, 92, 0.6);
-  border-radius: 12px;
-  padding: 10px 14px;
-  margin: 10px 0;
-  font-size: 14px;
-  text-align: center;
-}
-
-.ll-ic { font-size: 17px; margin-inline-end: 4px; }
-.ll-desc { color: var(--muted); font-size: 13px; margin-top: 4px; }
-.ll-timer {
-  font-family: 'Saudi', sans-serif;
-  font-weight: 800;
-  color: var(--gold);
-  margin-top: 4px;
-  min-height: 18px;
 }
 
 .qimg {
@@ -1346,24 +1283,6 @@ footer p { margin: 4px 0; }
 }
 .about-list b { color: var(--gold); }
 .about-list b.pt { color: var(--flag-bright); }
-
-.about-lifelines {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 10px;
-}
-.about-ll {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 11px 12px;
-}
-.all-ic { font-size: 22px; line-height: 1.2; }
-.all-name { font-weight: 800; font-size: 14px; color: var(--gold); margin-bottom: 3px; }
-.all-desc { font-size: 12.5px; line-height: 1.75; color: var(--muted); }
 
 .about-cards {
   display: grid;
