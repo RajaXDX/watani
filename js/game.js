@@ -448,6 +448,7 @@ function startGame() {
   Sound.start();
 
   boardCats = selectedCats.slice();
+  selectedCats = [];   // الجولة الجاية تبدأ بشاشة فئات فاضية
   stateUsed = boardCats.map(() => [false, false, false]);
   questionCache = {};
   scores = { A: 0, B: 0 };
@@ -829,17 +830,8 @@ function goSetup() {
 
 function goCategories() {
   Sound.click();
+  // ما نختار فئات تلقائياً — اللاعبون يختارونها بأنفسهم
   selectedCats = selectedCats.filter(c => CATEGORIES.some(x => x.id === c.id));
-  if (selectedCats.length === 0) {
-    // اللوحة تتسع لست: نختار الأكمل أسئلةً ونتجاهل الفاضية، ونحفظ ترتيبها الأصلي
-    selectedCats = CATEGORIES
-      .map((c, i) => ({ c, i, n: countCategoryQuestions(c.id) }))
-      .filter(x => x.n > 0)
-      .sort((a, b) => b.n - a.n || a.i - b.i)
-      .slice(0, 6)
-      .sort((a, b) => a.i - b.i)
-      .map(x => x.c);
-  }
   showScreen('screen-categories');
   renderCatGrid();
 }
