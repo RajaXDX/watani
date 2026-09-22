@@ -96,6 +96,23 @@ header {
   object-fit: contain;
 }
 
+/* العنوان مع سطر الخط العربي فوقه */
+.brand-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+/* «المملكة العربية السعودية» بخط الثلث — صغيرة فوق العنوان */
+.brand-calligraphy {
+  display: block;
+  width: auto;
+  height: clamp(17px, 2.5vw, 24px);
+  opacity: 0.92;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.45));
+}
+
 .brand {
   font-family: 'Saudi', sans-serif;
   font-weight: 900;
@@ -1462,7 +1479,7 @@ footer p { margin: 4px 0; }
   .admin-tab { flex: 1 1 calc(50% - 4px); font-size: 12.5px; padding: 8px 10px; }
   .admin-gear { top: 14px; inset-inline-start: 12px; padding: 6px 9px; font-size: 16px; }
   .mute-btn { inset-inline-start: auto; inset-inline-end: 12px; }
-  .brand { flex-basis: 100%; }   /* الشعار في سطر والعنوان تحته، بعيد عن زر ⚙️ */
+  .brand-block { flex-basis: 100%; }   /* الشعار في سطر والعنوان تحته، بعيد عن زر ⚙️ */
   .icon-input { max-width: 100%; }
   .points-inputs { grid-template-columns: 70px 1fr; }
 }
