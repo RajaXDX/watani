@@ -3,15 +3,13 @@
    أربعة أقسام: طريقة اللعب، الأدوات، اللغات، الفئات والأسئلة.
 
    لا رقم مكتوب بيد في قسم البنك: يُبنى من QBANK وCATEGORIES عند كل فتح،
-   فيبقى صادقاً بعد أي إضافة من لوحة الإدارة. ونصوص وسائل المساعدة تُقرأ
-   من LIFELINES في game.js حتى لا يتفرّق الشرح عن اللعبة.
+   فيبقى صادقاً بعد أي إضافة من لوحة الإدارة.
    يُحمَّل بعد game.js.
    ========================================================================= */
 
 function showAbout() {
   Sound.click();
   showScreen('screen-about');
-  renderAboutLifelines();
   renderAboutBank();
 }
 
@@ -28,19 +26,6 @@ function openAboutSection(sec) {
   });
 
   $('aboutToc').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-/* ---- وسائل المساعدة ---- */
-function renderAboutLifelines() {
-  $('aboutLifelines').innerHTML = LIFELINES.map(l => `
-    <div class="about-ll">
-      <span class="all-ic">${l.ic}</span>
-      <div>
-        <div class="all-name">${escapeHtml(l.name)}</div>
-        <div class="all-desc">${escapeHtml(l.desc)}</div>
-      </div>
-    </div>
-  `).join('');
 }
 
 /* ---- بنك الأسئلة ---- */

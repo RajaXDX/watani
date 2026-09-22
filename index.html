@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>اكتشف وطنك مع الإمام عاصم - لعبة اليوم الوطني السعودي</title>
-  <meta name="description" content="لعبة أسئلة جماعية لليوم الوطني السعودي — فريقان على جهاز واحد، ٣١٢ سؤالاً عن الوطن وتاريخه ودوله الثلاث وملوكه وأمرائه ومناطقه وشعاراته ومأكولاته وولي عهده، بلا حساب ولا إنترنت.">
+  <meta name="description" content="لعبة أسئلة جماعية لليوم الوطني السعودي — فريقان على جهاز واحد، ٢٨٤ سؤالاً عن الوطن وتاريخه ودوله الثلاث وملوكه وأمرائه ومناطقه وشعاراته ومأكولاته وولي عهده، بلا حساب ولا إنترنت.">
   <meta name="theme-color" content="#0A1A14">
 
   <!-- الأيقونات والتثبيت كتطبيق (manifest.webmanifest + sw.js) -->
@@ -22,7 +22,7 @@
   <meta property="og:site_name" content="اكتشف وطنك مع الإمام عاصم">
   <meta property="og:url" content="https://rajaxdx.github.io/watani/">
   <meta property="og:title" content="اكتشف وطنك مع الإمام عاصم — لعبة اليوم الوطني">
-  <meta property="og:description" content="عزّنا بطبعنا 🇸🇦 لعبة أسئلة جماعية لليوم الوطني: فريقان على جهاز واحد، ٣١٢ سؤالاً عن الوطن وتاريخه ومناطقه.">
+  <meta property="og:description" content="عزّنا بطبعنا 🇸🇦 لعبة أسئلة جماعية لليوم الوطني: فريقان على جهاز واحد، ٢٨٤ سؤالاً عن الوطن وتاريخه ومناطقه.">
   <meta property="og:image" content="https://rajaxdx.github.io/watani/assets/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -33,7 +33,7 @@
   <link rel="preload" href="assets/fonts/SaudiWeb-Bold.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/SaudiWeb-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <!-- ?v= رقم الإصدار: غيّره عند أي تعديل حتى تصل النسخة الجديدة للمتصفحات -->
-  <link rel="stylesheet" href="css/style.css?v=23">
+  <link rel="stylesheet" href="css/style.css?v=25">
 </head>
 <body>
 
@@ -123,11 +123,10 @@
 <!-- ============ إعداد الفرق ============ -->
 <div class="screen" id="screen-setup">
   <div class="step-title">حدد معلومات الفرق</div>
-  <div class="step-sub">اكتب اسم كل فريق واختر ٣ وسائل مساعدة</div>
+  <div class="step-sub">اكتب اسم كل فريق — أو خلّه على الاسم الافتراضي</div>
   <div class="setup-container">
     <div class="setup-row" id="teamsSetupContainer"></div>
   </div>
-  <div class="setup-status" id="setupStatus"></div>
   <div class="nav-buttons">
     <button class="btn-main btn-ghost" id="btnSetupBack">← رجوع</button>
     <button class="btn-main btn-primary" id="btnSetupNext">التالي →</button>
@@ -137,7 +136,7 @@
 <!-- ============ اختيار الفئات ============ -->
 <div class="screen" id="screen-categories">
   <div class="step-title">اختر فئات الجولة</div>
-  <div class="step-sub">اللوحة تتسع لـ ٦ فئات — اخترنا لك الأكمل أسئلةً، وتقدر تبدّل</div>
+  <div class="step-sub">اختاروا من فئة إلى ٦ فئات — اللوحة تتسع لست</div>
   <div class="cat-grid" id="catGrid"></div>
   <div class="selection-status" id="selStatus"></div>
   <div class="nav-buttons">
@@ -153,12 +152,18 @@
       <div class="team-card A" id="teamCardA">
         <div class="team-name" id="gameNameA">الفريق الأول</div>
         <div class="team-score" id="scoreA">0</div>
-        <div class="team-lifelines" id="lifeDisplayA"></div>
+        <div class="score-adjust" aria-label="تعديل النقاط يدوياً">
+          <button class="score-adj" type="button" data-team="A" data-delta="-50" title="نقص ٥٠ نقطة">−٥٠</button>
+          <button class="score-adj" type="button" data-team="A" data-delta="50" title="زيادة ٥٠ نقطة">+٥٠</button>
+        </div>
       </div>
       <div class="team-card B" id="teamCardB">
         <div class="team-name" id="gameNameB">الفريق الثاني</div>
         <div class="team-score" id="scoreB">0</div>
-        <div class="team-lifelines" id="lifeDisplayB"></div>
+        <div class="score-adjust" aria-label="تعديل النقاط يدوياً">
+          <button class="score-adj" type="button" data-team="B" data-delta="-50" title="نقص ٥٠ نقطة">−٥٠</button>
+          <button class="score-adj" type="button" data-team="B" data-delta="50" title="زيادة ٥٠ نقطة">+٥٠</button>
+        </div>
       </div>
     </div>
     <div class="turn-banner" id="turnBanner"></div>
@@ -212,10 +217,9 @@
       </p>
 
       <div class="about-step">
-        <div class="about-step-head"><span class="about-num">1</span> سمِّ الفرق واختر وسائل المساعدة</div>
+        <div class="about-step-head"><span class="about-num">1</span> سمِّ الفرق</div>
         <div class="about-body">
-          <p class="about-p">لكل فريق اسم، و<b>ثلاث</b> وسائل مساعدة يختارها من خمس. كل وسيلة تُستعمل مرة واحدة طوال اللعبة، وزرّ «التالي» ما يُفتح قبل ما يكمّل الفريقان.</p>
-          <div class="about-lifelines" id="aboutLifelines"></div>
+          <p class="about-p">لكل فريق اسم يظهر على بطاقته وعلى أزرار النقاط — ولو ما كتبتوا شي يبقى «الفريق الأول» و«الفريق الثاني».</p>
         </div>
       </div>
 
@@ -224,7 +228,7 @@
         <div class="about-body">
           <ul class="about-list">
             <li>اللوحة تتسع لـ<b>ست فئات</b> كحدّ أعلى، وفئة واحدة تكفي للبدء.</li>
-            <li>اللعبة تختار لك مسبقاً <b>الأكمل أسئلةً</b>، وتقدر تبدّل بلمسة.</li>
+            <li>ما فيه اختيار تلقائي — <b>أنتم تختارون</b> الفئات، وكل جولة تبدأ بشاشة فاضية.</li>
           </ul>
         </div>
       </div>
@@ -236,7 +240,7 @@
             <li>كل فئة ثلاث خانات: <b class="pt">100</b> سهل، <b class="pt">250</b> متوسط، <b class="pt">400</b> صعب.</li>
             <li><b>القرعة</b> تختار الفريق اللي يبدأ، وبعدها الدور ينتقل تلقائياً بعد كل سؤال.</li>
             <li>الخانة المُستهلَكة تُعلَّم بـ ✓ وتُقفل.</li>
-            <li>المجموع وشارة «الدور على» ووسائل كل فريق كلها فوق اللوحة.</li>
+            <li>المجموع وشارة «الدور على» فوق اللوحة، وتحت نقاط كل فريق زرّا <b>−٥٠</b> و<b>+٥٠</b> للتعديل اليدوي.</li>
           </ul>
         </div>
       </div>
@@ -488,10 +492,6 @@
       <div class="qpoints" id="qpoints"></div>
     </div>
 
-    <div class="lifeline-banner" id="lifelineBanner" style="display:none;"></div>
-
-    <!-- وسائل المساعدة هنا أيضاً: النافذة تغطّي بطاقات الفرق فما تنضغط أيقوناتها -->
-    <div class="qlifelines" id="qLifelines" hidden></div>
 
     <div id="qbody"></div>
 
@@ -527,8 +527,8 @@
   <p class="foot-sub">كل شي يشتغل على هذا الجهاز — بلا حساب ولا إنترنت</p>
 </footer>
 
-<script src="js/questions.js?v=11"></script>
-<script src="js/game.js?v=13"></script>
+<script src="js/questions.js?v=14"></script>
+<script src="js/game.js?v=15"></script>
 <script src="js/admin.js?v=11"></script>
 <script src="js/about.js?v=2"></script>
 

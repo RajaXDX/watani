@@ -70,7 +70,7 @@ function escapeHtml(text) {
    كل رقم يظهر للاعبين بالأرقام العربية، وتمييزه يتبع صيغة العدد:
    واحد · اثنان · ٣-١٠ جمع · ١١ فما فوق مفرد منصوب. */
 const AR_DIGITS = '٠١٢٣٤٥٦٧٨٩';
-const ar = (n) => String(n ?? '').replace(/[0-9]/g, d => AR_DIGITS[+d]);
+const ar = (n) => String(n ?? '').replace(/-/g, '−').replace(/[0-9]/g, d => AR_DIGITS[+d]);
 
 // forms = [صفر, مفرد, مثنى, جمع (٣-١٠), تمييز (١١+)]
 function arCount(n, forms) {
@@ -146,14 +146,6 @@ function uiConfirm(message) {
 }
 
 /* ============================= الثوابت ============================= */
-const LIFELINES = [
-  { key: 'fakh',     name: 'الفخ',           ic: '🪤', desc: 'إذا أجاب الفريق الآخر إجابة صحيحة، تذهب النقاط لكم بدلاً منه.' },
-  { key: 'istareeh', name: 'استريح',         ic: '✋', desc: 'تتخطّون السؤال بلا نقاط لأحد، ويبقى الدور معكم.' },
-  { key: 'hofra',    name: 'الحفرة',         ic: '🕳️', desc: 'يُمنع الفريق الآخر من أخذ نقاط هذا السؤال.' },
-  { key: 'sadeeq',   name: 'اتصال بصديق',    ic: '📞', desc: 'لديكم ٣٠ ثانية للاتصال بصديق يساعدكم في الإجابة.' },
-  { key: 'jawabain', name: 'جاوب جوابين',    ic: '✌️', desc: 'يحقّ لكم تقديم إجابتين، وتُحتسب لكم إن صحّت إحداهما.' },
-];
-
 const DIFFKEY = ['easy', 'medium', 'hard'];
 const DIFFNAME = ['سهل', 'متوسط', 'صعب'];
 const QTIMER_SECONDS = 60;
@@ -302,8 +294,8 @@ const K_BANK_VER = 'nd_bank_version';
 
 /* ============================= الحالة ============================= */
 let teamSetup = {
-  A: { name: 'الفريق الأول', lifelines: [] },
-  B: { name: 'الفريق الثاني', lifelines: [] },
+  A: { name: 'الفريق الأول' },
+  B: { name: 'الفريق الثاني' },
 };
 
 let selectedCats = [];      // الفئات المختارة لهذه الجولة
@@ -311,14 +303,10 @@ let boardCats = [];         // فئات اللوحة الحالية
 let stateUsed = [];         // [ci][row] = مستخدَمة؟
 let questionCache = {};     // السؤال المسحوب لكل خانة حتى لا يتغيّر عند إعادة الفتح
 let scores = { A: 0, B: 0 };
-let lifelineUsed = { A: [], B: [] };
 let current = null;         // { ci, row, cat }
 let activeTeam = null;      // صاحب الدور
-let activeLifeline = null;  // { team, key }
-let friendCallTimer = null;
 let qTimer = null;
-let undoStack = [];          // لقطات قبل كل سؤال انحسب — للتراجع
-let pendingSnap = null;     // لقطة الحالة لحظة فتح السؤال الحالي
+let undoStack = [];         // { ci, row, team, pts, cat, turn } لكل سؤال انحسب — للتراجع
 
 /* ---- حفظ الجولة الجارية ----
    تُحفظ بعد كل تغيير، فلو تحدّثت الصفحة أو انقفل المتصفح ترجع من الرئيسية.
@@ -326,14 +314,10 @@ let pendingSnap = null;     // لقطة الحالة لحظة فتح السؤا�
 const K_GAME = 'nd_game';
 const HISTORY_MAX = 30;
 
-function snapshot() {
-  return clone({ scores, stateUsed, lifelineUsed, activeTeam });
-}
-
 function saveGame() {
   try {
     localStorage.setItem(K_GAME, JSON.stringify({
-      teamSetup, boardCats, stateUsed, questionCache, scores, lifelineUsed, activeTeam, undoStack,
+      teamSetup, boardCats, stateUsed, questionCache, scores, activeTeam, undoStack,
     }));
   } catch (e) { /* التخزين ممتلئ أو معطّل — اللعبة تكمل بدون حفظ */ }
 }
@@ -359,12 +343,10 @@ function resumeGame() {
   stateUsed = g.stateUsed;
   questionCache = g.questionCache || {};
   scores = g.scores;
-  lifelineUsed = g.lifelineUsed || { A: [], B: [] };
   activeTeam = g.activeTeam === 'B' ? 'B' : 'A';
-  undoStack = Array.isArray(g.undoStack) ? g.undoStack : [];
+  // جولات محفوظة من الإصدار السابق كانت تحفظ لقطات كاملة — ما تنفع للتراجع الجديد
+  undoStack = Array.isArray(g.undoStack) ? g.undoStack.filter(u => Number.isInteger(u.ci)) : [];
   current = null;
-  activeLifeline = null;
-  pendingSnap = null;
   updateGameUI();
   renderBoard();
   showScreen('screen-game');
@@ -396,68 +378,13 @@ function renderTeamSetup() {
       <input type="text" id="setupName${team}" maxlength="18"
              placeholder="${first ? 'الفريق الأول' : 'الفريق الثاني'}"
              value="${escapeHtml(teamSetup[team].name)}">
-      <div class="lifelines-label">وسائل المساعدة (اختر ٣)</div>
-      <div class="lifelines" id="lifelines${team}"></div>
-      <div class="lifeline-count" id="count${team}">0 / 3</div>
     `;
     container.appendChild(div);
 
     $(`setupName${team}`).addEventListener('input', e => {
       teamSetup[team].name = e.target.value.trim() || (first ? 'الفريق الأول' : 'الفريق الثاني');
     });
-
-    renderLifelineChips(team);
   });
-
-  updateSetupStatus();
-}
-
-function renderLifelineChips(team) {
-  const wrap = $(`lifelines${team}`);
-  wrap.innerHTML = '';
-
-  LIFELINES.forEach(l => {
-    const sel = teamSetup[team].lifelines.includes(l.key);
-    const chip = document.createElement('button');
-    chip.type = 'button';
-    chip.className = `lifeline-chip${sel ? ' sel' : ''}`;
-    chip.title = l.desc;
-    chip.innerHTML = `<span class="ic">${l.ic}</span>${escapeHtml(l.name)}`;
-    chip.onclick = () => toggleLifeline(team, l.key, chip);
-    wrap.appendChild(chip);
-  });
-
-  $(`count${team}`).textContent = `${teamSetup[team].lifelines.length} / 3`;
-}
-
-function toggleLifeline(team, key, chipEl) {
-  Sound.select();
-  const arr = teamSetup[team].lifelines;
-  const idx = arr.indexOf(key);
-
-  if (idx > -1) {
-    arr.splice(idx, 1);
-    chipEl.classList.remove('sel');
-  } else {
-    if (arr.length >= 3) return;
-    arr.push(key);
-    chipEl.classList.add('sel');
-  }
-
-  $(`count${team}`).textContent = `${arr.length} / 3`;
-  updateSetupStatus();
-}
-
-function updateSetupStatus() {
-  const a = teamSetup.A.lifelines.length;
-  const b = teamSetup.B.lifelines.length;
-  const ready = a === 3 && b === 3;
-  const el = $('setupStatus');
-  el.textContent = ready
-    ? '✅ الفريقان جاهزان'
-    : `اختر ٣ وسائل لكل فريق — الأول ${ar(a)}/٣ · الثاني ${ar(b)}/٣`;
-  el.classList.toggle('ok', ready);
-  $('btnSetupNext').disabled = !ready;
 }
 
 /* ============================= اختيار الفئات ============================= */
@@ -541,15 +468,13 @@ function startGame() {
   Sound.start();
 
   boardCats = selectedCats.slice();
+  selectedCats = [];   // الجولة الجاية تبدأ بشاشة فئات فاضية
   stateUsed = boardCats.map(() => [false, false, false]);
   questionCache = {};
   scores = { A: 0, B: 0 };
-  lifelineUsed = { A: [], B: [] };
   current = null;
-  activeLifeline = null;
   activeTeam = Math.random() < 0.5 ? 'A' : 'B';
   undoStack = [];
-  pendingSnap = null;
 
   updateGameUI();
   renderBoard();
@@ -569,7 +494,6 @@ function updateGameUI() {
   $('scoreA').textContent = ar(scores.A);
   $('scoreB').textContent = ar(scores.B);
   renderTurnIndicator();
-  renderLifelineDisplay();
 }
 
 function renderTurnIndicator() {
@@ -583,70 +507,6 @@ function renderTurnIndicator() {
 function switchTurn() {
   activeTeam = activeTeam === 'A' ? 'B' : 'A';
   renderTurnIndicator();
-}
-
-function renderLifelineDisplay() {
-  ['A', 'B'].forEach(team => {
-    const wrap = $(`lifeDisplay${team}`);
-    wrap.innerHTML = '';
-
-    teamSetup[team].lifelines.forEach(key => {
-      const l = LIFELINES.find(x => x.key === key);
-      if (!l) return;
-
-      const used = lifelineUsed[team].includes(key);
-      const el = document.createElement('button');
-      el.type = 'button';
-      el.className = `ic${used ? ' used' : ''}`;
-      el.title = used ? `${l.name} — مُستخدمة` : `${l.name}: ${l.desc}`;
-      el.textContent = l.ic;
-      if (used) el.disabled = true;
-      else el.onclick = () => useLifeline(team, key);
-      wrap.appendChild(el);
-    });
-  });
-
-  renderQuestionLifelines();
-}
-
-/* نسخة الوسائل داخل نافذة السؤال —
-   النافذة تغطّي الشاشة كلها، فأيقونات بطاقات الفرق ما تنضغط وهي مفتوحة. */
-function renderQuestionLifelines() {
-  const wrap = $('qLifelines');
-  if (!wrap) return;
-  wrap.innerHTML = '';
-
-  const left = (t) => (teamSetup[t]?.lifelines || []).filter(k => !(lifelineUsed[t] || []).includes(k));
-  const teams = current ? ['A', 'B'].filter(t => left(t).length) : [];
-
-  wrap.hidden = teams.length === 0;
-  if (!teams.length) return;
-
-  teams.forEach(team => {
-    const group = document.createElement('div');
-    group.className = `qll-team ${team}`;
-
-    const name = document.createElement('span');
-    name.className = 'qll-name';
-    name.textContent = `${team === 'A' ? '🟢' : '🟡'} ${getTeamName(team)}`;
-    group.appendChild(name);
-
-    left(team).forEach(key => {
-      const l = LIFELINES.find(x => x.key === key);
-      if (!l) return;
-
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'qll-btn';
-      btn.innerHTML = `<span class="ic">${l.ic}</span>${escapeHtml(l.name)}`;
-      btn.title = l.desc;
-      btn.disabled = !!activeLifeline;
-      btn.onclick = () => useLifeline(team, key);
-      group.appendChild(btn);
-    });
-
-    wrap.appendChild(group);
-  });
 }
 
 /* ============================= اللوحة ============================= */
@@ -687,7 +547,6 @@ function openQuestion(ci, row) {
   Sound.open();
   const cat = boardCats[ci];
   current = { ci, row, cat };
-  pendingSnap = snapshot();
 
   const key = `${ci}-${row}`;
   if (!questionCache[key]) { questionCache[key] = pickQuestion(cat.id, row); saveGame(); }
@@ -722,8 +581,6 @@ function openQuestion(ci, row) {
   }
 
   resetQuestionTimer();
-  renderLifelineBanner();
-  renderQuestionLifelines();
   $('overlay').classList.add('show');
 }
 
@@ -780,123 +637,24 @@ function startQuestionTimer() {
   qTimer = setInterval(tick, 1000);
 }
 
-/* ============================= وسائل المساعدة ============================= */
-async function useLifeline(team, key) {
-  if (lifelineUsed[team].includes(key)) return;
-
-  const l = LIFELINES.find(x => x.key === key);
-  if (!l) return;
-
-  if (!current) {
-    uiAlert(`${l.ic} ${l.name}\n\n${l.desc}\n\nافتح السؤال أولاً ثم فعّلها.`);
-    return;
-  }
-
-  if (activeLifeline) {
-    uiAlert('⚠️ فيه وسيلة مساعدة مفعّلة على هذا السؤال بالفعل');
-    return;
-  }
-
-  const ok = await uiConfirm(`${l.ic} تفعيل «${l.name}» لفريق ${getTeamName(team)}؟\n\n${l.desc}\n\nتُستخدم مرة واحدة فقط طوال اللعبة.`);
-  if (!ok) return;
-
-  Sound.select();
-  lifelineUsed[team].push(key);
-  activeLifeline = { team, key };
-  saveGame();
-
-  renderLifelineDisplay();
-  renderLifelineBanner();
-  renderAwardButtons();
-
-  if (key === 'sadeeq') startFriendCall();
-  if (key === 'istareeh') award(null, { keepTurn: true });
-}
-
-function renderLifelineBanner() {
-  const banner = $('lifelineBanner');
-
-  if (!activeLifeline) {
-    banner.style.display = 'none';
-    banner.innerHTML = '';
-    return;
-  }
-
-  const l = LIFELINES.find(x => x.key === activeLifeline.key);
-  banner.style.display = 'block';
-  banner.innerHTML = `
-    <span class="ll-ic">${l.ic}</span>
-    <b>${escapeHtml(l.name)}</b> — ${escapeHtml(getTeamName(activeLifeline.team))}
-    <div class="ll-desc">${escapeHtml(l.desc)}</div>
-    <div class="ll-timer" id="lifelineTimer"></div>
-  `;
-}
-
-function startFriendCall() {
-  clearInterval(friendCallTimer);
-  let left = 30;
-
-  const tick = () => {
-    const el = $('lifelineTimer');
-    if (!el) return;
-    el.textContent = `⏱️ ${ar(left)} ثانية`;
-    if (left <= 0) {
-      clearInterval(friendCallTimer);
-      friendCallTimer = null;
-      el.textContent = '⏰ انتهى الوقت';
-      Sound.skip();
-    }
-    left--;
-  };
-
-  tick();
-  friendCallTimer = setInterval(tick, 1000);
-}
-
-function clearActiveLifeline() {
-  clearInterval(friendCallTimer);
-  friendCallTimer = null;
-  activeLifeline = null;
-  renderLifelineBanner();
-}
-
 /* ============================= النقاط ============================= */
 function renderAwardButtons() {
   const container = $('awardButtons');
   container.innerHTML = '';
 
-  // «الحفرة» تمنع الفريق الآخر من أخذ نقاط هذا السؤال
-  const blocked = activeLifeline?.key === 'hofra'
-    ? (activeLifeline.team === 'A' ? 'B' : 'A')
-    : null;
-
   ['A', 'B'].forEach(team => {
-    const isBlocked = blocked === team;
     const btn = document.createElement('button');
-    btn.className = `btn btn-award ${team}${isBlocked ? ' blocked' : ''}`;
-    btn.textContent = `${isBlocked ? '🕳️' : (team === 'A' ? '🟢' : '🟡')} ${getTeamName(team)}`;
-    if (isBlocked) {
-      btn.disabled = true;
-      btn.title = 'محجوب بـ «الحفرة»';
-    } else {
-      btn.onclick = () => award(team);
-    }
+    btn.className = `btn btn-award ${team}`;
+    btn.textContent = `${team === 'A' ? '🟢' : '🟡'} ${getTeamName(team)}`;
+    btn.onclick = () => award(team);
     container.appendChild(btn);
   });
 }
 
-function award(team, opts = {}) {
+function award(team) {
   if (!current) return;
 
   const pts = POINTS[current.row];
-  const before = pendingSnap || snapshot();
-
-  // «الفخ»: إذا أجاب الفريق الآخر صحيحاً، تذهب النقاط لصاحب الفخ
-  if (team && activeLifeline?.key === 'fakh' && team !== activeLifeline.team) {
-    const trapper = activeLifeline.team;
-    uiAlert(`🪤 وقع ${getTeamName(team)} في فخ ${getTeamName(trapper)}!\nالنقاط (${ar(pts)}) تذهب لـ ${getTeamName(trapper)}.`);
-    team = trapper;
-  }
 
   if (team) {
     scores[team] += pts;
@@ -906,21 +664,21 @@ function award(team, opts = {}) {
     Sound.skip();
   }
 
-  undoStack.push({ ...before, team, pts, cat: current.cat.name });
+  undoStack.push({ ci: current.ci, row: current.row, team, pts, cat: current.cat.name, turn: activeTeam });
   if (undoStack.length > HISTORY_MAX) undoStack.shift();
 
   stateUsed[current.ci][current.row] = true;
-  closeQuestion({ scored: true });
+  closeQuestion();
   renderBoard();
 
-  if (!opts.keepTurn) switchTurn();
-  else renderUndoButtons();
+  switchTurn();
   saveGame();
   if (isGameFinished()) showEndScreen();
 }
 
 /* ---- التراجع عن آخر سؤال ----
-   يرجّع النقاط والخانة والدور ووسائل المساعدة كما كانت قبل فتح السؤال. */
+   يفتح الخانة من جديد، ويشيل نقاطها من الفريق، ويرجّع الدور لصاحبه.
+   ما يلمس أي زيادة أو نقص يدوي صار بعدها. */
 function renderUndoButtons() {
   const last = undoStack[undoStack.length - 1];
   ['btnUndo', 'btnEndUndo'].forEach(id => {
@@ -940,10 +698,9 @@ async function undoLast() {
   if (!await uiConfirm(`↩️ تراجع عن آخر سؤال؟\n\n${last.cat} — ${what}\n\nالخانة ترجع مفتوحة والدور يرجع لصاحبه.`)) return;
 
   undoStack.pop();
-  scores = last.scores;
-  stateUsed = last.stateUsed;
-  lifelineUsed = last.lifelineUsed;
-  activeTeam = last.activeTeam;
+  stateUsed[last.ci][last.row] = false;
+  if (last.team) scores[last.team] -= last.pts;
+  activeTeam = last.turn;
 
   updateGameUI();
   renderBoard();
@@ -952,22 +709,22 @@ async function undoLast() {
   Sound.skip();
 }
 
-function closeQuestion(opts = {}) {
-  // إغلاق بلا احتساب: السؤال ما انلعب، فالوسيلة المفعّلة ترجع لصاحبه
-  const restore = !opts.scored && !!activeLifeline && !!pendingSnap;
-  if (restore) lifelineUsed = clone(pendingSnap.lifelineUsed);
-
+function closeQuestion() {
   $('overlay').classList.remove('show');
   $('cornersBar').style.display = '';
   $('answerCorner').style.display = '';
   clearInterval(qTimer);
   qTimer = null;
   current = null;
-  pendingSnap = null;
-  clearActiveLifeline();
+}
 
-  if (restore) { renderLifelineDisplay(); saveGame(); }
-  else renderQuestionLifelines();
+/* ---- زيادة ونقص يدوي ----
+   لتصحيح أي خطأ أو لمكافأة/خصم يقرره الحَكَم. تُحفظ مع الجولة. */
+function adjustScore(team, delta) {
+  scores[team] += delta;
+  $(`score${team}`).textContent = ar(scores[team]);
+  (delta > 0 ? Sound.select : Sound.skip)();
+  saveGame();
 }
 
 function isGameFinished() {
@@ -1098,17 +855,8 @@ function goSetup() {
 
 function goCategories() {
   Sound.click();
+  // ما نختار فئات تلقائياً — اللاعبون يختارونها بأنفسهم
   selectedCats = selectedCats.filter(c => CATEGORIES.some(x => x.id === c.id));
-  if (selectedCats.length === 0) {
-    // اللوحة تتسع لست: نختار الأكمل أسئلةً ونتجاهل الفاضية، ونحفظ ترتيبها الأصلي
-    selectedCats = CATEGORIES
-      .map((c, i) => ({ c, i, n: countCategoryQuestions(c.id) }))
-      .filter(x => x.n > 0)
-      .sort((a, b) => b.n - a.n || a.i - b.i)
-      .slice(0, 6)
-      .sort((a, b) => a.i - b.i)
-      .map(x => x.c);
-  }
   showScreen('screen-categories');
   renderCatGrid();
 }
@@ -1125,6 +873,9 @@ document.addEventListener('DOMContentLoaded', () => {
   $('btnResume').onclick = resumeGame;
   $('btnUndo').onclick = undoLast;
   $('btnEndUndo').onclick = undoLast;
+  document.querySelectorAll('.score-adj').forEach(b => {
+    b.onclick = () => adjustScore(b.dataset.team, Number(b.dataset.delta));
+  });
   $('btnMute').onclick = () => { Sound.setMuted(!Sound.muted); renderMuteButton(); Sound.click(); };
 
   $('btnNewGame').onclick = goSetup;
@@ -1153,7 +904,7 @@ document.addEventListener('DOMContentLoaded', () => {
     Sound.click();
     uiAlert(
       'كيف نلعب:\n\n' +
-      '١) اكتبوا أسماء الفريقين، وكل فريق يختار ٣ وسائل مساعدة.\n' +
+      '١) اكتبوا أسماء الفريقين.\n' +
       '٢) اللوحة ٦ فئات × ٣ مستويات: ١٠٠ سهل، ٢٥٠ متوسط، ٤٠٠ صعب.\n' +
       '٣) الفريق صاحب الدور يختار خانة، ويقرأ أحدكم السؤال بصوت عالٍ.\n' +
       '٤) بعد الإجابة اضغطوا «عرض الإجابة»، ثم أعطوا النقاط للفريق المستحق أو «بدون نقاط».\n' +
