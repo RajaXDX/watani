@@ -598,6 +598,7 @@ function toggleAnswer() {
   a.classList.toggle('show', showing);
   q.classList.toggle('hide', showing);
   btn.textContent = showing ? 'رجوع للسؤال' : 'عرض الإجابة';
+  if (showing) stopQuestionTimer();
 
   // لو للإجابة صورة، تحلّ مكان صورة السؤال وقت عرض الإجابة
   const am = $('amedia');
@@ -640,6 +641,15 @@ function startQuestionTimer() {
 
   tick();
   qTimer = setInterval(tick, 1000);
+}
+
+// يوقف العدّاد عند الثانية اللي وصلها — عند عرض الإجابة
+function stopQuestionTimer() {
+  if (!qTimer) return;
+  clearInterval(qTimer);
+  qTimer = null;
+  $('btnTimer').disabled = false;
+  $('btnTimer').textContent = '↺ أعد العدّاد';
 }
 
 /* ============================= النقاط ============================= */
