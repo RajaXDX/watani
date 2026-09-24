@@ -103,12 +103,12 @@ header {
   gap: 2px;
 }
 
-/* «المملكة العربية السعودية» بخط الثلث — صغيرة فوق العنوان */
+/* «المملكة العربية السعودية» بخط الثلث فوق العنوان */
 .brand-calligraphy {
   display: block;
   width: auto;
-  height: clamp(17px, 2.5vw, 24px);
-  opacity: 0.92;
+  height: clamp(38px, 6.4vw, 60px);
+  opacity: 1;
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.45));
 }
 
@@ -124,12 +124,6 @@ header {
 }
 
 .brand span { color: var(--sand); }
-
-.dedication {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 2px;
-}
 
 .tag {
   color: var(--muted);
@@ -1244,8 +1238,6 @@ footer p { margin: 4px 0; }
 .about-p { font-size: 14px; line-height: 1.95; color: var(--text); margin: 0 0 12px; }
 .about-p b { color: var(--gold); }
 
-.about-note { font-size: 13px; line-height: 1.9; color: var(--muted); text-align: center; margin: 22px 0 0; }
-.about-note b { color: var(--gold); }
 
 .about-step, .about-block {
   background: var(--panel);
