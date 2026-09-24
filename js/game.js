@@ -50,6 +50,12 @@ const Sound = (function () {
     award()  { tone(523, 0, 0.12, 'triangle', 0.14); tone(659, 0.10, 0.12, 'triangle', 0.14); tone(784, 0.20, 0.22, 'triangle', 0.16); },
     skip()   { tone(300, 0, 0.12, 'sine', 0.10); tone(220, 0.10, 0.18, 'sine', 0.10); },
     start()  { tone(392, 0, 0.10, 'triangle', 0.12); tone(494, 0.10, 0.10, 'triangle', 0.12); tone(587, 0.20, 0.10, 'triangle', 0.12); tone(784, 0.30, 0.25, 'triangle', 0.16); },
+    // انتهى الوقت: ثلاث صفّارات قصيرة ثم جرس طويل واضح
+    timeUp() {
+      [0, 0.18, 0.36].forEach(t => tone(880, t, 0.12, 'square', 0.12));
+      tone(220, 0.56, 0.7, 'sawtooth', 0.16);
+      tone(330, 0.56, 0.7, 'square', 0.08);
+    },
     win()    { [523, 659, 784, 1046].forEach((f, i) => tone(f, i * 0.13, 0.3, 'triangle', 0.15)); },
   };
 })();
@@ -644,7 +650,7 @@ function runQuestionTimer(immediate) {
       clearInterval(qTimer);
       qTimer = null;
       view.textContent = '⏰ انتهى الوقت';
-      Sound.skip();
+      Sound.timeUp();
       $('btnTimer').disabled = false;
       $('btnTimer').textContent = '↺ أعد العدّاد';
     }
