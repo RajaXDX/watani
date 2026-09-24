@@ -1,5 +1,5 @@
 /* =========================================================================
-   اكتشف وطنك مع رجا — منطق اللعبة
+   اكتشف وطنك مع الإمام عاصم — منطق اللعبة
    نسخة محلية بالكامل: لا حسابات ولا سحابة. بنك الأسئلة جاهز في questions.js
    ========================================================================= */
 
@@ -810,8 +810,8 @@ function buildResultText() {
   const a = scores.A, b = scores.B;
   const nameA = getTeamName('A'), nameB = getTeamName('B');
   const header = a === b
-    ? '🤝 تعادل في «اكتشف وطنك مع رجا»!'
-    : `🏆 فاز ${a > b ? nameA : nameB} في «اكتشف وطنك مع رجا»!`;
+    ? '🤝 تعادل في «اكتشف وطنك مع الإمام عاصم»!'
+    : `🏆 فاز ${a > b ? nameA : nameB} في «اكتشف وطنك مع الإمام عاصم»!`;
   return `${header}\n\n🟢 ${nameA}: ${ar(a)}\n🟡 ${nameB}: ${ar(b)}\n\n🇸🇦 كل عام والوطن بخير`;
 }
 
@@ -821,7 +821,7 @@ async function shareResult() {
 
   if (navigator.share) {
     try {
-      await navigator.share({ title: 'اكتشف وطنك مع رجا', text });
+      await navigator.share({ title: 'اكتشف وطنك مع الإمام عاصم', text });
       return;
     } catch (e) {
       if (e?.name === 'AbortError') return;
