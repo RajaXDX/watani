@@ -371,13 +371,16 @@ function renderTeamSetup() {
 
   ['A', 'B'].forEach(team => {
     const first = team === 'A';
+    const fallback = first ? 'الفريق الأول' : 'الفريق الثاني';
+    // الاسم الافتراضي يظهر تلميحاً فقط — لو كان قيمة، الكتابة تنلصق بعده
+    const name = teamSetup[team].name === fallback ? '' : teamSetup[team].name;
     const div = document.createElement('div');
     div.className = `team-setup ${team}`;
     div.innerHTML = `
-      <label for="setupName${team}">${first ? '🟢' : '🟡'} اسم ${first ? 'الفريق الأول' : 'الفريق الثاني'}</label>
+      <label for="setupName${team}">${first ? '🟢' : '🟡'} اسم ${fallback}</label>
       <input type="text" id="setupName${team}" maxlength="18"
-             placeholder="${first ? 'الفريق الأول' : 'الفريق الثاني'}"
-             value="${escapeHtml(teamSetup[team].name)}">
+             placeholder="${fallback}"
+             value="${escapeHtml(name)}">
     `;
     container.appendChild(div);
 
@@ -582,6 +585,8 @@ function openQuestion(ci, row) {
 
   resetQuestionTimer();
   $('overlay').classList.add('show');
+  // العدّاد يبدأ تلقائياً مع فتح السؤال
+  if (item) startQuestionTimer();
 }
 
 function toggleAnswer() {
