@@ -190,7 +190,10 @@ if (!Array.isArray(POINTS) || POINTS.length !== 3) POINTS = [100, 250, 400];
 
 /* ---- أسماء فئات أصلية تغيّرت ----
    البنك المحفوظ يحمل الاسم القديم، فنبدّله فقط لو ما عدّله صاحب الجهاز. */
-const RENAMED_DEFAULTS = { turath: { from: 'تراث وفلكلور', to: 'تراث' } };
+const RENAMED_DEFAULTS = {
+  turath: { from: 'تراث وفلكلور', to: 'تراث' },
+  rumooz: { from: 'رموز الوطن', to: 'العلم والنشيد الوطني' },
+};
 (function renameOldDefaults() {
   let changed = false;
   CATEGORIES.forEach(c => {
