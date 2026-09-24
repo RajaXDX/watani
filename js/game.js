@@ -309,6 +309,8 @@ let scores = { A: 0, B: 0 };
 let current = null;         // { ci, row, cat }
 let activeTeam = null;      // صاحب الدور
 let qTimer = null;
+let qLeft = 0;          // الثواني الباقية في العدّاد
+let qPaused = false;    // موقوف مؤقتاً وقت عرض الإجابة
 let undoStack = [];         // { ci, row, team, pts, cat, turn } لكل سؤال انحسب — للتراجع
 
 /* ---- حفظ الجولة الجارية ----
@@ -601,7 +603,7 @@ function toggleAnswer() {
   a.classList.toggle('show', showing);
   q.classList.toggle('hide', showing);
   btn.textContent = showing ? 'رجوع للسؤال' : 'عرض الإجابة';
-  if (showing) stopQuestionTimer();
+  if (showing) pauseQuestionTimer(); else resumeQuestionTimer();
 
   // لو للإجابة صورة، تحلّ مكان صورة السؤال وقت عرض الإجابة
   const am = $('amedia');
@@ -615,6 +617,7 @@ function toggleAnswer() {
 function resetQuestionTimer() {
   clearInterval(qTimer);
   qTimer = null;
+  qPaused = false;
   $('timerView').textContent = '';
   $('timerView').classList.remove('low');
   $('btnTimer').textContent = `⏱️ ابدأ العدّاد (${ar(QTIMER_SECONDS)} ثانية)`;
@@ -622,16 +625,22 @@ function resetQuestionTimer() {
 }
 
 function startQuestionTimer() {
+  qLeft = QTIMER_SECONDS;
+  runQuestionTimer(true);
+}
+
+// يشغّل العدّاد من qLeft — immediate يعرض الثانية الحالية فوراً (بداية جديدة)
+function runQuestionTimer(immediate) {
   clearInterval(qTimer);
-  let left = QTIMER_SECONDS;
+  qPaused = false;
   const view = $('timerView');
   $('btnTimer').disabled = true;
   $('btnTimer').textContent = '⏱️ العدّاد شغّال';
 
   const tick = () => {
-    view.textContent = `${ar(left)} ثانية`;
-    view.classList.toggle('low', left <= 10);
-    if (left <= 0) {
+    view.textContent = `${ar(qLeft)} ثانية`;
+    view.classList.toggle('low', qLeft <= 10);
+    if (qLeft <= 0) {
       clearInterval(qTimer);
       qTimer = null;
       view.textContent = '⏰ انتهى الوقت';
@@ -639,20 +648,26 @@ function startQuestionTimer() {
       $('btnTimer').disabled = false;
       $('btnTimer').textContent = '↺ أعد العدّاد';
     }
-    left--;
+    qLeft--;
   };
 
-  tick();
+  if (immediate) tick();
   qTimer = setInterval(tick, 1000);
 }
 
-// يوقف العدّاد عند الثانية اللي وصلها — عند عرض الإجابة
-function stopQuestionTimer() {
+// يوقف العدّاد مؤقتاً عند الثانية اللي وصلها — عند عرض الإجابة
+function pauseQuestionTimer() {
   if (!qTimer) return;
   clearInterval(qTimer);
   qTimer = null;
+  qPaused = true;
   $('btnTimer').disabled = false;
   $('btnTimer').textContent = '↺ أعد العدّاد';
+}
+
+// يكمل من حيث وقف — عند الرجوع للسؤال
+function resumeQuestionTimer() {
+  if (qPaused) runQuestionTimer(false);
 }
 
 /* ============================= النقاط ============================= */
