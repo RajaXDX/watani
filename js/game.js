@@ -831,22 +831,23 @@ async function shareResult() {
   window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
 }
 
-/* ============================= العدّ لليوم الوطني ============================= */
+/* ============================= كم مضى على اليوم الوطني ============================= */
 function renderNationalDayCount() {
   const now = new Date();
-  const year = now.getMonth() > 8 || (now.getMonth() === 8 && now.getDate() > 23)
-    ? now.getFullYear() + 1
+  const year = now.getMonth() < 8 || (now.getMonth() === 8 && now.getDate() < 23)
+    ? now.getFullYear() - 1
     : now.getFullYear();
 
-  const target = new Date(year, 8, 23);           // ٢٣ سبتمبر
+  const last = new Date(year, 8, 23);             // آخر ٢٣ سبتمبر مرّ
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const days = Math.round((target - today) / 86400000);
+  const days = Math.round((today - last) / 86400000);
 
   const el = $('ndCount');
   if (days === 0) el.textContent = '🇸🇦 اليوم هو اليوم الوطني';
-  else if (days === 1) el.textContent = 'باقي يوم واحد على ٢٣ سبتمبر';
-  else if (days === 2) el.textContent = 'باقي يومان على ٢٣ سبتمبر';
-  else el.textContent = `باقي ${ar(days)} يوماً على ٢٣ سبتمبر`;
+  else if (days === 1) el.textContent = 'مضى يوم واحد على ٢٣ سبتمبر';
+  else if (days === 2) el.textContent = 'مضى يومان على ٢٣ سبتمبر';
+  else if (days <= 10) el.textContent = `مضت ${ar(days)} أيام على ٢٣ سبتمبر`;
+  else el.textContent = `مضى ${ar(days)} يوماً على ٢٣ سبتمبر`;
 }
 
 /* ============================= العمل بدون إنترنت ============================= */
