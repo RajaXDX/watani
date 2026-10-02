@@ -1,0 +1,1107 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>توأمي الرقمي</title>
+<meta name="description" content="نسخة رقمية منك تتعلم من كلامك واختياراتك واهتماماتك، وتعيش معها في عالم افتراضي وتتوقع وش بتختار.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f1ea; --bg2:#ebe6db; --card:#fffdf8; --ink:#1f1d1a; --muted:#6d675d; --line:#ddd5c6;
+  --accent:#0f7b6c; --accent-ink:#ffffff; --accent-soft:#d8efe9;
+  --twin:#6a4bc4; --twin-soft:#ebe5fa; --you:#c76a1d; --you-soft:#fbe9d8;
+  --good:#2e8b4f; --bad:#c0443a;
+  --sky1:#bfe3f2; --sky2:#f6efd9; --ground:#d9cfae; --ground2:#cbbf97; --road:#efe7d2; --water:#7cc3d8; --sand:#ead9a7;
+  --shadow:0 1px 2px rgba(0,0,0,.06),0 6px 20px rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15161a; --bg2:#1c1d22; --card:#212228; --ink:#ece9e2; --muted:#a29c90; --line:#33343b;
+    --accent:#3cc3ac; --accent-ink:#0d1714; --accent-soft:#16332e;
+    --twin:#a58cf0; --twin-soft:#2a2442; --you:#f0a35c; --you-soft:#3a2a1b;
+    --good:#5cc684; --bad:#ef7d72;
+    --sky1:#1b2540; --sky2:#28263a; --ground:#3a3628; --ground2:#2f2c21; --road:#4a4535; --water:#24576a; --sand:#5a4f33;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15161a; --bg2:#1c1d22; --card:#212228; --ink:#ece9e2; --muted:#a29c90; --line:#33343b;
+  --accent:#3cc3ac; --accent-ink:#0d1714; --accent-soft:#16332e;
+  --twin:#a58cf0; --twin-soft:#2a2442; --you:#f0a35c; --you-soft:#3a2a1b;
+  --good:#5cc684; --bad:#ef7d72;
+  --sky1:#1b2540; --sky2:#28263a; --ground:#3a3628; --ground2:#2f2c21; --road:#4a4535; --water:#24576a; --sand:#5a4f33;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",system-ui,"Segoe UI",Tahoma,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button{font:inherit;color:inherit;cursor:pointer}
+input,textarea{font:inherit;color:inherit}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px}
+
+/* Header */
+header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:12px;padding:10px 0}
+.brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.brand h1{font-size:1.05rem;margin:0;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand small{display:block;color:var(--muted);font-size:.78rem;line-height:1.3}
+.know{display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--muted)}
+.know .meter{width:80px;height:6px;border-radius:9px;background:var(--line);overflow:hidden}
+.know .meter i{display:block;height:100%;background:var(--twin);width:0;transition:width .6s}
+.iconbtn{border:1px solid var(--line);background:var(--card);border-radius:10px;width:36px;height:36px;display:grid;place-items:center}
+nav.tabs{display:flex;gap:4px;padding-bottom:10px;overflow-x:auto;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{border:0;background:transparent;padding:7px 14px;border-radius:999px;color:var(--muted);font-weight:600;white-space:nowrap;font-size:.92rem}
+nav.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+
+/* Avatars */
+.ava{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:700;flex:none;position:relative}
+.ava.twin{background:var(--twin-soft);color:var(--twin);box-shadow:inset 0 0 0 2px var(--twin)}
+.ava.you{background:var(--you-soft);color:var(--you);box-shadow:inset 0 0 0 2px var(--you)}
+.ava.twin::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px dashed var(--twin);opacity:.5;animation:spin 12s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+main{padding:20px 0 60px}
+section.panel{display:none}
+section.panel.on{display:block;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow)}
+.stack>*+*{margin-top:16px}
+h2{font-size:1.35rem;margin:0 0 4px}
+h3{font-size:1.02rem;margin:0 0 8px}
+p.lead{color:var(--muted);margin:0}
+.btn{border:0;border-radius:12px;padding:10px 18px;font-weight:600;background:var(--accent);color:var(--accent-ink);transition:transform .1s,filter .2s}
+.btn:hover{filter:brightness(1.07)}
+.btn:active{transform:scale(.98)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.twin{background:var(--twin);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.muted{color:var(--muted)}
+.small{font-size:.85rem}
+
+/* Teach / quiz */
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.progress{height:6px;border-radius:9px;background:var(--line);overflow:hidden;margin:6px 0 18px}
+.progress i{display:block;height:100%;background:var(--accent);transition:width .4s}
+.qtext{font-size:1.3rem;font-weight:700;margin:0 0 16px}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.choice{border:1.5px solid var(--line);background:var(--bg);border-radius:16px;padding:18px;text-align:start;font-weight:600;font-size:1.02rem;transition:border-color .2s,transform .15s,background .2s;position:relative}
+.choice:hover{border-color:var(--accent);transform:translateY(-2px)}
+.choice .em{font-size:1.6rem;display:block;margin-bottom:6px}
+.choice.picked{border-color:var(--accent);background:var(--accent-soft)}
+.choice.guess::after{content:"توقّع توأمك";position:absolute;top:-10px;left:12px;background:var(--twin);color:#fff;font-size:.72rem;padding:1px 8px;border-radius:99px}
+.guessline{margin-top:14px;font-size:.9rem;color:var(--twin);min-height:1.6em}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 14px;font-size:.92rem}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.chip.like{background:var(--accent-soft);border-color:transparent}
+.chip.dislike{background:color-mix(in srgb,var(--bad) 15%,transparent);border-color:transparent}
+.chip .x{margin-inline-start:6px;opacity:.6;border:0;background:none;padding:0}
+textarea{width:100%;min-height:96px;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:12px;resize:vertical}
+input[type=text]{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 12px}
+textarea:focus,input:focus{outline:2px solid var(--accent);outline-offset:1px}
+
+/* World */
+.world{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);background:var(--sky2)}
+.world svg{display:block;width:100%;height:auto}
+.place{cursor:pointer}
+.place .pin{transition:transform .2s;transform-box:fill-box;transform-origin:center bottom}
+.place:hover .pin,.place.active .pin{transform:scale(1.12)}
+.place text{font-family:inherit;font-weight:700;fill:var(--ink);font-size:15px}
+.place .lbl{fill:var(--card);stroke:var(--line)}
+.place.active .lbl{fill:var(--accent);stroke:var(--accent)}
+.place.active text.name{fill:var(--accent-ink)}
+.agent{transition:transform 1.1s cubic-bezier(.5,0,.3,1)}
+.agent .bob{animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-4px)}}
+.cloud{animation:drift 60s linear infinite}
+@keyframes drift{from{transform:translateX(-200px)}to{transform:translateX(1000px)}}
+.worldbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 12px;flex-wrap:wrap}
+.clock{font-size:.85rem;color:var(--muted)}
+.scene{margin-top:16px}
+.scene .where{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.scene .where .em{font-size:1.8rem}
+.bubble{border-radius:16px;padding:12px 16px;max-width:100%}
+.bubble.twin{background:var(--twin-soft);border:1px solid color-mix(in srgb,var(--twin) 30%,transparent)}
+.bubble.you{background:var(--you-soft);border:1px solid color-mix(in srgb,var(--you) 30%,transparent)}
+.say{display:flex;gap:10px;align-items:flex-start}
+.probs{margin-top:10px;display:grid;gap:6px}
+.prob{display:grid;grid-template-columns:minmax(0,1fr) 46px;gap:8px;align-items:center;font-size:.88rem}
+.prob .bar{height:8px;border-radius:9px;background:color-mix(in srgb,var(--twin) 15%,transparent);overflow:hidden;grid-column:1/-1}
+.prob .bar i{display:block;height:100%;background:var(--twin);width:0;transition:width .8s}
+.prob .lab{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prob .pc{text-align:left;font-variant-numeric:tabular-nums;color:var(--muted)}
+.verdict{margin-top:12px;padding:10px 14px;border-radius:12px;font-weight:600}
+.verdict.ok{background:color-mix(in srgb,var(--good) 15%,transparent);color:var(--good)}
+.verdict.no{background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad)}
+.choice.right{border-color:var(--good)}
+.choice.picked.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,transparent)}
+
+/* Chat */
+.chat{display:flex;flex-direction:column;height:min(70vh,640px);padding:0;overflow:hidden}
+.msgs{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
+.msg{display:flex;gap:8px;align-items:flex-end;max-width:88%}
+.msg .ava{width:30px;height:30px;font-size:.8rem}
+.msg .ava.twin::after{display:none}
+.msg.me{align-self:flex-start;flex-direction:row}
+.msg.tw{align-self:flex-end;flex-direction:row-reverse}
+.msg .b{padding:9px 14px;border-radius:16px;white-space:pre-wrap;word-wrap:break-word}
+.msg.me .b{background:var(--you-soft);border-bottom-right-radius:4px}
+.msg.tw .b{background:var(--twin-soft);border-bottom-left-radius:4px}
+.msg .opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.msg .opts button{border:1px solid var(--twin);background:var(--card);color:var(--twin);border-radius:999px;padding:3px 12px;font-size:.85rem}
+.msg .opts button:disabled{opacity:.4}
+.msg .opts button.sel{background:var(--twin);color:#fff;opacity:1}
+.typing span{display:inline-block;width:6px;height:6px;margin:0 2px;border-radius:50%;background:var(--twin);animation:blink 1s infinite}
+.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+@keyframes blink{50%{opacity:.2}}
+.composer{border-top:1px solid var(--line);padding:10px;display:flex;gap:8px;background:var(--card)}
+.composer input{flex:1}
+.suggest{display:flex;gap:6px;overflow-x:auto;padding:8px 10px 0;background:var(--card);border-top:1px solid var(--line);scrollbar-width:none}
+.suggest::-webkit-scrollbar{display:none}
+.suggest button{flex:none;border:1px dashed var(--line);background:transparent;border-radius:999px;padding:3px 12px;font-size:.82rem;color:var(--muted)}
+
+/* Profile */
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.trait{margin:12px 0}
+.trait .ends{display:flex;justify-content:space-between;font-size:.82rem;color:var(--muted)}
+.trait .axis{position:relative;height:10px;border-radius:9px;background:var(--line);margin-top:4px}
+.trait .axis::before{content:"";position:absolute;top:-3px;bottom:-3px;left:50%;width:1px;background:var(--muted);opacity:.5}
+.trait .dot{position:absolute;top:50%;width:18px;height:18px;border-radius:50%;background:var(--twin);border:3px solid var(--card);transform:translate(50%,-50%);transition:right .6s;right:50%;box-shadow:0 0 0 1px var(--twin)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center}
+.stat b{display:block;font-size:1.5rem;font-variant-numeric:tabular-nums}
+.stat span{font-size:.8rem;color:var(--muted)}
+.hist{list-style:none;padding:0;margin:0;font-size:.88rem}
+.hist li{padding:8px 0;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:baseline}
+.hist li:last-child{border:0}
+.tag{font-size:.75rem;padding:0 8px;border-radius:99px;flex:none}
+.tag.ok{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}
+.tag.no{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
+.portrait{font-size:1.02rem;line-height:1.9}
+
+/* Modal */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.45);display:none;place-items:center;padding:16px}
+.modal.on{display:grid}
+.modal .card{max-width:440px;width:100%}
+.swatches{display:flex;gap:8px}
+.swatches button{width:32px;height:32px;border-radius:50%;border:3px solid var(--card);box-shadow:0 0 0 1px var(--line)}
+.swatches button[aria-pressed="true"]{box-shadow:0 0 0 2px var(--ink)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:12px;opacity:0;transition:.3s;z-index:60;font-size:.9rem;pointer-events:none;max-width:calc(100% - 32px)}
+.toast.on{opacity:1;transform:translateX(-50%)}
+@media (max-width:560px){
+  .know .meter{width:50px}
+  .qtext{font-size:1.12rem}
+  .card{padding:16px}
+  .msg{max-width:94%}
+  .place text{font-size:19px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="hbar">
+      <div class="brand">
+        <div class="ava twin" id="hAva">؟</div>
+        <div style="min-width:0">
+          <h1 id="hName">توأمك الرقمي</h1>
+          <small id="hSub">نسخة منك تتعلم منك</small>
+        </div>
+      </div>
+      <div class="know" title="كم يعرفك توأمك">
+        <span id="knowPct">٠٪</span>
+        <div class="meter"><i id="knowBar"></i></div>
+      </div>
+      <button class="iconbtn" id="themeBtn" aria-label="تبديل المظهر">◐</button>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-tab="teach" aria-selected="true">علّمني عنك</button>
+      <button role="tab" data-tab="world" aria-selected="false">العالم</button>
+      <button role="tab" data-tab="chat" aria-selected="false">سولف معي</button>
+      <button role="tab" data-tab="profile" aria-selected="false">وش أعرف عنك</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- TEACH -->
+  <section class="panel on" id="p-teach">
+    <div class="stack">
+      <div>
+        <h2>علّم توأمك كيف تفكر</h2>
+        <p class="lead">كل اختيار تسويه هنا يتعلم منه. وبعد كم سؤال بيبدأ يتوقع جوابك قبل لا تختار.</p>
+      </div>
+
+      <div class="card" id="quizCard">
+        <div class="qhead">
+          <span class="muted small" id="qCount"></span>
+          <button class="btn ghost small" id="qSkip" style="padding:4px 12px">تخطّي</button>
+        </div>
+        <div class="progress"><i id="qProg"></i></div>
+        <p class="qtext" id="qText"></p>
+        <div class="choices" id="qChoices"></div>
+        <div class="guessline" id="qGuess"></div>
+      </div>
+
+      <div class="card">
+        <h3>وش تحب؟</h3>
+        <p class="muted small" style="margin:0 0 12px">اختر اهتماماتك. توأمك بيستخدمها لما يتوقع اختياراتك.</p>
+        <div class="chips" id="interestChips"></div>
+      </div>
+
+      <div class="card">
+        <h3>احكِ له عن نفسك</h3>
+        <p class="muted small" style="margin:0 0 12px">اكتب بأسلوبك. مثلاً: «أحب القهوة والسفر، وما أحب الزحمة، وأنا شخص أخطط لكل شي».</p>
+        <textarea id="aboutText" placeholder="أنا شخص…"></textarea>
+        <div class="row" style="margin-top:10px;justify-content:space-between">
+          <span class="muted small" id="aboutResult"></span>
+          <button class="btn" id="aboutBtn">علّمه</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORLD -->
+  <section class="panel" id="p-world">
+    <div class="worldbar">
+      <div>
+        <h2>عالمكم</h2>
+        <p class="lead">اضغط على أي مكان وتروحون له سوا. هناك بتواجه مواقف، واسأله: «وش تتوقع إني أختار؟»</p>
+      </div>
+      <span class="clock" id="clock"></span>
+    </div>
+    <div class="world" id="world"></div>
+    <div class="scene card" id="scene"></div>
+  </section>
+
+  <!-- CHAT -->
+  <section class="panel" id="p-chat">
+    <div class="card chat">
+      <div class="msgs" id="msgs" aria-live="polite"></div>
+      <div class="suggest" id="suggest"></div>
+      <form class="composer" id="composer">
+        <input type="text" id="chatIn" autocomplete="off" placeholder="وش تتوقع إني أختار: بيتزا ولا برجر؟">
+        <button class="btn twin" type="submit">إرسال</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- PROFILE -->
+  <section class="panel" id="p-profile">
+    <div class="stack">
+      <div class="card">
+        <div class="say">
+          <div class="ava twin" id="pAva">؟</div>
+          <div>
+            <h3 id="pTitle">وش أعرف عنك</h3>
+            <div class="portrait" id="portrait"></div>
+          </div>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="card">
+          <h3>طريقة تفكيرك</h3>
+          <div id="traits"></div>
+        </div>
+        <div class="card stack">
+          <div>
+            <h3>دقة توقعاتي</h3>
+            <div class="stats">
+              <div class="stat"><b id="sPred">٠</b><span>توقّع</span></div>
+              <div class="stat"><b id="sHit">٠</b><span>صح</span></div>
+              <div class="stat"><b id="sAcc">—</b><span>الدقة</span></div>
+            </div>
+          </div>
+          <div>
+            <h3>اللي تحبه</h3>
+            <div class="chips" id="likesBox"></div>
+          </div>
+          <div>
+            <h3>اللي ما تحبه</h3>
+            <div class="chips" id="dislikesBox"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>آخر اختياراتك</h3>
+        <ul class="hist" id="hist"></ul>
+      </div>
+      <div class="row">
+        <button class="btn ghost" id="exportBtn">تصدير بياناتي</button>
+        <button class="btn ghost" id="renameBtn">تغيير الاسم</button>
+        <button class="btn ghost" id="resetBtn" style="color:var(--bad)">امسح توأمي وابدأ من جديد</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Onboarding -->
+<div class="modal" id="onboard">
+  <div class="card stack">
+    <div class="say">
+      <div class="ava twin">✦</div>
+      <div>
+        <h2>هلا! أنا نسختك الرقمية</h2>
+        <p class="lead">لسه ما أعرف عنك شي. علّمني بكلامك واختياراتك، وبعدها نعيش سوا في عالم صغير وأحاول أتوقع وش بتختار.</p>
+      </div>
+    </div>
+    <label>
+      <span class="small muted">وش اسمك؟</span>
+      <input type="text" id="obName" maxlength="24" placeholder="اسمك">
+    </label>
+    <div>
+      <span class="small muted">لون توأمك</span>
+      <div class="swatches" id="swatches" style="margin-top:6px"></div>
+    </div>
+    <button class="btn twin" id="obGo">يلا نبدأ</button>
+    <p class="muted small" style="margin:0">كل شي يتخزن على جهازك بس.</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+"use strict";
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const el = (tag, attrs = {}, ...kids) => {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") n.className = v;
+    else if (k === "html") n.innerHTML = v;
+    else if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
+    else n.setAttribute(k, v);
+  }
+  for (const c of kids.flat()) if (c != null) n.append(c);
+  return n;
+};
+const AR = n => String(n).replace(/\d/g, d => "٠١٢٣٤٥٦٧٨٩"[d]);
+const pct = x => AR(Math.round(x * 100)) + "٪";
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const norm = s => String(s).toLowerCase()
+  .replace(/[ً-ْـ]/g, "")
+  .replace(/[أإآٱ]/g, "ا").replace(/ى/g, "ي").replace(/ة/g, "ه").replace(/ؤ/g, "و").replace(/ئ/g, "ي")
+  .replace(/\s+/g, " ").trim();
+const stem = w => w.replace(/^(وال|بال|فال|كال|لل|ال|و|ب)(?=..)/, "");
+const tokens = s => norm(s).split(/[^\p{L}\p{N}]+/u).filter(w => w.length >= 2).map(stem).filter(w => w.length >= 2);
+const toast = msg => { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("on"), 2200); };
+
+/* ---------- personality model ---------- */
+const TRAITS = ["adv", "soc", "logic", "lux", "new", "active", "plan"];
+const TI = {
+  adv:    { pos: "مغامر",       neg: "تحب المضمون",  posL: "تحب المغامرة وما تخاف من المخاطرة", negL: "تفضّل الأمان والشي المضمون" },
+  soc:    { pos: "اجتماعي",      neg: "تحب وقتك لحالك", posL: "تحب الناس والجمعات", negL: "ترتاح بوقتك لحالك" },
+  logic:  { pos: "عقلاني",       neg: "عاطفي",       posL: "تقرر بعقلك وتحسبها صح", negL: "تمشي ورا إحساسك وقلبك" },
+  lux:    { pos: "تحب الرفاهية",  neg: "موفّر",        posL: "ما تبخل على نفسك بالأشياء الحلوة", negL: "تحسبها وتحب التوفير" },
+  new:    { pos: "تحب الجديد",    neg: "وفي لعاداتك",  posL: "تحب تجرب أشياء جديدة", negL: "وفي للشي اللي تعرفه وتحبه" },
+  active: { pos: "نشيط",         neg: "رايق",         posL: "تحب الحركة والنشاط", negL: "تحب الهدوء والراحة" },
+  plan:   { pos: "مخطط",         neg: "عفوي",         posL: "تخطط لكل شي قبل لا تسويه", negL: "عفوي وتحبها على البركة" }
+};
+
+// word → trait vector (normalized keys, matched as substrings)
+const LEX = [
+  ["مغامر", {adv:1,new:.5}], ["مخاطر", {adv:1}], ["تجربه", {new:.8}], ["جديد", {new:.8}], ["غريب", {new:.6,adv:.3}],
+  ["سفر", {adv:.5,new:.6}], ["سافر", {adv:.5,new:.6}], ["تخييم", {adv:.5,lux:-.4}], ["كشته", {adv:.4,soc:.4,lux:-.3}], ["بر ", {adv:.3}],
+  ["غوص", {adv:1,active:.6}], ["قفز", {adv:1}], ["سرعه", {adv:.6}], ["تطعيس", {adv:1,active:.5}],
+  ["هدوء", {active:-.8,soc:-.4}], ["هادي", {active:-.7,soc:-.3}], ["راحه", {active:-.7}], ["استرخا", {active:-.8}], ["نوم", {active:-.8}], ["بيت", {adv:-.4,soc:-.4}], ["زحمه", {soc:.8}],
+  ["اصدقا", {soc:1}], ["ربع", {soc:1}], ["شله", {soc:1}], ["شباب", {soc:.8}], ["جمعه", {soc:.9}], ["عزيمه", {soc:1}], ["حفله", {soc:1,active:.3}], ["ناس", {soc:.8}], ["سوالف", {soc:.8}], ["اهل", {soc:.5,new:-.3}],
+  ["لحالي", {soc:-1}], ["وحدي", {soc:-1}], ["بروحي", {soc:-1}], ["انطوا", {soc:-1}],
+  ["رياضه", {active:1}], ["نادي", {active:.9}], ["جري", {active:1}], ["مشي", {active:.7}], ["كوره", {active:.8,soc:.4}], ["سباحه", {active:1}], ["جيم", {active:1}],
+  ["قرا", {logic:.5,active:-.4}], ["كتاب", {logic:.5,active:-.4}], ["وثائقي", {logic:.8}], ["فيلم", {active:-.3}], ["مسلسل", {active:-.5}], ["العاب", {active:-.2,logic:.2}],
+  ["فخم", {lux:1}], ["غالي", {lux:1}], ["فاخر", {lux:1}], ["vip", {lux:1}], ["ماركه", {lux:.8}], ["رخيص", {lux:-.8}], ["توفير", {lux:-1,plan:.4}], ["خصم", {lux:-.6}], ["عرض", {lux:-.4}],
+  ["خطه", {plan:1}], ["اخطط", {plan:1}], ["جدول", {plan:1}], ["ترتيب", {plan:.8}], ["منظم", {plan:1}], ["عفوي", {plan:-1}], ["فجاه", {plan:-.8}], ["البركه", {plan:-1}],
+  ["ارقام", {logic:1}], ["منطق", {logic:1}], ["عقل", {logic:.8}], ["مقارن", {logic:.8}], ["احساس", {logic:-1}], ["قلب", {logic:-.8}], ["مشاعر", {logic:-1}], ["دراما", {logic:-.7}],
+  ["معتاد", {new:-1}], ["دايم", {new:-.6}], ["تقليد", {new:-.8}], ["تاريخ", {new:-.3,logic:.3}], ["تراث", {new:-.5}],
+  ["تقنيه", {logic:.7,new:.5}], ["برمج", {logic:.8,new:.4}], ["طبخ", {plan:.3,new:.2}], ["تسوق", {lux:.6,soc:.2}], ["سيار", {adv:.4,lux:.3}],
+  ["اكشن", {adv:.8,active:.5}], ["رعب", {adv:.7}], ["كوميد", {soc:.5}], ["موسيقى", {logic:-.3}], ["رسم", {logic:-.4,new:.3}], ["فن", {logic:-.4,new:.3}]
+];
+const lexVec = text => {
+  const t = " " + norm(text) + " ", v = {};
+  for (const [w, vec] of LEX) if (t.includes(w)) for (const k in vec) v[k] = (v[k] || 0) + vec[k];
+  return v;
+};
+
+/* ---------- content ---------- */
+const QUIZ = [
+  { q: "إجازتك المثالية؟", o: [["🏨", "فندق خمس نجوم وخدمة غرف", {lux:1,adv:-.3}], ["⛺", "خيمة بالبر تحت النجوم", {lux:-1,adv:.6}]] },
+  { q: "لما تقرر شي مهم، تمشي ورا؟", o: [["🧠", "عقلي والأرقام", {logic:1}], ["❤️", "قلبي وإحساسي", {logic:-1}]] },
+  { q: "نهاية الأسبوع؟", o: [["🎉", "جمعة كبيرة مع الربع", {soc:1}], ["🎧", "أنا ونفسي وهدوء", {soc:-1,active:-.3}]] },
+  { q: "رحت مطعم، وش تطلب؟", o: [["🌶️", "طبق ما جربته قبل", {new:1,adv:.4}], ["🍽️", "طلبي المعتاد", {new:-1}]] },
+  { q: "قبل السفر؟", o: [["🗂️", "جدول مفصّل بالساعة", {plan:1}], ["🎲", "نقرر هناك على البركة", {plan:-1,adv:.3}]] },
+  { q: "يومك المثالي فيه؟", o: [["🏃", "رياضة وحركة", {active:1}], ["🛋️", "كنبة ومسلسل", {active:-1}]] },
+  { q: "معك مبلغ تستثمره؟", o: [["🛡️", "مضمون وربحه قليل", {adv:-1,logic:.3}], ["🚀", "مخاطرة وربحه كبير", {adv:1}]] },
+  { q: "تشتري هدية لشخص غالي؟", o: [["💎", "شي غالي وفخم", {lux:1}], ["✍️", "شي بسيط من القلب", {lux:-.6,logic:-.5}]] },
+  { q: "واجهتك مشكلة؟", o: [["🔧", "أحلها بنفسي", {soc:-.6,logic:.4}], ["🗣️", "أستشير اللي حولي", {soc:.8}]] },
+  { q: "أي نوع ألعاب؟", o: [["♟️", "استراتيجية وتفكير", {logic:1,plan:.5}], ["🎮", "أكشن سريع", {active:.6,adv:.6,plan:-.4}]] },
+  { q: "الصباح عندك؟", o: [["🌅", "أصحى بدري ويومي مرتب", {plan:.8,active:.5}], ["🌙", "سهران وأصحى متأخر", {plan:-.6,active:-.3}]] },
+  { q: "الأكل؟", o: [["🍜", "أجرب أكلات الشعوب", {new:1,adv:.5}], ["🍛", "كبسة الوالدة ولا غيرها", {new:-1}]] },
+  { q: "اشتريت جهاز جديد؟", o: [["📖", "أقرأ الدليل كامل", {plan:1,logic:.6}], ["👆", "أشغله وأتعلم بالتجربة", {plan:-.8,adv:.4}]] },
+  { q: "في العزايم أنت؟", o: [["🎤", "أبو السوالف والضحك", {soc:1}], ["👀", "أسمع أكثر من ما أتكلم", {soc:-.7}]] }
+];
+
+const INTERESTS = ["قهوة", "سفر", "رياضة", "كورة", "قراءة", "أفلام", "ألعاب", "تقنية", "برمجة", "طبخ", "تصوير", "موسيقى", "كشتات", "تسوق", "سيارات", "رسم", "بحر", "تاريخ"];
+
+const PLACES = [
+  { id: "home",    name: "البيت",   em: "🏠", x: 400, y: 285 },
+  { id: "cafe",    name: "الكوفي",  em: "☕", x: 160, y: 150 },
+  { id: "cinema",  name: "السينما", em: "🎬", x: 400, y: 120 },
+  { id: "market",  name: "المول",   em: "🛍️", x: 640, y: 150 },
+  { id: "office",  name: "الدوام",  em: "💼", x: 150, y: 400 },
+  { id: "desert",  name: "البر",    em: "🏕️", x: 170, y: 275 },
+  { id: "beach",   name: "البحر",   em: "🏖️", x: 655, y: 395 },
+  { id: "airport", name: "المطار",  em: "✈️", x: 410, y: 430 }
+];
+
+const SCEN = {
+  home: [
+    { q: "ليلة الخميس، وش الخطة؟", o: [["أعزم الربع عندي", {soc:1}], ["مسلسل ونوم بدري", {soc:-.8,active:-.8}], ["أتعلم شي جديد، كورس أو هواية", {new:.8,logic:.5}]] },
+    { q: "جعت، وش العشا؟", o: [["أطبخ وصفة جديدة", {new:1,plan:.3}], ["أطلب من مطعمي المعتاد", {new:-1,lux:.4}], ["أي شي موجود بالثلاجة", {lux:-.8,plan:-.5}]] },
+    { q: "عندك يوم إجازة فاضي فجأة", o: [["أرتب البيت وأنجز المؤجل", {plan:1,active:.4}], ["أطلع بدون وجهة وأشوف", {plan:-1,adv:.6}], ["ما أسوي شي، أرتاح", {active:-1}]] }
+  ],
+  cafe: [
+    { q: "طابور الكوفي طويل، وش تطلب؟", o: [["طلبي المعتاد", {new:-1,adv:-.4}], ["مشروب الموسم الجديد", {new:1,adv:.5}], ["قهوة سعودية مع تمر", {new:-.5,lux:-.3}]] },
+    { q: "وين تجلس؟", o: [["زاوية هادئة مع سماعاتي", {soc:-1,active:-.4}], ["طاولة كبيرة وسط الناس", {soc:1}], ["الجلسة الخارجية أتأمل الشارع", {new:.3,adv:.2}]] },
+    { q: "صديقك تأخر ساعة", o: [["أفتح اللابتوب وأنجز", {logic:.7,plan:.6}], ["أتصل عليه وأسولف", {soc:.8,logic:-.3}], ["أمشي ونخليها مرة ثانية", {soc:-.4,plan:.3}]] }
+  ],
+  cinema: [
+    { q: "أي فيلم تدخل؟", o: [["أكشن ومطاردات", {adv:1,active:.6}], ["دراما تبكّي", {logic:-1}], ["وثائقي عن الفضاء", {logic:1,new:.4}], ["كوميدي مع الشلة", {soc:1}]] },
+    { q: "التذاكر؟", o: [["VIP وكراسي تنسدح", {lux:1}], ["عادي ونوفر للفشار", {lux:-1}], ["أنتظره ينزل على المنصات", {lux:-.8,soc:-.6,active:-.4}]] }
+  ],
+  market: [
+    { q: "تبي جوال جديد", o: [["الأحدث والأغلى", {lux:1,new:.6}], ["أقارن المواصفات بالسعر", {logic:1,plan:.6,lux:-.3}], ["اللي الناس يمدحونه", {soc:.6,logic:-.4}]] },
+    { q: "لقيت خصم ٥٠٪ على شي ما تحتاجه", o: [["آخذه، فرصة!", {plan:-1,lux:.3,logic:-.5}], ["أطنّش، ما أحتاجه", {logic:1,plan:.7,lux:-.5}], ["أصوره وأفكر فيه", {plan:.5,logic:.3}]] },
+    { q: "تبي هدية لنفسك", o: [["ساعة ماركة", {lux:1}], ["كتاب أو كورس", {logic:.7,new:.4}], ["أدوات رياضة", {active:1}]] }
+  ],
+  office: [
+    { q: "جاك مشروع مستعجل", o: [["أخطط وأقسم المهام أول", {plan:1,logic:.6}], ["أبدأ على طول وأشوف", {plan:-1,adv:.4}], ["أجمع الفريق ونعصف أفكار", {soc:1}]] },
+    { q: "عرض وظيفة براتب أعلى بس فيها مخاطرة", o: [["أقبل وأجرب", {adv:1,new:.8}], ["أبقى في المضمون", {adv:-1,new:-.6}], ["أفاوض شغلي الحالي", {logic:.8,plan:.5}]] },
+    { q: "استراحة الغدا", o: [["مع الزملاء بالمطعم", {soc:1}], ["على مكتبي وأكمل شغل", {soc:-.6,plan:.5}], ["أطلع أتمشى شوي", {active:.8}]] }
+  ],
+  desert: [
+    { q: "كشتة مع الربع، وش دورك؟", o: [["الطبخ وتجهيز العشا", {plan:.6,soc:.4}], ["التطعيس بالسيارة", {adv:1,active:.8}], ["عند النار أسولف", {soc:.8,active:-.6}]] },
+    { q: "المخيم؟", o: [["مخيم فاخر فيه كل شي", {lux:1,adv:-.4}], ["بساطة: فراش ونار", {lux:-1,adv:.5}]] },
+    { q: "الليل نزل والنجوم طالعة", o: [["أتأمل لحالي شوي", {soc:-.8,logic:-.4}], ["نلعب بلوت", {soc:1,logic:.3}], ["أصور النجوم", {new:.6,plan:.3}]] }
+  ],
+  beach: [
+    { q: "وصلت البحر", o: [["غوص وسنوركل", {adv:1,active:1,new:.4}], ["أفرش وأقرأ وأسترخي", {active:-1,soc:-.4}], ["طائرة شاطئية مع الشباب", {soc:1,active:.8}]] },
+    { q: "الموج ارتفع فجأة", o: [["أنزل، الموج متعة!", {adv:1,logic:-.5}], ["أطلع وأحتاط", {adv:-1,logic:.6}]] }
+  ],
+  airport: [
+    { q: "عندك إجازة أسبوع", o: [["مدينة صاخبة: مطاعم وتسوق", {soc:.6,lux:.6,active:.3}], ["طبيعة وجبال وهدوء", {soc:-.6,adv:.5,active:.3}], ["مكان تاريخي ومتاحف", {logic:.6,new:.3}], ["أقعد بالبيت وأرتاح", {active:-1,lux:-.6,adv:-.6}]] },
+    { q: "الرحلة نفسها؟", o: [["جدول مرتب بالساعة", {plan:1}], ["على البركة نقرر هناك", {plan:-1,adv:.5}]] },
+    { q: "تأخرت الرحلة ٤ ساعات", o: [["أدخل اللاونج وأرتاح", {lux:1,active:-.5}], ["أتعرف على ناس بالانتظار", {soc:1,new:.4}], ["أنجز شغل على الجوال", {plan:.7,logic:.5}]] }
+  ]
+};
+
+/* ---------- state ---------- */
+const KEY = "digital-twin-v1";
+const fresh = () => ({
+  name: "", color: "#6a4bc4", acc: Object.fromEntries(TRAITS.map(k => [k, 0])), ev: 0,
+  likes: {}, dislikes: {}, interests: [], textChoices: {}, mem: {}, quizIdx: 0, quizDone: [],
+  history: [], stats: { pred: 0, hit: 0 }, chat: [], place: "home", seen: {}
+});
+let S = fresh();
+try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(fresh(), JSON.parse(raw)); } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
+
+const trait = k => Math.tanh((S.acc[k] || 0) / 3);
+const knowledge = () => Math.min(1, (S.ev + Object.keys(S.likes).length * .5 + Object.keys(S.dislikes).length * .5 + S.interests.length * .3) / 30);
+const twinName = () => S.name ? `${S.name} الرقمي` : "توأمك الرقمي";
+const initial = () => (S.name || "؟").trim().charAt(0);
+
+/* ---------- learning ---------- */
+function meanVec(vs) {
+  const m = {};
+  for (const k of TRAITS) m[k] = vs.reduce((a, v) => a + (v[k] || 0), 0) / vs.length;
+  return m;
+}
+function learnChoice(vecs, idx, w = 1) {
+  const m = meanVec(vecs);
+  for (const k of TRAITS) S.acc[k] += w * ((vecs[idx][k] || 0) - m[k]);
+  S.ev += w;
+}
+const clean = s => String(s).replace(/[\u064B-\u0652\u0640]/g, "").replace(/\s+/g, " ").trim();
+const label = k => (S.labels && S.labels[k]) || k;
+function addPref(phrase, sign, w = 1, shown = phrase) {
+  const n0 = norm(phrase), p = n0.replace(/^(ال)?(شي|اشيا)\s+/, "").slice(0, 40).trim();
+  if (p.length < 2) return null;
+  const d0 = clean(shown), at = n0.indexOf(p);
+  const disp = d0.length === n0.length && at >= 0 ? d0.substr(at, p.length) : clean(phrase);
+  const book = sign > 0 ? S.likes : S.dislikes, other = sign > 0 ? S.dislikes : S.likes;
+  delete other[p];
+  book[p] = (book[p] || 0) + w;
+  S.labels = S.labels || {};
+  if (!S.labels[p]) S.labels[p] = disp;
+  const lv = lexVec(p);
+  for (const k in lv) S.acc[k] += .6 * sign * lv[k] * w;
+  return S.labels[p];
+}
+
+// Read free text and learn likes / dislikes / traits.
+function learnFromText(text) {
+  let t = " " + norm(text) + " ";
+  const orig = " " + clean(text).toLowerCase() + " ";
+  const aligned = orig.length === t.length;
+  const blank = m => " ".repeat(m.length);
+  const shownAt = (m, p, off) => aligned ? orig.substr(off + m.length - p.length, p.length) : p;
+  const found = { likes: [], dislikes: [] };
+  const clause = "([^،,.!؟?\\n]+?)(?=\\s+(?:بس|لكن|واحب|وما|واكره)\\s|[،,.!؟?\\n]|$)";
+  const disRe = new RegExp("(?:ما\\s*(?:ا|اني\\s+)?(?:حب|احب|يعجبني|تعجبني|اطيق|اطيق|ابي|ابغى|احبذ)|اكره|كاره|مو\\s+حلو)\\s+" + clause, "g");
+  t = t.replace(disRe, (m, p, off) => { const r = addPref(p, -1, 1, shownAt(m, p, off)); if (r) found.dislikes.push(r); return blank(m); });
+  const likeRe = new RegExp("(?:احب|حب|اموت\\s+في|اعشق|يعجبني|تعجبني|مدمن|افضل|استمتع\\s+ب|هوايتي|هواياتي|اهتماماتي|اهتم\\s+ب)\\s+" + clause, "g");
+  t = t.replace(likeRe, (m, p, off) => {
+    const shown = shownAt(m, p, off), parts = p.split(/\s+و(?=\S)/);
+    let pos = 0;
+    for (const part of parts) {
+      const at = p.indexOf(part, pos); pos = at + part.length;
+      const r = addPref(part, 1, 1, shown.substr(at, part.length)); if (r) found.likes.push(r);
+    }
+    return blank(m);
+  });
+  // whatever is left nudges traits a bit
+  const lv = lexVec(t);
+  for (const k in lv) S.acc[k] += .35 * lv[k];
+  if (Object.keys(lv).length) S.ev += .5;
+  save();
+  return found;
+}
+
+/* ---------- prediction ---------- */
+function prefScore(text) {
+  const tk = new Set(tokens(text)), nt = norm(text);
+  let s = 0; const hits = [];
+  const match = key => nt.includes(key) || tokens(key).some(w => w.length >= 3 && [...tk].some(x => x === w || (x.length >= 4 && w.length >= 4 && (x.startsWith(w) || w.startsWith(x)))));
+  for (const [k, w] of Object.entries(S.likes)) if (match(k)) { s += 2 * Math.min(w, 2); hits.push(["like", k]); }
+  for (const [k, w] of Object.entries(S.dislikes)) if (match(k)) { s -= 2.4 * Math.min(w, 2); hits.push(["dislike", k]); }
+  for (const i of S.interests) if (match(norm(i))) { s += 1.2; hits.push(["interest", i]); }
+  return { s, hits };
+}
+
+// options: [{label, vec?, memKey?}]
+function predict(options) {
+  const vecs = options.map(o => o.vec || lexVec(o.label));
+  const m = meanVec(vecs);
+  const details = options.map((o, i) => {
+    let s = 0, best = null, bestV = 0;
+    for (const k of TRAITS) {
+      const c = 2.2 * trait(k) * ((vecs[i][k] || 0) - m[k]);
+      s += c; if (c > bestV) { bestV = c; best = k; }
+    }
+    const pf = prefScore(o.label); s += pf.s;
+    const mem = o.memKey ? (S.mem[o.memKey] || 0) : (S.textChoices[norm(o.label)] || 0);
+    s += Math.min(mem, 3) * 1.1;
+    return { i, s, trait: best, traitC: bestV, hits: pf.hits, mem };
+  });
+  const ex = details.map(d => Math.exp(d.s * 1.5)), z = ex.reduce((a, b) => a + b, 0);
+  details.forEach((d, i) => d.p = ex[i] / z);
+  // break exact ties randomly so the twin still commits
+  const top = details.slice().sort((a, b) => b.p - a.p || Math.random() - .5)[0];
+  return { details, top, reason: explain(top, options[top.i], options.length) };
+}
+
+function explain(d, opt, n) {
+  const bits = [];
+  const like = d.hits.find(h => h[0] === "like" || h[0] === "interest");
+  if (like) bits.push(`قلت لي إنك تحب «${label(like[1])}»`);
+  if (d.mem) bits.push(d.mem > 1 ? `واخترته قبل ${AR(d.mem)} مرات` : "واخترته قبل");
+  if (d.trait && d.traitC > .25) {
+    const v = trait(d.trait);
+    bits.push(`وأحس إنك ${v > 0 ? TI[d.trait].posL : TI[d.trait].negL}`);
+  }
+  if (!bits.length) {
+    const t = TRAITS.map(k => [k, trait(k)]).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))[0];
+    if (Math.abs(t[1]) > .3) bits.push(`لأنك ${t[1] > 0 ? TI[t[0]].posL : TI[t[0]].negL}`);
+  }
+  if (!bits.length) return d.p < 1 / n + .08 ? "بصراحة لسه ما أعرفك كفاية هنا، هذا حدس. علّمني أكثر!" : "حدسي يقول كذا.";
+  let s = bits.join("، ").replace(/^و/, "");
+  return s + ".";
+}
+const confWord = p => p > .8 ? "متأكد" : p > .6 ? "أتوقع بقوة" : p > .45 ? "أميل" : "أخمّن";
+
+function recordOutcome(q, labels, predicted, chosen, source) {
+  const ok = predicted === chosen;
+  S.stats.pred++; if (ok) S.stats.hit++;
+  S.history.unshift({ q, chosen: labels[chosen], predicted: labels[predicted], ok, src: source, t: Date.now() });
+  S.history = S.history.slice(0, 60);
+  save();
+  return ok;
+}
+
+/* ---------- header / theme ---------- */
+function paintHeader() {
+  document.documentElement.style.setProperty("--twin", S.color);
+  $("#hAva").textContent = initial();
+  $("#pAva").textContent = initial();
+  $("#hName").textContent = twinName();
+  const k = knowledge();
+  $("#knowPct").textContent = pct(k);
+  $("#knowBar").style.width = (k * 100) + "%";
+  $("#hSub").textContent = k < .15 ? "لسه أتعرف عليك" : k < .45 ? "بدأت أفهمك" : k < .8 ? "أعرفك زين" : "كأني أنت";
+}
+const themeBtn = $("#themeBtn");
+try { const th = localStorage.getItem(KEY + "-theme"); if (th) document.documentElement.dataset.theme = th; } catch (e) {}
+themeBtn.onclick = () => {
+  const cur = document.documentElement.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  const nx = cur === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = nx;
+  try { localStorage.setItem(KEY + "-theme", nx); } catch (e) {}
+  drawWorld();
+};
+
+/* ---------- tabs ---------- */
+function showTab(id) {
+  document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === id));
+  document.querySelectorAll("section.panel").forEach(p => p.classList.toggle("on", p.id === "p-" + id));
+  if (id === "profile") renderProfile();
+  if (id === "world") { drawWorld(); renderScene(); }
+  if (id === "chat") { renderChat(); setTimeout(() => $("#chatIn").focus(), 50); }
+  window.scrollTo({ top: 0 });
+}
+document.querySelectorAll("nav.tabs button").forEach(b => b.onclick = () => showTab(b.dataset.tab));
+
+/* ---------- TEACH ---------- */
+let quizGuess = null;
+function renderQuiz() {
+  const remaining = QUIZ.map((_, i) => i).filter(i => !S.quizDone.includes(i));
+  const done = QUIZ.length - remaining.length;
+  $("#qProg").style.width = (done / QUIZ.length * 100) + "%";
+  const box = $("#qChoices"); box.innerHTML = "";
+  if (!remaining.length) {
+    $("#qCount").textContent = `خلصت ${AR(QUIZ.length)} سؤال`;
+    $("#qText").textContent = "خلصت الأسئلة! الحين روح للعالم وخلني أتوقع اختياراتك.";
+    $("#qGuess").textContent = "";
+    $("#qSkip").style.display = "none";
+    box.append(el("button", { class: "btn twin", onclick: () => showTab("world") }, "روح للعالم"),
+               el("button", { class: "btn ghost", onclick: () => { S.quizDone = []; save(); renderQuiz(); } }, "أعد الأسئلة"));
+    return;
+  }
+  $("#qSkip").style.display = "";
+  const qi = remaining[0], Q = QUIZ[qi];
+  S.quizIdx = qi;
+  $("#qCount").textContent = `سؤال ${AR(done + 1)} من ${AR(QUIZ.length)}`;
+  $("#qText").textContent = Q.q;
+  quizGuess = null;
+  if (S.ev >= 3) {
+    const pr = predict(Q.o.map(o => ({ label: o[1], vec: o[2] })));
+    quizGuess = pr.top.i;
+    $("#qGuess").textContent = `${twinName()}: ${confWord(pr.top.p)} إنك بتختار «${Q.o[pr.top.i][1]}»`;
+  } else $("#qGuess").textContent = "";
+  Q.o.forEach((o, i) => {
+    box.append(el("button", { class: "choice" + (quizGuess === i ? " guess" : ""), onclick: e => answerQuiz(qi, i, e.currentTarget) },
+      el("span", { class: "em" }, o[0]), o[1]));
+  });
+}
+async function answerQuiz(qi, i, btn) {
+  const Q = QUIZ[qi];
+  [...$("#qChoices").children].forEach(b => b.disabled = true);
+  btn.classList.add("picked");
+  if (quizGuess !== null) {
+    const ok = recordOutcome(Q.q, Q.o.map(o => o[1]), quizGuess, i, "أسئلة");
+    $("#qGuess").textContent = ok ? "✓ توقعتها صح!" : "✗ غلطت، بس تعلمت منها.";
+  }
+  learnChoice(Q.o.map(o => o[2]), i);
+  S.quizDone.push(qi); save(); paintHeader();
+  await sleep(quizGuess !== null ? 900 : 350);
+  renderQuiz();
+}
+$("#qSkip").onclick = () => { S.quizDone.push(S.quizIdx); save(); renderQuiz(); };
+
+function renderInterests() {
+  const box = $("#interestChips"); box.innerHTML = "";
+  for (const it of INTERESTS) {
+    const on = S.interests.includes(it);
+    box.append(el("button", { class: "chip", "aria-pressed": on, onclick: () => {
+      if (S.interests.includes(it)) {
+        S.interests = S.interests.filter(x => x !== it);
+        const lv = lexVec(it); for (const k in lv) S.acc[k] -= .5 * lv[k];
+      } else {
+        S.interests.push(it);
+        const lv = lexVec(it); for (const k in lv) S.acc[k] += .5 * lv[k];
+      }
+      save(); paintHeader(); renderInterests();
+    } }, it));
+  }
+}
+$("#aboutBtn").onclick = () => {
+  const v = $("#aboutText").value.trim();
+  if (!v) return;
+  const f = learnFromText(v);
+  const parts = [];
+  if (f.likes.length) parts.push("تحب: " + f.likes.join("، "));
+  if (f.dislikes.length) parts.push("ما تحب: " + f.dislikes.join("، "));
+  $("#aboutResult").textContent = parts.length ? "فهمت إنك " + parts.join(" · ") : "سجلت كلامك وفهمت منه شوي عن طريقة تفكيرك.";
+  $("#aboutText").value = "";
+  paintHeader();
+};
+
+/* ---------- WORLD ---------- */
+let scene = null; // {place, idx, prediction, answered}
+const isNight = () => { const h = new Date().getHours(); return h >= 19 || h < 6; };
+function drawWorld() {
+  const night = isNight();
+  const P = S.place, at = PLACES.find(p => p.id === P) || PLACES[0];
+  const roads = PLACES.filter(p => p.id !== "home").map(p => `M400 285 Q ${(400 + p.x) / 2 + (p.y - 285) * .15} ${(285 + p.y) / 2 - (p.x - 400) * .1} ${p.x} ${p.y}`);
+  const stars = night ? Array.from({ length: 30 }, (_, i) => `<circle cx="${(i * 137) % 800}" cy="${(i * 53) % 90 + 5}" r="${i % 3 ? 1 : 1.6}" fill="#fff" opacity="${.4 + (i % 5) / 10}"/>`).join("") : "";
+  const placeSvg = PLACES.map(p => `
+    <g class="place${p.id === P ? " active" : ""}" data-id="${p.id}" tabindex="0" role="button" aria-label="${p.name}">
+      <g class="pin">
+        <ellipse cx="${p.x}" cy="${p.y + 22}" rx="34" ry="8" fill="rgba(0,0,0,.12)"/>
+        <circle cx="${p.x}" cy="${p.y}" r="30" fill="var(--card)" stroke="var(--line)" stroke-width="2"/>
+        <text x="${p.x}" y="${p.y + 11}" text-anchor="middle" style="font-size:30px">${p.em}</text>
+      </g>
+      <rect class="lbl" x="${p.x - 38}" y="${p.y + 34}" width="76" height="26" rx="13" stroke-width="1"/>
+      <text class="name" x="${p.x}" y="${p.y + 52}" text-anchor="middle">${p.name}</text>
+    </g>`).join("");
+  $("#world").innerHTML = `
+  <svg viewBox="0 0 800 500" role="img" aria-label="خريطة العالم الافتراضي">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="${night ? "#0f1630" : "var(--sky1)"}"/><stop offset="1" stop-color="${night ? "#2b2747" : "var(--sky2)"}"/>
+      </linearGradient>
+    </defs>
+    <rect width="800" height="500" fill="url(#sky)"/>
+    ${stars}
+    <circle cx="${night ? 90 : 720}" cy="45" r="22" fill="${night ? "#f3ecd0" : "#ffd36b"}" opacity=".95"/>
+    <g class="cloud" opacity="${night ? .15 : .8}"><ellipse cx="100" cy="50" rx="40" ry="12" fill="#fff"/><ellipse cx="125" cy="42" rx="25" ry="12" fill="#fff"/></g>
+    <g class="cloud" style="animation-delay:-30s" opacity="${night ? .12 : .7}"><ellipse cx="100" cy="80" rx="30" ry="9" fill="#fff"/><ellipse cx="118" cy="74" rx="18" ry="9" fill="#fff"/></g>
+    <path d="M0 95 Q 200 70 400 92 T 800 88 V500 H0Z" fill="var(--ground)"/>
+    <path d="M0 220 Q 120 200 260 240 T 330 330 Q 200 360 0 330Z" fill="var(--sand)" opacity=".7"/>
+    <path d="M560 330 Q 650 300 800 320 V500 H540 Q 540 400 560 330Z" fill="var(--water)" opacity=".85"/>
+    <path d="M560 330 Q 650 300 800 320" fill="none" stroke="#fff" stroke-width="3" opacity=".5" stroke-dasharray="10 12"><animate attributeName="stroke-dashoffset" from="0" to="44" dur="3s" repeatCount="indefinite"/></path>
+    ${roads.map(d => `<path d="${d}" fill="none" stroke="var(--road)" stroke-width="16" stroke-linecap="round"/>`).join("")}
+    ${roads.map(d => `<path d="${d}" fill="none" stroke="var(--ground2)" stroke-width="1.5" stroke-dasharray="6 8"/>`).join("")}
+    ${[[60,180],[280,190],[520,230],[300,360],[730,250],[540,110],[260,450]].map(([x,y]) => `<g><rect x="${x-2}" y="${y}" width="4" height="14" fill="#8a6a3d"/><circle cx="${x}" cy="${y-2}" r="11" fill="#5f9c5a" opacity=".9"/></g>`).join("")}
+    ${placeSvg}
+    <g class="agent" id="agYou" style="transform:translate(${at.x - 44}px,${at.y - 46}px)">
+      <g class="bob"><circle r="15" fill="var(--you-soft)" stroke="var(--you)" stroke-width="3"/><text y="5" text-anchor="middle" style="font-size:13px;font-weight:700;fill:var(--you)">أنت</text></g>
+    </g>
+    <g class="agent" id="agTwin" style="transform:translate(${at.x + 44}px,${at.y - 46}px)">
+      <g class="bob" style="animation-delay:-.6s"><circle r="15" fill="var(--twin-soft)" stroke="var(--twin)" stroke-width="3"/><circle r="20" fill="none" stroke="var(--twin)" stroke-dasharray="3 4" opacity=".6"/><text y="5" text-anchor="middle" style="font-size:14px;font-weight:700;fill:var(--twin)">${initial()}</text></g>
+    </g>
+  </svg>`;
+  $("#world").querySelectorAll(".place").forEach(g => {
+    g.addEventListener("click", () => goTo(g.dataset.id));
+    g.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); goTo(g.dataset.id); } });
+  });
+  const d = new Date();
+  $("#clock").textContent = (night ? "🌙 ليل" : "☀️ نهار") + " · " + d.toLocaleTimeString("ar-SA", { hour: "numeric", minute: "2-digit" });
+}
+function goTo(id) {
+  const p = PLACES.find(x => x.id === id);
+  S.place = id; save();
+  $("#world").querySelectorAll(".place").forEach(g => g.classList.toggle("active", g.dataset.id === id));
+  $("#agYou").style.transform = `translate(${p.x - 44}px,${p.y - 46}px)`;
+  setTimeout(() => { const t = $("#agTwin"); if (t) t.style.transform = `translate(${p.x + 44}px,${p.y - 46}px)`; }, 180);
+  newScene(id);
+}
+function newScene(id) {
+  const list = SCEN[id];
+  const seen = S.seen[id] || 0;
+  scene = { place: id, idx: seen % list.length, prediction: null, answered: null };
+  S.seen[id] = seen + 1; save();
+  renderScene();
+}
+function renderScene() {
+  const box = $("#scene"); box.innerHTML = "";
+  if (!scene) {
+    const p = PLACES.find(x => x.id === S.place) || PLACES[0];
+    box.append(el("div", { class: "say" }, el("div", { class: "ava twin" }, initial()),
+      el("div", { class: "bubble twin" }, `إحنا الحين في ${p.name}. اختر مكان من الخريطة ونروح له، وهناك اسألني وش تتوقع إنك تختار.`)),
+      el("div", { class: "row", style: "margin-top:12px" }, el("button", { class: "btn", onclick: () => newScene(S.place) }, `موقف في ${p.name}`),
+        el("button", { class: "btn ghost", onclick: () => goTo(pick(PLACES.filter(x => x.id !== S.place)).id) }, "ودّني مكان عشوائي")));
+    return;
+  }
+  const p = PLACES.find(x => x.id === scene.place), Sc = SCEN[scene.place][scene.idx];
+  const memKey = i => `${scene.place}:${scene.idx}:${i}`;
+  box.append(el("div", { class: "where" }, el("span", { class: "em" }, p.em), el("div", {}, el("div", { class: "muted small" }, p.name), el("h3", { style: "margin:0;font-size:1.2rem" }, Sc.q))));
+
+  if (!scene.prediction) {
+    box.append(el("div", { class: "say", style: "margin:14px 0" }, el("div", { class: "ava you" }, "أنت"),
+      el("button", { class: "btn twin", onclick: () => {
+        scene.prediction = predict(Sc.o.map((o, i) => ({ label: o[0], vec: o[1], memKey: memKey(i) })));
+        renderScene();
+      } }, "وش تتوقع إني أختار؟")));
+    const ch = el("div", { class: "choices" });
+    Sc.o.forEach(o => ch.append(el("button", { class: "choice", disabled: "", style: "opacity:.55;cursor:default" }, o[0])));
+    box.append(ch, el("p", { class: "muted small", style: "margin:10px 0 0" }, "اسأله أول، وبعدها اختر."));
+    return;
+  }
+
+  const pr = scene.prediction;
+  const probs = el("div", { class: "probs" });
+  pr.details.forEach(d => {
+    const bar = el("i");
+    probs.append(el("div", { class: "prob" }, el("span", { class: "lab" }, Sc.o[d.i][0]), el("span", { class: "pc" }, pct(d.p)), el("div", { class: "bar" }, bar)));
+    requestAnimationFrame(() => requestAnimationFrame(() => bar.style.width = (d.p * 100) + "%"));
+  });
+  box.append(el("div", { class: "say", style: "margin:14px 0" }, el("div", { class: "ava twin" }, initial()),
+    el("div", { class: "bubble twin", style: "flex:1" },
+      el("div", {}, `${confWord(pr.top.p)} إنك بتختار `, el("b", {}, `«${Sc.o[pr.top.i][0]}»`), ". "),
+      el("div", { class: "small muted" }, pr.reason), probs)));
+
+  const ch = el("div", { class: "choices" });
+  Sc.o.forEach((o, i) => {
+    let cls = "choice";
+    if (scene.answered != null) cls += i === scene.answered ? (i === pr.top.i ? " picked right" : " picked wrong") : (i === pr.top.i ? " guess" : "");
+    const b = el("button", { class: cls, onclick: () => {
+      if (scene.answered != null) return;
+      scene.answered = i;
+      S.mem[memKey(i)] = (S.mem[memKey(i)] || 0) + 1;
+      learnChoice(Sc.o.map(x => x[1]), i);
+      recordOutcome(Sc.q, Sc.o.map(x => x[0]), pr.top.i, i, p.name);
+      paintHeader(); renderScene();
+    } }, o[0]);
+    if (scene.answered != null) b.disabled = true;
+    ch.append(b);
+  });
+  box.append(el("p", { class: "small", style: "margin:0 0 8px;font-weight:600" }, scene.answered == null ? "وش اخترت فعلاً؟" : "اخترت:"), ch);
+
+  if (scene.answered != null) {
+    const ok = scene.answered === pr.top.i;
+    box.append(el("div", { class: "verdict " + (ok ? "ok" : "no") }, ok ? pick(["✓ قلت لك! أعرفك أكثر من نفسك 😄", "✓ صح! كأني داخل راسك.", "✓ توقعتها!"]) : pick(["✗ ما توقعتها! سجلتها وما راح أغلط فيها مرة ثانية.", "✗ فاجأتني. تعلمت شي جديد عنك.", "✗ غلطت هالمرة، بس كل غلطة تقربني منك."])),
+      el("div", { class: "row", style: "margin-top:12px" },
+        el("button", { class: "btn", onclick: () => newScene(scene.place) }, "موقف ثاني هنا"),
+        el("button", { class: "btn ghost", onclick: () => goTo(pick(PLACES.filter(x => x.id !== scene.place)).id) }, "نروح مكان ثاني")));
+  }
+}
+
+/* ---------- CHAT ---------- */
+const SUGGESTIONS = ["وش تتوقع إني أختار: قهوة ولا شاي؟", "وش تعرف عني؟", "أحب السفر والبحر", "ما أحب الزحمة", "اسألني سؤال", "وش تتوقع إني أختار بين البيتزا والشاورما والكبسة؟"];
+let pendingQuiz = null;
+function renderChat() {
+  const box = $("#msgs"); box.innerHTML = "";
+  if (!S.chat.length) {
+    S.chat.push({ who: "tw", text: `هلا ${S.name || ""}! أنا ${twinName()}. سولف معي عن نفسك وأتعلم منك، أو اسألني:\n«وش تتوقع إني أختار: كذا ولا كذا؟» وأقولك وش بتختار.` });
+    save();
+  }
+  S.chat.forEach((m, idx) => box.append(msgNode(m, idx)));
+  box.scrollTop = box.scrollHeight;
+  const sg = $("#suggest"); sg.innerHTML = "";
+  SUGGESTIONS.forEach(s => sg.append(el("button", { type: "button", onclick: () => send(s) }, s)));
+}
+function msgNode(m, idx) {
+  const b = el("div", { class: "b" }, m.text);
+  if (m.opts) {
+    const o = el("div", { class: "opts" });
+    m.opts.forEach((label, i) => {
+      const btn = el("button", { type: "button", class: m.chosen === i ? "sel" : "", onclick: () => chooseInChat(idx, i) }, label);
+      if (m.chosen != null) btn.disabled = true;
+      o.append(btn);
+    });
+    b.append(el("div", { class: "small muted", style: "margin-top:8px" }, m.kind === "quiz" ? "اختر:" : "وش اخترت فعلاً؟"), o);
+  }
+  return el("div", { class: "msg " + (m.who === "me" ? "me" : "tw") },
+    el("div", { class: "ava " + (m.who === "me" ? "you" : "twin") }, m.who === "me" ? "أنت" : initial()), b);
+}
+function pushMsg(m) {
+  S.chat.push(m); S.chat = S.chat.slice(-80); save();
+  const box = $("#msgs");
+  box.append(msgNode(m, S.chat.length - 1));
+  box.scrollTop = box.scrollHeight;
+}
+async function twinSays(m) {
+  const box = $("#msgs");
+  const t = el("div", { class: "msg tw" }, el("div", { class: "ava twin" }, initial()), el("div", { class: "b typing" }, el("span"), el("span"), el("span")));
+  box.append(t); box.scrollTop = box.scrollHeight;
+  await sleep(500 + Math.min(1200, (m.text || "").length * 12));
+  t.remove(); pushMsg(Object.assign({ who: "tw" }, m));
+}
+function chooseInChat(idx, i) {
+  const m = S.chat[idx];
+  if (!m || m.chosen != null) return;
+  m.chosen = i;
+  if (m.kind === "quiz") {
+    const Q = QUIZ[m.qi];
+    if (m.guess != null) recordOutcome(Q.q, Q.o.map(o => o[1]), m.guess, i, "سوالف");
+    learnChoice(Q.o.map(o => o[2]), i);
+    if (!S.quizDone.includes(m.qi)) S.quizDone.push(m.qi);
+    save(); renderChat(); paintHeader();
+    twinSays({ text: m.guess == null ? `سجلتها: «${Q.o[i][1]}». ` + pick(["حلو أعرف هالشي عنك.", "كذا بدأت أفهمك أكثر."]) : (m.guess === i ? "✓ توقعتها صح!" : "✗ غلطت، بس الحين عرفت.") });
+    return;
+  }
+  // prediction feedback
+  const labels = m.opts;
+  const ok = recordOutcome(m.q, labels, m.predicted, i, "سوالف");
+  S.textChoices[norm(labels[i])] = (S.textChoices[norm(labels[i])] || 0) + 1;
+  const vecs = labels.map(l => lexVec(l));
+  if (vecs.some(v => Object.keys(v).length)) learnChoice(vecs, i, .8); else S.ev += .5;
+  addPref(labels[i], 1, .5, labels[i]);
+  save(); renderChat(); paintHeader();
+  twinSays({ text: ok ? pick(["✓ قلت لك! 😄", "✓ صح، أعرفك زين.", "✓ كنت متأكد."]) : `✗ ما توقعت «${labels[i]}». خلاص سجلتها، المرة الجاية أعرف.` });
+}
+
+function parseOptions(raw) {
+  let t = raw.replace(/[؟?!]/g, " ").trim();
+  let m;
+  const hadBetween = /(?:^|\s)بين\s/.test(t);
+  if ((m = t.match(/(?:^|\s)بين\s+(.+)$/))) t = m[1];
+  else if (t.includes(":")) t = t.slice(t.lastIndexOf(":") + 1);
+  else if ((m = t.match(/(?:اختار|أختار|اخذ|آخذ|أفضل|افضل|اطلب|أطلب|اروح|أروح|احب|أحب)\s+(.+)$/))) t = m[1];
+  let parts = t.split(/\s+(?:ولا|والا|وإلا|أو|او|أم|ام)\s+|[،,\/]|\s+-\s+/).map(s => s.trim()).filter(Boolean);
+  if (parts.length === 1 && hadBetween) parts = t.split(/\s+و(?=\S)/).map(s => s.trim()).filter(Boolean);
+  // "بين A و B و C" with commas: split the last part on و too
+  if (parts.length >= 2 && hadBetween) parts = parts.flatMap(p => p.split(/\s+و(?=\S)/)).map(s => s.trim()).filter(Boolean);
+  return [...new Set(parts)].slice(0, 6);
+}
+
+function portraitText() {
+  const ranked = TRAITS.map(k => [k, trait(k)]).filter(x => Math.abs(x[1]) > .2).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
+  const likes = Object.keys(S.likes).map(label).concat(S.interests).slice(0, 6);
+  const dis = Object.keys(S.dislikes).map(label).slice(0, 4);
+  if (!ranked.length && !likes.length && !dis.length) return "لسه ما أعرف عنك شي تقريباً. جاوب الأسئلة في «علّمني عنك» أو سولف معي.";
+  let s = "";
+  if (ranked.length) s += "اللي فهمته عنك: إنك " + ranked.slice(0, 4).map(([k, v]) => v > 0 ? TI[k].posL : TI[k].negL).join("، و") + ". ";
+  if (likes.length) s += `تحب ${likes.join("، ")}. `;
+  if (dis.length) s += `وما تحب ${dis.join("، ")}. `;
+  if (S.stats.pred) s += `ولين الحين توقعت ${AR(S.stats.pred)} اختيار، صح منها ${AR(S.stats.hit)}.`;
+  return s.trim();
+}
+
+async function send(text) {
+  text = text.trim(); if (!text) return;
+  pushMsg({ who: "me", text });
+  const n = norm(text);
+
+  // 1) prediction request
+  if (/توقع|تتوقع|بختار|اختار|راح اخذ|بفضل|اختياري/.test(n)) {
+    const opts = parseOptions(text);
+    if (opts.length >= 2) {
+      const pr = predict(opts.map(l => ({ label: l })));
+      const lines = pr.details.slice().sort((a, b) => b.p - a.p).map(d => `${opts[d.i]} — ${pct(d.p)}`).join("\n");
+      await twinSays({ text: `${confWord(pr.top.p)} إنك بتختار «${opts[pr.top.i]}».\n${pr.reason}\n\n${lines}`, opts, q: text, predicted: pr.top.i, kind: "pred" });
+      return;
+    }
+    // no options → offer a scenario from the world
+    const pl = pick(PLACES), sc = SCEN[pl.id][Math.floor(Math.random() * SCEN[pl.id].length)];
+    const o = sc.o.map(x => x[0]);
+    const pr = predict(sc.o.map(x => ({ label: x[0], vec: x[1] })));
+    await twinSays({ text: `عطني خيارات وأقولك، مثلاً: «وش تتوقع إني أختار: بحر ولا بر؟»\n\nأو خذ هالموقف من ${pl.name} ${pl.em}: ${sc.q}\nأتوقع تختار «${o[pr.top.i]}». ${pr.reason}`, opts: o, q: sc.q, predicted: pr.top.i, kind: "pred" });
+    return;
+  }
+
+  // 2) what do you know about me
+  if (/وش تعرف|ماذا تعرف|مين انا|من انا|وصفني|وش رايك فيني|شخصيتي/.test(n)) {
+    await twinSays({ text: portraitText() });
+    return;
+  }
+
+  // 3) ask me a question
+  if (/اسالني|سالني|سؤال|اختبرني/.test(n)) return askQuiz();
+
+  // 4) greeting
+  if (/^(هلا|مرحبا|السلام|اهلين|هاي|صباح|مسا)/.test(n) && n.length < 25) {
+    await twinSays({ text: pick(["هلا والله! وش عندك اليوم؟", "يا هلا! سولف لي عن يومك، أو اسألني أتوقع لك شي.", "أهلين! تبي أتوقع اختيار؟ قل: وش تتوقع إني أختار: كذا ولا كذا؟"]) });
+    return;
+  }
+
+  // 5) learn from free text
+  const before = Object.keys(S.likes).length + Object.keys(S.dislikes).length;
+  const f = learnFromText(text);
+  paintHeader();
+  const learned = [];
+  if (f.likes.length) learned.push(`إنك تحب ${f.likes.map(x => "«" + x + "»").join(" و")}`);
+  if (f.dislikes.length) learned.push(`إنك ما تحب ${f.dislikes.map(x => "«" + x + "»").join(" و")}`);
+  if (learned.length) {
+    await twinSays({ text: pick(["سجلتها! ", "حلو، عرفت ", "تمام، صرت أعرف "]) + learned.join("، و") + "." });
+  } else {
+    const lv = lexVec(text), k = Object.keys(lv).sort((a, b) => Math.abs(lv[b]) - Math.abs(lv[a]))[0];
+    if (k) await twinSays({ text: `فهمت. كلامك يقول لي إنك ${lv[k] > 0 ? TI[k].posL : TI[k].negL}، صح؟ بحطها في بالي.` });
+    else await twinSays({ text: pick(["أسمعك 👂 كمّل، كل كلمة تعلمني عنك.", "طيب، وش بعد؟ قل لي وش تحب ووش ما تحب.", "سجلت. تبي أسألك سؤال أتعرف عليك أكثر؟"]) });
+  }
+  if (before < 3 && Math.random() < .6) askQuiz();
+}
+async function askQuiz() {
+  const left = QUIZ.map((_, i) => i).filter(i => !S.quizDone.includes(i));
+  const qi = left.length ? pick(left) : Math.floor(Math.random() * QUIZ.length);
+  const Q = QUIZ[qi];
+  let guess = null, extra = "";
+  if (S.ev >= 3) {
+    const pr = predict(Q.o.map(o => ({ label: o[1], vec: o[2] })));
+    guess = pr.top.i; extra = `\n(في بالي جوابك، بعدين أقولك 😉)`;
+  }
+  await twinSays({ text: `سؤال: ${Q.q}${extra}`, opts: Q.o.map(o => o[0] + " " + o[1]), kind: "quiz", qi, guess });
+}
+$("#composer").onsubmit = e => { e.preventDefault(); const v = $("#chatIn").value; $("#chatIn").value = ""; send(v); };
+
+/* ---------- PROFILE ---------- */
+function renderProfile() {
+  $("#pTitle").textContent = `${twinName()} يقول:`;
+  $("#portrait").textContent = portraitText();
+  const tb = $("#traits"); tb.innerHTML = "";
+  for (const k of TRAITS) {
+    const v = trait(k);
+    const dot = el("span", { class: "dot" });
+    tb.append(el("div", { class: "trait" },
+      el("div", { class: "ends" }, el("span", {}, TI[k].pos), el("span", {}, TI[k].neg)),
+      el("div", { class: "axis" }, dot)));
+    requestAnimationFrame(() => dot.style.right = (50 - v * 46) + "%");
+  }
+  $("#sPred").textContent = AR(S.stats.pred);
+  $("#sHit").textContent = AR(S.stats.hit);
+  $("#sAcc").textContent = S.stats.pred ? pct(S.stats.hit / S.stats.pred) : "—";
+  const chipList = (box, obj, cls) => {
+    box.innerHTML = "";
+    const keys = Object.keys(obj);
+    if (!keys.length) { box.append(el("span", { class: "muted small" }, "لسه ما قلت لي")); return; }
+    keys.forEach(k => box.append(el("span", { class: "chip " + cls }, label(k),
+      el("button", { class: "x", "aria-label": "حذف", onclick: () => { delete obj[k]; save(); renderProfile(); paintHeader(); } }, "×"))));
+  };
+  const likeObj = Object.assign({}, S.likes);
+  chipList($("#likesBox"), S.likes, "like");
+  S.interests.forEach(i => $("#likesBox").append(el("span", { class: "chip like" }, i)));
+  if (S.interests.length && !Object.keys(likeObj).length) $("#likesBox").querySelector(".muted")?.remove();
+  chipList($("#dislikesBox"), S.dislikes, "dislike");
+  const h = $("#hist"); h.innerHTML = "";
+  if (!S.history.length) h.append(el("li", { class: "muted" }, "ما فيه اختيارات للحين."));
+  S.history.slice(0, 15).forEach(x => h.append(el("li", {},
+    el("span", { class: "tag " + (x.ok ? "ok" : "no") }, x.ok ? "توقعته" : "فاجأتني"),
+    el("span", {}, el("span", { class: "muted" }, x.q + " ← "), el("b", {}, x.chosen), x.ok ? "" : el("span", { class: "muted small" }, ` (توقعت: ${x.predicted})`)))));
+}
+$("#exportBtn").onclick = () => {
+  const blob = new Blob([JSON.stringify(S, null, 2)], { type: "application/json" });
+  const a = el("a", { href: URL.createObjectURL(blob), download: "digital-twin.json" });
+  document.body.append(a); a.click(); a.remove();
+};
+$("#resetBtn").onclick = () => {
+  if (!confirm("أكيد تبي تمسح كل اللي تعلمته عنك؟")) return;
+  S = fresh(); save(); scene = null; location.reload();
+};
+$("#renameBtn").onclick = () => openOnboard();
+
+/* ---------- onboarding ---------- */
+const COLORS = ["#6a4bc4", "#0f7b6c", "#c2410c", "#be185d", "#2563eb", "#4d7c0f"];
+let chosenColor = S.color;
+function openOnboard() {
+  const sw = $("#swatches"); sw.innerHTML = "";
+  COLORS.forEach(c => sw.append(el("button", { style: `background:${c}`, "aria-pressed": c === chosenColor, "aria-label": "لون", onclick: () => { chosenColor = c; openOnboard(); } })));
+  $("#obName").value = $("#obName").value || S.name;
+  $("#onboard").classList.add("on");
+  setTimeout(() => $("#obName").focus(), 50);
+}
+$("#obGo").onclick = () => {
+  const n = $("#obName").value.trim();
+  if (!n) { $("#obName").focus(); toast("اكتب اسمك أول"); return; }
+  S.name = n; S.color = chosenColor; save();
+  $("#onboard").classList.remove("on");
+  paintHeader(); renderQuiz();
+  toast(`هلا ${n}! خلنا نتعرف`);
+};
+$("#obName").addEventListener("keydown", e => { if (e.key === "Enter") $("#obGo").click(); });
+
+/* ---------- boot ---------- */
+paintHeader(); renderQuiz(); renderInterests();
+if (!S.name) openOnboard();
+setInterval(() => { if ($("#p-world").classList.contains("on")) { const d = new Date(); $("#clock").textContent = (isNight() ? "🌙 ليل" : "☀️ نهار") + " · " + d.toLocaleTimeString("ar-SA", { hour: "numeric", minute: "2-digit" }); } }, 30000);
+})();
+</script>
+</body>
+</html>
