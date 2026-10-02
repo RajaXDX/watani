@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>متجر لوكس</title>
+<meta name="description" content="لوكس: ستيكرات فينيل مقصوصة على حدود التصميم وميداليات أكريليك مطبوعة على الوجهين، مع توصيل لكل مدن المملكة.">
+<meta name="theme-color" content="#1D5B48">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/icons/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ar_SA">
+<meta property="og:title" content="لوكس — ستيكرات وميداليات">
+<meta property="og:description" content="ستيكرات فينيل وميداليات أكريليك، وتصميمك الخاص نطبعه لك.">
+<meta property="og:image" content="https://rajaxdx.github.io/watani/lux/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script>document.documentElement.lang = 'ar'; document.documentElement.dir = 'rtl';</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lalezar&family=Readex+Pro:wght@400;500;600;700&display=swap">
+<style>
+/* التخطيط: واجهة على «مشرحة قص» خضراء عليها ستيكرات وميدالية، وبعدها المنتجات على ورق فاتح بشبكة سنتيمترات خفيفة */
+:root {
+  --paper: #F6F4F9;
+  --surface: #FFFFFF;
+  --tile: #ECE8F2;
+  --tile-grid: rgba(28, 21, 48, .055);
+  --ink: #1C1530;
+  --ink-2: #5D5570;
+  --line: #E0DAE8;
+  --mat: #1D5B48;
+  --mat-ink: #F2FAF6;
+  --mat-ink-2: rgba(242, 250, 246, .78);
+  --mat-minor: rgba(242, 250, 246, .07);
+  --mat-major: rgba(242, 250, 246, .17);
+  --accent: #D93A76;
+  --accent-ink: #FFFFFF;
+  --ok: #1D7A52;
+  --error: #C2343B;
+  --btn: #1C1530;
+  --btn-ink: #FFFFFF;
+  --veil: rgba(17, 12, 26, .5);
+  --shade: rgba(28, 21, 48, .16);
+  --holo: linear-gradient(115deg, #FF7AC6 0%, #FFD45C 27%, #5CE1C9 52%, #7AA2FF 76%, #B983FF 100%);
+  --silver-1: #F6F7F9; --silver-2: #8E95A1; --silver-3: #CDD1D8;
+  --gold-1: #FFF2C6; --gold-2: #B9821F; --gold-3: #EDC75C;
+  --die: #FFFFFF;
+
+  --display: 'Lalezar', 'Readex Pro', Tahoma, sans-serif;
+  --body: 'Readex Pro', 'Segoe UI', Tahoma, system-ui, sans-serif;
+  --fs-xs: .8125rem;
+  --fs-s: .9375rem;
+  --fs-m: 1rem;
+  --fs-l: 1.25rem;
+  --fs-xl: clamp(1.6rem, 1.2rem + 1.6vw, 2.25rem);
+  --fs-hero: clamp(2.6rem, 1.6rem + 4.4vw, 4.6rem);
+  --r-s: 10px;
+  --r-m: 16px;
+  --r-l: 26px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #110D18; --surface: #1A1524; --tile: #221C2F; --tile-grid: rgba(241, 236, 249, .05);
+    --ink: #F1ECF9; --ink-2: #A99FBB; --line: #2E2740;
+    --mat: #184C3C; --accent: #FF6E9F; --accent-ink: #22101A; --ok: #4CC98E; --error: #FF7A80;
+    --btn: #F1ECF9; --btn-ink: #16111F; --veil: rgba(4, 2, 8, .66); --shade: rgba(0, 0, 0, .4);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #110D18; --surface: #1A1524; --tile: #221C2F; --tile-grid: rgba(241, 236, 249, .05);
+  --ink: #F1ECF9; --ink-2: #A99FBB; --line: #2E2740;
+  --mat: #184C3C; --accent: #FF6E9F; --accent-ink: #22101A; --ok: #4CC98E; --error: #FF7A80;
+  --btn: #F1ECF9; --btn-ink: #16111F; --veil: rgba(4, 2, 8, .66); --shade: rgba(0, 0, 0, .4);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html:has(dialog[open]) { overflow: hidden; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 var(--fs-m)/1.7 var(--body);
+  overflow-x: hidden;
+}
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+a { color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+.wrap { width: min(100% - 32px, 1160px); margin-inline: auto; }
+.num { font-variant-numeric: tabular-nums; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- الأزرار ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5em;
+  min-height: 48px; padding: .55em 1.3em;
+  border: 0; border-radius: 999px;
+  background: var(--btn); color: var(--btn-ink);
+  font-weight: 600; font-size: var(--fs-m); text-decoration: none;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px var(--shade); }
+.btn:active { transform: translateY(1px); }
+.btn-ghost { background: transparent; color: inherit; box-shadow: inset 0 0 0 2px currentColor; }
+.btn-ghost:hover { box-shadow: inset 0 0 0 2px currentColor, 0 6px 16px var(--shade); }
+.btn-block { width: 100%; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+.icon-btn {
+  display: inline-grid; place-items: center;
+  width: 40px; height: 40px; padding: 0;
+  border: 0; border-radius: 50%; background: var(--tile); color: var(--ink);
+}
+.icon-btn svg { width: 20px; height: 20px; }
+
+/* ---------- الترويسة ---------- */
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.top-in { display: flex; align-items: center; gap: 24px; min-height: 68px; }
+.brand { display: block; line-height: 0; flex: none; }
+.brand img { height: 54px; width: auto; }
+.nav { display: flex; gap: 22px; margin-inline-start: auto; }
+.nav a { text-decoration: none; font-weight: 500; color: var(--ink-2); }
+.nav a:hover { color: var(--ink); }
+.cart-btn {
+  position: relative; display: inline-flex; align-items: center; gap: 8px;
+  min-height: 44px; padding: 0 16px 0 14px;
+  border: 0; border-radius: 999px; background: var(--btn); color: var(--btn-ink); font-weight: 600;
+}
+.cart-btn svg { width: 20px; height: 20px; }
+.cart-count {
+  display: inline-grid; place-items: center; min-width: 24px; height: 24px; padding: 0 6px;
+  border-radius: 999px; background: var(--accent); color: var(--accent-ink);
+  font-size: var(--fs-xs); font-weight: 700; line-height: 1;
+}
+.cart-count.bump { animation: bump .35s ease; }
+@keyframes bump { 40% { transform: scale(1.35); } }
+@media (max-width: 760px) {
+  .nav { display: none; }
+  .cart-btn { margin-inline-start: auto; }
+  .brand img { height: 46px; }
+}
+
+/* ---------- الواجهة: مشرحة القص ---------- */
+.hero { padding-block: 22px 8px; }
+.mat {
+  position: relative; overflow: hidden;
+  display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); align-items: center; gap: 12px;
+  padding: 58px 48px 44px;
+  border-radius: var(--r-l);
+  background-color: var(--mat);
+  background-image:
+    linear-gradient(var(--mat-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--mat-major) 1px, transparent 1px),
+    linear-gradient(var(--mat-minor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--mat-minor) 1px, transparent 1px);
+  background-size: 140px 140px, 140px 140px, 28px 28px, 28px 28px;
+  background-position: calc(100% + 1px) -1px;
+  color: var(--mat-ink);
+}
+.mat::before { /* خط الزاوية ٤٥° المرسوم على المشارح */
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to top right, transparent calc(50% - 1px), var(--mat-major) 50%, transparent calc(50% + 1px));
+}
+.ruler {
+  position: absolute; inset-inline: 0; top: 8px;
+  display: flex; padding-inline-start: 0; overflow: hidden;
+  font-size: 10px; line-height: 1; color: var(--mat-ink-2); opacity: .7;
+  pointer-events: none; user-select: none;
+}
+.ruler span { flex: 0 0 28px; text-align: center; }
+.ruler span:nth-child(5n) { font-weight: 700; opacity: 1; }
+.hero-copy { position: relative; display: grid; gap: 18px; justify-items: start; max-width: 34rem; }
+.hero-kicker {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 5px 12px; border-radius: 999px;
+  background: rgba(0, 0, 0, .18); color: var(--mat-ink);
+  font-size: var(--fs-xs); font-weight: 600; letter-spacing: .02em;
+}
+.hero h1 {
+  font-family: var(--display); font-weight: 400;
+  font-size: var(--fs-hero); line-height: 1.12;
+}
+.holo-text {
+  background: var(--holo); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.hero-sub { max-width: 30rem; color: var(--mat-ink-2); font-size: 1.0625rem; }
+.hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px; }
+.hero .btn { background: var(--mat-ink); color: #133F31; }
+.hero .btn-ghost { background: transparent; color: var(--mat-ink); }
+.board { position: relative; container-type: inline-size; height: 380px; }
+.board-in { position: absolute; inset: 0; font-size: clamp(9px, 3.5cqi, 16px); }
+.board .piece { position: absolute; display: grid; place-items: center; }
+.board .kc { animation: sway 5s ease-in-out infinite; }
+@keyframes sway { 0%, 100% { rotate: -3deg; } 50% { rotate: 4deg; } }
+@media (max-width: 860px) {
+  .mat { grid-template-columns: minmax(0, 1fr); padding: 52px 22px 10px; gap: 4px; }
+  .board { height: 300px; }
+}
+
+/* ---------- المزايا ---------- */
+.perks { padding-block: 26px 10px; }
+.perks ul {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 28px;
+}
+.perks li { display: grid; grid-template-columns: 42px minmax(0, 1fr); gap: 2px 12px; align-items: start; }
+.perks svg {
+  grid-row: span 2; width: 42px; height: 42px; padding: 9px;
+  border-radius: 12px; background: var(--tile); color: var(--ink);
+}
+.perks strong { font-weight: 600; }
+.perks span { color: var(--ink-2); font-size: var(--fs-s); line-height: 1.55; }
+@media (max-width: 760px) { .perks ul { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- المنتجات ---------- */
+.section { padding-block: 48px; }
+.section-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+.section-head h2 { font-family: var(--display); font-weight: 400; font-size: var(--fs-xl); line-height: 1.2; }
+.section-head p { color: var(--ink-2); margin-top: 4px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 16px;
+  border: 1.5px solid var(--line); border-radius: 999px; background: var(--surface); font-weight: 500;
+}
+.chip small { color: var(--ink-2); font-size: var(--fs-xs); }
+.chip[aria-pressed="true"] { background: var(--btn); color: var(--btn-ink); border-color: var(--btn); }
+.chip[aria-pressed="true"] small { color: inherit; opacity: .75; }
+.grid { display: grid; gap: 26px 18px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 700px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 12px; } }
+.card { display: grid; gap: 10px; align-content: start; min-width: 0; }
+.card-art {
+  position: relative; display: block; width: 100%; padding: 0; border: 0;
+  aspect-ratio: 1; max-width: 100%;
+  border-radius: var(--r-m); overflow: hidden;
+  background-color: var(--tile);
+  background-image: linear-gradient(var(--tile-grid) 1px, transparent 1px), linear-gradient(90deg, var(--tile-grid) 1px, transparent 1px);
+  background-size: 10% 10%; background-position: 50% 50%;
+  container-type: inline-size;
+}
+.card-art .art { transition: transform .25s ease; }
+.card-art:hover .art { transform: scale(1.05) rotate(-1.5deg); }
+.badge {
+  position: absolute; top: 10px; inset-inline-start: 10px;
+  padding: 3px 10px; border-radius: 999px;
+  background: var(--accent); color: var(--accent-ink);
+  font-size: var(--fs-xs); font-weight: 600; line-height: 1.6;
+}
+.card h3 { font-size: var(--fs-m); font-weight: 600; line-height: 1.4; }
+.card-meta { color: var(--ink-2); font-size: var(--fs-xs); margin-top: 2px; }
+.card-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.price { font-weight: 700; font-size: 1.0625rem; font-variant-numeric: tabular-nums; }
+.price small { font-weight: 400; color: var(--ink-2); font-size: var(--fs-xs); margin-inline-end: 2px; }
+.add {
+  display: inline-grid; place-items: center; width: 40px; height: 40px; flex: none;
+  border: 0; border-radius: 50%; background: var(--btn); color: var(--btn-ink);
+  transition: transform .15s ease;
+}
+.add:hover { transform: scale(1.08); }
+.add svg { width: 18px; height: 18px; }
+
+/* ---------- رسم المنتجات: ستيكرات ---------- */
+.art { position: absolute; inset: 0; display: grid; place-items: center; font-size: clamp(7px, 6.2cqi, 22px); }
+.stk {
+  display: inline-block; white-space: nowrap;
+  font-family: var(--display); font-size: 2.35em; line-height: 1;
+  padding: .42em .62em .3em;
+  background: var(--c); color: var(--t);
+  border-radius: .45em;
+  box-shadow: 0 0 0 .2em var(--die), 0 0 0 calc(.2em + 1px) rgba(28, 21, 48, .1), 0 .32em .55em .05em rgba(28, 21, 48, .26);
+  rotate: var(--r, 0deg);
+}
+.stk-pill { border-radius: 999px; padding-inline: .8em; }
+.stk-circle { display: grid; place-items: center; width: 3.1em; height: 3.1em; padding: .12em 0 0; border-radius: 50%; }
+.stk-emo {
+  display: inline-block; font-size: 5.6em; line-height: 1; rotate: var(--r, 0deg);
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  filter:
+    drop-shadow(.055em 0 0 var(--die)) drop-shadow(-.055em 0 0 var(--die))
+    drop-shadow(0 .055em 0 var(--die)) drop-shadow(0 -.055em 0 var(--die))
+    drop-shadow(0 0 .5px rgba(28, 21, 48, .25))
+    drop-shadow(0 .07em .08em rgba(28, 21, 48, .28));
+}
+.stk-svg { width: 6.4em; height: 6.4em; rotate: var(--r, 0deg); filter: drop-shadow(0 .3em .4em rgba(28, 21, 48, .26)); overflow: visible; }
+.is-holo .stk { background: var(--holo); color: #1C1530; }
+.is-holo .stk-emo { animation: shimmer 2.4s linear infinite; }
+@keyframes shimmer {
+  0%, 100% { filter: drop-shadow(.055em 0 0 #FFD9F0) drop-shadow(-.055em 0 0 #CFF7EF) drop-shadow(0 .055em 0 #DCE6FF) drop-shadow(0 -.055em 0 #FFF2C4) drop-shadow(0 .07em .08em rgba(28, 21, 48, .28)) saturate(1.25); }
+  50% { filter: drop-shadow(.055em 0 0 #CFF7EF) drop-shadow(-.055em 0 0 #FFD9F0) drop-shadow(0 .055em 0 #FFF2C4) drop-shadow(0 -.055em 0 #DCE6FF) drop-shadow(0 .07em .08em rgba(28, 21, 48, .28)) saturate(1.5) hue-rotate(-12deg); }
+}
+.pack { position: relative; width: 9em; height: 7em; }
+.pack > * { position: absolute; }
+.pack .stk { font-size: 1.6em; }
+.pack .stk-emo { font-size: 3.6em; }
+.stk-custom {
+  display: grid; place-items: center; gap: .2em;
+  width: 7em; height: 7em; border-radius: 1.6em;
+  border: .16em dashed var(--ink-2); color: var(--ink-2);
+  font-family: var(--display); font-size: 1em; line-height: 1;
+  rotate: -4deg;
+}
+.stk-custom b { font-weight: 400; font-size: 1.5em; }
+.stk-custom svg { width: 2.2em; height: 2.2em; }
+
+/* ---------- رسم المنتجات: ميداليات ---------- */
+.kc {
+  --m1: var(--silver-1); --m2: var(--silver-2); --m3: var(--silver-3);
+  display: grid; justify-items: center; transform-origin: 50% 1.4em; rotate: var(--r, 0deg);
+  margin-top: -.6em;
+}
+.kc.gold { --m1: var(--gold-1); --m2: var(--gold-2); --m3: var(--gold-3); }
+.kc-ring {
+  width: 3em; height: 3em; border-radius: 50%;
+  background: conic-gradient(from 20deg, var(--m1), var(--m2), var(--m3), var(--m1), var(--m2), var(--m1));
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - .36em), #000 calc(100% - .34em));
+          mask: radial-gradient(farthest-side, transparent calc(100% - .36em), #000 calc(100% - .34em));
+  filter: drop-shadow(0 .08em .08em rgba(0, 0, 0, .3));
+}
+.kc-jump {
+  position: relative; z-index: 2;
+  width: .75em; height: 1.25em; margin-top: -.42em;
+  border: .17em solid var(--m2); border-radius: 50%;
+  box-shadow: inset 0 0 0 .05em var(--m1);
+}
+.kc-charm {
+  position: relative; display: grid; place-items: center; margin-top: -.62em;
+  width: 6.4em; height: 6.4em; border-radius: 1.3em;
+  background: var(--c); color: var(--t);
+  border: .42em solid rgba(255, 255, 255, .72);
+  box-shadow: 0 0 0 1px rgba(28, 21, 48, .14), inset 0 0 0 1px rgba(255, 255, 255, .5), 0 .5em .9em rgba(28, 21, 48, .24);
+  background-clip: padding-box;
+}
+.kc-charm::before { /* ثقب الحلقة */
+  content: ""; position: absolute; top: .18em; left: 50%; translate: -50% 0;
+  width: .5em; height: .5em; border-radius: 50%;
+  background: rgba(255, 255, 255, .9); box-shadow: inset 0 .06em .1em rgba(0, 0, 0, .35);
+}
+.kc-charm::after { /* لمعة الأكريليك */
+  content: ""; position: absolute; inset: 0; border-radius: .9em; pointer-events: none;
+  background: linear-gradient(140deg, rgba(255, 255, 255, .55) 0%, rgba(255, 255, 255, 0) 38%);
+}
+.kc-round { border-radius: 50%; }
+.kc-round::after { border-radius: 50%; }
+.kc-pill { width: auto; min-width: 6.4em; max-width: 13em; height: 3.6em; padding: .55em .9em .1em; border-radius: 1.8em; }
+.kc-pill::after { border-radius: 1.4em; }
+.kc-pill::before { top: .12em; }
+.kc-print { font-family: var(--display); font-size: 2.9em; line-height: 1; padding-top: .18em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.kc-pill .kc-print { font-size: 1.9em; padding-top: .12em; }
+.kc-emo { font-size: 3.6em; line-height: 1; font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif; }
+.kc-sparkle { width: 7.2em; height: 7.6em; margin-top: -.5em; filter: drop-shadow(0 .45em .6em rgba(28, 21, 48, .26)); overflow: visible; }
+
+/* ---------- تصميمك الخاص ---------- */
+.custom {
+  display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 32px; align-items: center;
+  padding: 40px; border-radius: var(--r-l);
+  background: var(--surface); border: 1px solid var(--line);
+}
+.custom h2 { font-family: var(--display); font-weight: 400; font-size: var(--fs-xl); line-height: 1.2; }
+.custom-lead { color: var(--ink-2); margin-top: 8px; max-width: 32rem; }
+.custom-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; counter-reset: step; }
+.steps li {
+  counter-increment: step;
+  display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 2px 14px; align-items: start;
+  padding: 16px; border-radius: var(--r-m); background: var(--tile);
+}
+.steps li::before {
+  content: counter(step, arabic-indic);
+  grid-row: span 2; display: grid; place-items: center; width: 44px; height: 44px;
+  border-radius: 50%; background: var(--btn); color: var(--btn-ink);
+  font-family: var(--display); font-size: 1.35rem; padding-top: .2em;
+}
+.steps strong { font-weight: 600; }
+.steps span { color: var(--ink-2); font-size: var(--fs-s); line-height: 1.6; }
+@media (max-width: 860px) { .custom { grid-template-columns: minmax(0, 1fr); padding: 26px 18px; } }
+
+/* ---------- الأسئلة ---------- */
+.faq { display: grid; gap: 10px; max-width: 46rem; }
+.faq details { border-radius: var(--r-m); background: var(--surface); border: 1px solid var(--line); }
+.faq summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 16px 18px; font-weight: 600; cursor: pointer; list-style: none;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-size: 1.4rem; line-height: 1; color: var(--ink-2); transition: rotate .2s ease; }
+.faq details[open] summary::after { rotate: 45deg; }
+.faq details p { padding: 0 18px 18px; color: var(--ink-2); max-width: 40rem; }
+
+/* ---------- التذييل ---------- */
+.foot { margin-top: 24px; padding-block: 34px 40px; border-top: 1px solid var(--line); color: var(--ink-2); font-size: var(--fs-s); }
+.foot-in { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px; }
+.foot img { height: 46px; width: auto; }
+.foot nav { display: flex; flex-wrap: wrap; gap: 18px; }
+.foot nav a { text-decoration: none; }
+.foot nav a:hover { color: var(--ink); }
+
+/* ---------- النوافذ ---------- */
+dialog {
+  padding: 0; border: 0; color: var(--ink); background: var(--surface);
+  max-width: calc(100% - 24px); max-height: calc(100dvh - 24px);
+  border-radius: var(--r-l); box-shadow: 0 30px 80px rgba(0, 0, 0, .35);
+}
+dialog::backdrop { background: var(--veil); }
+dialog[open] { animation: pop .22s ease; }
+@keyframes pop { from { opacity: 0; transform: translateY(14px) scale(.98); } }
+.dlg-x { position: absolute; top: 12px; inset-inline-end: 12px; z-index: 3; }
+
+.pd { width: 820px; }
+.pd-in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.pd-art { position: relative; container-type: inline-size; aspect-ratio: auto; min-height: 400px; height: 100%; max-width: 100%; border-radius: 0; }
+.pd-art .art { font-size: 6.2cqi; }
+.pd-body { display: grid; gap: 16px; align-content: start; padding: 28px 26px 24px; overflow-y: auto; max-height: calc(100dvh - 24px); }
+.pd-body h2 { font-family: var(--display); font-weight: 400; font-size: 2rem; line-height: 1.2; padding-inline-end: 44px; }
+.pd-meta { color: var(--ink-2); font-size: var(--fs-s); }
+.pd-desc { font-size: var(--fs-s); line-height: 1.75; }
+.opt { border: 0; margin: 0; padding: 0; display: grid; gap: 8px; }
+.opt legend { padding: 0; margin-bottom: 8px; font-weight: 600; font-size: var(--fs-s); }
+.opt-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.opt-row label { position: relative; }
+.opt-row input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.opt-row span {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px;
+  border: 1.5px solid var(--line); border-radius: 999px; font-size: var(--fs-s);
+}
+.opt-row span small { color: var(--ink-2); font-size: var(--fs-xs); }
+.opt-row input:checked + span { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); font-weight: 600; }
+.opt-row input:focus-visible + span { outline: 3px solid var(--accent); outline-offset: 2px; }
+.field { display: grid; gap: 6px; }
+.field label, .field .label { font-weight: 600; font-size: var(--fs-s); }
+.field input, .field select, .field textarea {
+  width: 100%; min-height: 46px; padding: 10px 14px;
+  border: 1.5px solid var(--line); border-radius: 12px; background: var(--paper);
+}
+.field textarea { min-height: 80px; resize: vertical; }
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--ink); }
+.field .hint { color: var(--ink-2); font-size: var(--fs-xs); }
+.field .err { color: var(--error); font-size: var(--fs-xs); font-weight: 600; }
+.field [aria-invalid="true"] { border-color: var(--error); }
+.note { padding: 12px 14px; border-radius: 12px; background: var(--tile); font-size: var(--fs-s); color: var(--ink-2); }
+.qty { display: inline-flex; align-items: center; gap: 4px; padding: 3px; border-radius: 999px; background: var(--tile); }
+.qty button { width: 34px; height: 34px; border: 0; border-radius: 50%; background: var(--surface); font-size: 1.1rem; line-height: 1; display: grid; place-items: center; }
+.qty output { min-width: 2ch; text-align: center; font-weight: 600; font-variant-numeric: tabular-nums; }
+.pd-buy { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding-top: 4px; }
+.pd-buy .btn { flex: 1 1 180px; }
+
+.drawer {
+  width: min(430px, 100%); max-width: 100%; height: 100dvh; max-height: 100dvh;
+  margin: 0; margin-inline-start: auto; border-radius: 0;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.drawer[open] { display: flex; flex-direction: column; animation: slide .25s ease; }
+@keyframes slide { from { transform: translateX(-30px); opacity: 0; } }
+.drawer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 20px; padding-top: calc(18px + env(safe-area-inset-top, 0px)); border-bottom: 1px solid var(--line); }
+.drawer-head h2 { font-family: var(--display); font-weight: 400; font-size: 1.7rem; line-height: 1.2; }
+.drawer-head h2 small { font-family: var(--body); font-size: var(--fs-s); color: var(--ink-2); margin-inline-start: 6px; }
+.drawer-head .dlg-x { position: static; }
+.lines { flex: 1; overflow-y: auto; padding: 8px 20px; list-style: none; margin: 0; }
+.line { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 14px; padding-block: 14px; border-bottom: 1px solid var(--line); }
+.line:last-child { border-bottom: 0; }
+.line-art { position: relative; width: 76px; aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: var(--tile); container-type: inline-size; }
+.line-info { display: grid; gap: 6px; min-width: 0; }
+.line-top { display: flex; justify-content: space-between; gap: 8px; }
+.line-top strong { font-weight: 600; line-height: 1.4; }
+.line-opts { color: var(--ink-2); font-size: var(--fs-xs); overflow-wrap: anywhere; }
+.line-bot { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.line-rm { border: 0; background: none; padding: 4px; color: var(--ink-2); font-size: var(--fs-xs); text-decoration: underline; text-underline-offset: 3px; }
+.empty { display: grid; justify-items: center; gap: 12px; text-align: center; padding: 48px 20px; color: var(--ink-2); }
+.empty .art { position: relative; inset: auto; width: 160px; height: 140px; font-size: 13px; }
+.drawer-foot { display: grid; gap: 10px; padding: 16px 20px 20px; border-top: 1px solid var(--line); background: var(--surface); }
+.ship-bar { display: grid; gap: 6px; font-size: var(--fs-s); }
+.ship-bar .track { height: 8px; border-radius: 999px; background: var(--tile); overflow: hidden; }
+.ship-bar .fill { height: 100%; width: 0; border-radius: inherit; background: var(--holo); transition: width .35s ease; }
+.ship-bar.done { color: var(--ok); font-weight: 600; }
+.sum { display: grid; gap: 4px; font-size: var(--fs-s); }
+.sum div { display: flex; justify-content: space-between; gap: 12px; }
+.sum dt { color: var(--ink-2); }
+.sum dd { margin: 0; font-variant-numeric: tabular-nums; }
+.sum .total { font-size: var(--fs-l); font-weight: 700; padding-top: 6px; }
+.sum .total dt { color: var(--ink); }
+
+.co { width: 560px; }
+.co-in { display: grid; gap: 16px; padding: 28px 24px 24px; overflow-y: auto; max-height: calc(100dvh - 24px); }
+.co-in h2 { font-family: var(--display); font-weight: 400; font-size: 1.9rem; line-height: 1.2; padding-inline-end: 44px; }
+.co-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.pay { display: grid; gap: 8px; }
+.pay label { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 12px; cursor: pointer; }
+.pay label:has(input:checked) { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.pay input { accent-color: var(--ink); width: 18px; height: 18px; margin: 0; }
+.pay small { display: block; color: var(--ink-2); font-size: var(--fs-xs); }
+.done-badge { display: inline-flex; align-items: center; gap: 8px; color: var(--ok); font-weight: 600; }
+.order-text {
+  width: 100%; min-height: 220px; padding: 14px; resize: vertical;
+  border: 1.5px solid var(--line); border-radius: 12px; background: var(--paper);
+  font-size: var(--fs-s); line-height: 1.7; white-space: pre-wrap;
+}
+.co-actions { display: grid; gap: 10px; }
+.wa { background: #1E8E4E; color: #FFFFFF; }
+
+@media (max-width: 700px) {
+  .pd, .co { width: 100%; max-width: 100%; margin: auto 0 0; border-radius: 22px 22px 0 0; max-height: 94dvh; padding-bottom: env(safe-area-inset-bottom, 0px); }
+  dialog.pd[open], dialog.co[open] { animation: rise .25s ease; }
+  @keyframes rise { from { transform: translateY(40px); opacity: 0; } }
+  .pd-in { grid-template-columns: minmax(0, 1fr); max-height: 94dvh; overflow-y: auto; }
+  .pd-art { aspect-ratio: 16 / 11; min-height: 0; height: auto; }
+  .pd-art .art { font-size: 4.6cqi; }
+  .pd-body, .co-in { max-height: none; padding: 20px 18px 22px; }
+  .co-in { max-height: 94dvh; }
+  .co-row { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---------- التنبيه ---------- */
+.toast {
+  position: fixed; z-index: 50; inset-inline: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  width: min(440px, calc(100% - 32px)); margin-inline: auto; padding: 12px 12px 12px 18px;
+  border-radius: 16px; background: var(--btn); color: var(--btn-ink);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .3);
+  translate: 0 160%; visibility: hidden; transition: translate .3s ease, visibility 0s linear .3s;
+}
+.toast.show { translate: 0 0; visibility: visible; transition: translate .3s ease; }
+.toast button { flex: none; border: 0; border-radius: 999px; padding: 8px 14px; background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  html { scroll-behavior: auto; }
+}
+</style>
+
+<a id="top"></a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#top" aria-label="لوكس، الرئيسية"><img src="assets/logo.svg" alt="لوكس" width="81" height="54"></a>
+    <nav class="nav" aria-label="أقسام المتجر">
+      <a href="#shop" data-jump="sticker">ستيكرات</a>
+      <a href="#shop" data-jump="keychain">ميداليات</a>
+      <a href="#custom">تصميمك الخاص</a>
+      <a href="#faq">أسئلة شائعة</a>
+    </nav>
+    <button class="cart-btn" id="cartBtn" type="button" aria-haspopup="dialog">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9L5 8Z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></svg>
+      <span>السلة</span>
+      <span class="cart-count num" id="cartCount" aria-label="عدد القطع في السلة">٠</span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap" aria-labelledby="heroTitle">
+    <div class="mat">
+      <div class="ruler" id="ruler" aria-hidden="true"></div>
+      <div class="hero-copy">
+        <span class="hero-kicker">ستيكرات · ميداليات · تصاميم حسب الطلب</span>
+        <h1 id="heroTitle">الصق <span class="holo-text">ذوقك</span><br>على كل شي</h1>
+        <p class="hero-sub">ستيكرات فينيل مقصوصة على حدود الرسمة، وميداليات أكريليك مطبوعة على الوجهين. نجهّز طلبك ونوصله لكل مدن المملكة.</p>
+        <div class="hero-cta">
+          <a class="btn" href="#shop">تسوّق الحين</a>
+          <a class="btn btn-ghost" href="#custom">اطبع تصميمك</a>
+        </div>
+      </div>
+      <div class="board" aria-hidden="true"><div class="board-in" id="board"></div></div>
+    </div>
+  </section>
+
+  <section class="perks wrap" aria-label="مزايا لوكس">
+    <ul>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s6 6.4 6 11a6 6 0 0 1-12 0c0-4.6 6-11 6-11Z"/><path d="M9.5 14.5a2.5 2.5 0 0 0 2.5 2.5"/></svg>
+        <strong>فينيل مقاوم للماء</strong>
+        <span>يتحمل غسيل اليد والشمس، ويثبت على المطارة واللابتوب والجوال.</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/></svg>
+        <strong id="perkShip">شحن مجاني فوق ٩٩ ر.س</strong>
+        <span id="perkShipSub">وتحتها رسوم الشحن ٢٥ ر.س لأي مدينة في المملكة.</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l4.5-1 10-10a2.1 2.1 0 0 0-3-3l-10 10L4 20Z"/><path d="M14 7l3 3"/></svg>
+        <strong>تصميمك الخاص</strong>
+        <span>أرسل لنا صورة أو اسم، ونطبعه ستيكر أو ميدالية.</span>
+      </li>
+    </ul>
+  </section>
+
+  <section class="section wrap" id="shop" aria-labelledby="shopTitle">
+    <div class="section-head">
+      <div>
+        <h2 id="shopTitle">المنتجات</h2>
+        <p>اضغط على أي منتج تختار المقاس والخامة.</p>
+      </div>
+      <div class="chips" id="chips" role="group" aria-label="تصفية المنتجات"></div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section class="section wrap" id="custom" aria-labelledby="customTitle">
+    <div class="custom">
+      <div>
+        <h2 id="customTitle">عندك تصميم؟ نطبعه لك</h2>
+        <p class="custom-lead">شعار فريقك، رسمة طفلك، صورة قطوتك، أو اسمك بالخط اللي تحبه. نقصّه على حدوده ونطبعه ستيكر أو ميدالية.</p>
+        <div class="custom-actions">
+          <button class="btn" type="button" data-open="s-custom">ستيكر بتصميمك</button>
+          <button class="btn btn-ghost" type="button" data-open="k-name">ميدالية باسمك</button>
+        </div>
+      </div>
+      <ol class="steps">
+        <li><strong>اختر المنتج وأضفه للسلة</strong><span>«ستيكر بتصميمك» بالمقاس والخامة اللي تبيها، أو «ميدالية باسمك» وتكتب الاسم.</span></li>
+        <li><strong>أكمل الطلب وأرسله على واتساب</strong><span>يوصلنا الطلب كامل بالمنتجات والعنوان.</span></li>
+        <li><strong>أرفق التصميم في نفس المحادثة</strong><span>نرسل لك بروفة قبل الطباعة، وما نطبع إلا بعد موافقتك.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section wrap" id="faq" aria-labelledby="faqTitle">
+    <div class="section-head"><h2 id="faqTitle">أسئلة شائعة</h2></div>
+    <div class="faq">
+      <details><summary>كم يتحمل الستيكر؟</summary><p>الستيكر فينيل مقاوم للماء والخدوش. يتحمل غسيل اليد والشمس، ومناسب للمطارة واللابتوب والجوال. ما ننصح فيه بغسالة الصحون.</p></details>
+      <details><summary>وش الفرق بين المطفي واللامع والهولوغرام؟</summary><p>المطفي بدون لمعة ويخفي البصمات، واللامع ألوانه أقوى، والهولوغرام يعكس ألوان قوس قزح مع الضوء ويزيد ٤ ر.س على السعر.</p></details>
+      <details><summary>كم مقاس الميدالية؟</summary><p>الميدالية أكريليك شفاف سماكته ٣ مم، وطولها تقريباً ٥ سم، مطبوعة على الوجهين ومعها حلقة معدن فضية أو ذهبية.</p></details>
+      <details><summary>متى يوصلني الطلب؟</summary><p>نجهّز الطلب خلال ١ إلى ٣ أيام عمل، والتوصيل ياخذ ٢ إلى ٥ أيام حسب مدينتك. الطلبات الخاصة تبدأ بعد موافقتك على البروفة.</p></details>
+      <details><summary>كيف أدفع؟</summary><p>بعد ما ترسل الطلب على واتساب نأكد معك المجموع، وتدفع بتحويل بنكي أو عند الاستلام.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <img src="assets/logo.svg" alt="لوكس" width="69" height="46">
+    <nav aria-label="روابط سريعة">
+      <a href="#shop">المنتجات</a>
+      <a href="#custom">تصميمك الخاص</a>
+      <a href="#faq">أسئلة شائعة</a>
+    </nav>
+    <p>© <span class="num" id="year">٢٠٢٦</span> لوكس</p>
+  </div>
+</footer>
+
+<!-- نافذة المنتج -->
+<dialog class="pd" id="pd" aria-labelledby="pdName">
+  <form method="dialog" class="pd-in" id="pdForm" novalidate>
+    <div class="card-art pd-art" id="pdArt"></div>
+    <div class="pd-body">
+      <button class="icon-btn dlg-x" type="button" data-close aria-label="إغلاق">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+      <div>
+        <h2 id="pdName"></h2>
+        <p class="pd-meta" id="pdMeta"></p>
+      </div>
+      <p class="pd-desc" id="pdDesc"></p>
+      <div id="pdOpts" class="pd-opts" style="display:grid;gap:16px"></div>
+      <div class="pd-buy">
+        <div class="qty" role="group" aria-label="الكمية">
+          <button type="button" data-step="1" aria-label="زيادة">+</button>
+          <output id="pdQty">١</output>
+          <button type="button" data-step="-1" aria-label="إنقاص">−</button>
+        </div>
+        <button class="btn" type="submit" id="pdAdd">أضف للسلة</button>
+      </div>
+    </div>
+  </form>
+</dialog>
+
+<!-- السلة -->
+<dialog class="drawer" id="cart" aria-labelledby="cartTitle">
+  <div class="drawer-head">
+    <h2 id="cartTitle">سلتك <small id="cartPieces"></small></h2>
+    <button class="icon-btn dlg-x" type="button" data-close aria-label="إغلاق السلة">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+  <ul class="lines" id="lines"></ul>
+  <div class="empty" id="cartEmpty" hidden>
+    <div class="art"><div class="pack" id="emptyArt"></div></div>
+    <p>سلتك فاضية.</p>
+    <button class="btn" type="button" id="browse">تصفّح المنتجات</button>
+  </div>
+  <div class="drawer-foot" id="cartFoot">
+    <div class="ship-bar" id="shipBar">
+      <span id="shipMsg"></span>
+      <div class="track"><div class="fill" id="shipFill"></div></div>
+    </div>
+    <dl class="sum" style="margin:0">
+      <div><dt>المنتجات</dt><dd id="sumSub"></dd></div>
+      <div><dt>الشحن</dt><dd id="sumShip"></dd></div>
+      <div class="total"><dt>الإجمالي</dt><dd id="sumTotal"></dd></div>
+    </dl>
+    <button class="btn btn-block" type="button" id="checkoutBtn">إتمام الطلب</button>
+  </div>
+</dialog>
+
+<!-- إتمام الطلب -->
+<dialog class="co" id="co" aria-labelledby="coTitle">
+  <form class="co-in" id="coForm" novalidate>
+    <button class="icon-btn dlg-x" type="button" data-close aria-label="إغلاق">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <h2 id="coTitle">بيانات التوصيل</h2>
+    <p class="note" id="coSummary"></p>
+    <div class="field">
+      <label for="fName">الاسم</label>
+      <input id="fName" name="name" autocomplete="name" required maxlength="60">
+      <span class="err" id="eName" hidden>اكتب اسمك عشان نعرف لمين الطلب.</span>
+    </div>
+    <div class="co-row">
+      <div class="field">
+        <label for="fPhone">رقم الجوال</label>
+        <input id="fPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="05XXXXXXXX" dir="ltr" required>
+        <span class="err" id="ePhone" hidden>الرقم لازم يبدأ بـ 05 ويكون ١٠ أرقام.</span>
+      </div>
+      <div class="field">
+        <label for="fCity">المدينة</label>
+        <select id="fCity" name="city" required></select>
+        <span class="err" id="eCity" hidden>اختر مدينتك.</span>
+      </div>
+    </div>
+    <div class="field">
+      <label for="fAddr">الحي والعنوان</label>
+      <input id="fAddr" name="address" autocomplete="street-address" placeholder="مثال: حي النرجس، شارع ١٢، بيت ٤" required maxlength="140">
+      <span class="err" id="eAddr" hidden>اكتب الحي والعنوان عشان يوصلك المندوب.</span>
+    </div>
+    <div class="field">
+      <span class="label" id="payLabel">طريقة الدفع</span>
+      <div class="pay" role="radiogroup" aria-labelledby="payLabel">
+        <label><input type="radio" name="pay" value="تحويل بنكي" checked><span>تحويل بنكي<small>نرسل لك رقم الآيبان بعد تأكيد الطلب.</small></span></label>
+        <label><input type="radio" name="pay" value="الدفع عند الاستلام"><span>الدفع عند الاستلام<small>تدفع للمندوب كاش أو شبكة.</small></span></label>
+      </div>
+    </div>
+    <div class="field">
+      <label for="fNote">ملاحظات <span class="hint">(اختياري)</span></label>
+      <textarea id="fNote" name="note" maxlength="300" placeholder="مثال: أبي الستيكرات مغلفة هدية"></textarea>
+    </div>
+    <button class="btn btn-block" type="submit">تأكيد الطلب</button>
+  </form>
+
+  <div class="co-in" id="coDone" hidden>
+    <button class="icon-btn dlg-x" type="button" data-close aria-label="إغلاق">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <span class="done-badge"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg> طلبك جاهز للإرسال</span>
+    <h2 id="doneTitle"></h2>
+    <p id="doneLead"></p>
+    <label class="sr-only" for="orderText">نص الطلب</label>
+    <textarea class="order-text" id="orderText" readonly></textarea>
+    <div class="co-actions">
+      <a class="btn btn-block wa" id="waLink" href="#" target="_blank" rel="noopener">أرسل الطلب على واتساب</a>
+      <button class="btn btn-ghost btn-block" type="button" id="copyBtn">انسخ نص الطلب</button>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span id="toastMsg"></span>
+  <button type="button" id="toastCart">عرض السلة</button>
+</div>
+
+<script>
+/* ===== إعدادات المتجر: عدّلها من هنا ===== */
+const STORE = {
+  name: 'لوكس',
+  whatsapp: '',            // رقم واتساب المتجر بالصيغة الدولية بدون + ولا أصفار، مثال: 9665XXXXXXXX
+  freeShippingFrom: 99,    // الشحن مجاني إذا وصل مجموع المنتجات لهذا المبلغ
+  shippingFee: 25,
+  currency: 'ر.س',
+  cities: ['الرياض', 'جدة', 'مكة المكرمة', 'المدينة المنورة', 'الدمام', 'الخبر', 'الظهران', 'الجبيل', 'الأحساء', 'القطيف', 'بريدة', 'عنيزة', 'الطائف', 'أبها', 'خميس مشيط', 'تبوك', 'حائل', 'جازان', 'نجران', 'الباحة', 'الجوف', 'ينبع', 'مدينة أخرى'],
+};
+
+const OPTIONS = {
+  size:   { label: 'المقاس', choices: [{ id: '5', label: '٥ × ٥ سم', add: 0 }, { id: '7', label: '٧ × ٧ سم', add: 3 }, { id: '10', label: '١٠ × ١٠ سم', add: 6 }] },
+  finish: { label: 'الخامة', choices: [{ id: 'matte', label: 'مطفي', add: 0 }, { id: 'gloss', label: 'لامع', add: 0 }, { id: 'holo', label: 'هولوغرام', add: 4 }] },
+  ring:   { label: 'لون الحلقة', choices: [{ id: 'silver', label: 'فضي', add: 0 }, { id: 'gold', label: 'ذهبي', add: 2 }] },
+};
+
+const PRODUCTS = [
+  { id: 's-coffee', type: 'sticker', name: 'قهوة أولاً', price: 7, opts: ['size', 'finish'], tag: 'الأكثر طلباً',
+    art: { kind: 'text', text: 'قهوة أولاً', bg: '#5A3825', fg: '#FFE3B8', shape: 'pill', tilt: -6 },
+    desc: 'للي ما يبدأ يومه إلا بفنجان. يركب على المطارة والكوب واللابتوب.' },
+  { id: 's-hala', type: 'sticker', name: 'يا هلا', price: 7, opts: ['size', 'finish'],
+    art: { kind: 'text', text: 'يا هلا', bg: '#1F7A5A', fg: '#FFFFFF', shape: 'rect', tilt: 5 },
+    desc: 'ترحيبة على باب الغرفة أو ظهر الجوال.' },
+  { id: 's-wala', type: 'sticker', name: 'ولا يهمك', price: 7, opts: ['size', 'finish'],
+    art: { kind: 'text', text: 'ولا يهمك', bg: '#FFD23F', fg: '#1C1530', shape: 'rect', tilt: -3 },
+    desc: 'للأيام اللي تبي تهدّي فيها الجو.' },
+  { id: 's-mazaj', type: 'sticker', name: 'مزاج', price: 7, opts: ['size', 'finish'],
+    art: { kind: 'text', text: 'مزاج', bg: '#D93A76', fg: '#FFFFFF', shape: 'circle', tilt: 8 },
+    desc: 'ستيكر دائري يناسب أي زاوية.' },
+  { id: 's-yalla', type: 'sticker', name: 'يلا نسافر', price: 7, opts: ['size', 'finish'],
+    art: { kind: 'text', text: 'يلا نسافر', bg: '#7AA2FF', fg: '#1C1530', shape: 'pill', tilt: 4 },
+    desc: 'لشنطة السفر وغلاف الجواز واللابتوب.' },
+  { id: 's-cat', type: 'sticker', name: 'قطوة', price: 8, opts: ['size', 'finish'],
+    art: { kind: 'emoji', emoji: '🐱', tilt: 6 },
+    desc: 'مقصوصة على حدود الرسمة بحافة بيضاء.' },
+  { id: 's-camel', type: 'sticker', name: 'بعير', price: 8, opts: ['size', 'finish'],
+    art: { kind: 'emoji', emoji: '🐪', tilt: -5 },
+    desc: 'لمسة من الصحراء على لابتوبك.' },
+  { id: 's-palm', type: 'sticker', name: 'نخلة', price: 8, opts: ['size', 'finish'],
+    art: { kind: 'emoji', emoji: '🌴', tilt: 4 },
+    desc: 'نخلة خضراء مقصوصة على حدودها.' },
+  { id: 's-moon', type: 'sticker', name: 'هلال', price: 8, opts: ['size', 'finish'],
+    art: { kind: 'emoji', emoji: '🌙', tilt: -10 },
+    desc: 'هلال صغير يحلّي أي سطح غامق.' },
+  { id: 's-flower', type: 'sticker', name: 'وردة', price: 8, opts: ['size', 'finish'],
+    art: { kind: 'emoji', emoji: '🌷', tilt: 7 },
+    desc: 'وردة ناعمة تنفع للدفاتر والهدايا.' },
+  { id: 's-pack', type: 'sticker', name: 'باكج ٢٠ ستيكر', price: 59, opts: [], tag: 'أوفر خيار', meta: 'تشكيلة عشوائية · ٥ إلى ٧ سم',
+    art: { kind: 'pack' },
+    desc: 'عشرين ستيكر من تصاميمنا نختارها لك عشوائياً، وكل باكج يختلف عن الثاني.' },
+  { id: 's-custom', type: 'sticker', name: 'ستيكر بتصميمك', price: 12, opts: ['size', 'finish'], design: true,
+    art: { kind: 'custom' },
+    desc: 'أي صورة أو رسمة أو شعار. نقصّه على حدوده ونطبعه بالمقاس اللي تبيه.' },
+
+  { id: 'k-letter', type: 'keychain', name: 'ميدالية حرف', price: 15, opts: ['ring'],
+    custom: { label: 'الحرف', max: 1, placeholder: 'ن', hint: 'حرف واحد، عربي أو إنجليزي.' },
+    art: { kind: 'text', shape: 'round', bg: '#1C1530', fg: '#FFFFFF', text: 'ن' },
+    desc: 'أول حرف من اسمك أو اسم أحد تحبه، بخط عريض.' },
+  { id: 'k-name', type: 'keychain', name: 'ميدالية باسمك', price: 22, opts: ['ring'], tag: 'الأكثر طلباً',
+    custom: { label: 'الاسم', max: 10, placeholder: 'نورة', hint: 'لين ١٠ حروف.' },
+    art: { kind: 'text', shape: 'pill', bg: '#D93A76', fg: '#FFFFFF', text: 'نورة' },
+    desc: 'اسمك مقصوص على الأكريليك ومطبوع على الوجهين. هدية تنفع لأي أحد.' },
+  { id: 'k-coffee', type: 'keychain', name: 'ميدالية فنجال', price: 18, opts: ['ring'],
+    art: { kind: 'emoji', shape: 'round', bg: '#FFE3B8', emoji: '☕' },
+    desc: 'لمحبين القهوة، تعلّقها مع مفتاح السيارة.' },
+  { id: 'k-cat', type: 'keychain', name: 'ميدالية قطوة', price: 18, opts: ['ring'],
+    art: { kind: 'emoji', shape: 'tag', bg: '#BFE3FF', emoji: '🐱' },
+    desc: 'قطوة صغيرة ترافق مفاتيحك.' },
+  { id: 'k-camel', type: 'keychain', name: 'ميدالية بعير', price: 18, opts: ['ring'],
+    art: { kind: 'emoji', shape: 'tag', bg: '#FFD23F', emoji: '🐪' },
+    desc: 'بعير على أكريليك أصفر، يبان من بعيد.' },
+  { id: 'k-palm', type: 'keychain', name: 'ميدالية نخلة', price: 18, opts: ['ring'],
+    art: { kind: 'emoji', shape: 'round', bg: '#C9F2DF', emoji: '🌴' },
+    desc: 'نخلة على أكريليك أخضر فاتح.' },
+  { id: 'k-moon', type: 'keychain', name: 'ميدالية هلال', price: 18, opts: ['ring'],
+    art: { kind: 'emoji', shape: 'tag', bg: '#2B2350', emoji: '🌙' },
+    desc: 'هلال ذهبي على أكريليك كحلي.' },
+  { id: 'k-lux', type: 'keychain', name: 'ميدالية لوكس', price: 20, opts: ['ring'], tag: 'جديد',
+    art: { kind: 'sparkle' },
+    desc: 'لمعة لوكس بطباعة هولوغرام تتلوّن مع الضوء.' },
+];
+
+const TYPES = { sticker: 'ستيكرات', keychain: 'ميداليات' };
+
+/* ===== أدوات ===== */
+const $ = (s, el = document) => el.querySelector(s);
+const AR = '٠١٢٣٤٥٦٧٨٩';
+const ar = n => String(n).replace(/\d/g, d => AR[d]);
+const money = n => `${ar(n)} ${STORE.currency}`;
+const latin = s => String(s).replace(/[٠-٩]/g, d => AR.indexOf(d)).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const byId = id => PRODUCTS.find(p => p.id === id);
+
+/* «قطعة واحدة · قطعتان · ٣ قطع · ١١ قطعة» */
+function pieces(n) {
+  if (n === 1) return 'قطعة واحدة';
+  if (n === 2) return 'قطعتان';
+  if (n % 100 >= 3 && n % 100 <= 10) return `${ar(n)} قطع`;
+  return `${ar(n)} قطعة`;
+}
+
+const store = {
+  get(k, fallback) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fallback; } catch { return fallback; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+};
+
+/* ===== رسم المنتجات ===== */
+const SPARKLE = 'M50,6 Q57,45 94,52 Q57,59 50,98 Q43,59 6,52 Q43,45 50,6Z';
+const HOLO_STOPS = '<stop offset="0" stop-color="#FF7AC6"/><stop offset=".3" stop-color="#FFD45C"/><stop offset=".55" stop-color="#5CE1C9"/><stop offset=".78" stop-color="#7AA2FF"/><stop offset="1" stop-color="#B983FF"/>';
+let svgUid = 0;
+
+function sparkleSticker(tilt = 0) {
+  const g = `h${++svgUid}`;
+  return `<svg class="stk-svg" viewBox="0 0 100 104" style="--r:${tilt}deg" aria-hidden="true">
+    <defs><linearGradient id="${g}" x1=".2" y1=".15" x2=".8" y2=".85">${HOLO_STOPS}</linearGradient></defs>
+    <path d="${SPARKLE}" fill="#fff" stroke="#fff" stroke-width="13" stroke-linejoin="round"/>
+    <path d="${SPARKLE}" fill="url(#${g})" stroke="#1C1530" stroke-width="2.2" stroke-linejoin="round"/></svg>`;
+}
+
+function stickerArt(a, s = {}) {
+  const tilt = a.tilt || 0;
+  if (a.kind === 'text') return `<span class="stk stk-${a.shape}" style="--c:${a.bg};--t:${a.fg};--r:${tilt}deg">${esc(a.text)}</span>`;
+  if (a.kind === 'emoji') return `<span class="stk-emo" style="--r:${tilt}deg">${a.emoji}</span>`;
+  if (a.kind === 'sparkle') return sparkleSticker(tilt);
+  if (a.kind === 'pack') return `<span class="pack">
+      <span class="stk stk-rect" style="--c:#1F7A5A;--t:#fff;--r:-12deg;top:.6em;right:.2em">يا هلا</span>
+      <span class="stk stk-circle" style="--c:#D93A76;--t:#fff;--r:10deg;bottom:.1em;right:.4em">مزاج</span>
+      <span class="stk-emo" style="--r:8deg;top:.3em;left:.2em">🐪</span>
+      <span class="stk stk-pill" style="--c:#FFD23F;--t:#1C1530;--r:-4deg;bottom:.3em;left:.3em">ولا يهمك</span>
+    </span>`;
+  if (a.kind === 'custom') return `<span class="stk-custom">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+      <b>تصميمك</b></span>`;
+  return '';
+}
+
+function keychainArt(p, s = {}) {
+  const a = p.art;
+  const ring = s.ring === 'gold' ? ' gold' : '';
+  const tilt = a.tilt ? `style="--r:${a.tilt}deg"` : '';
+  if (a.kind === 'sparkle') {
+    const g = `h${++svgUid}`;
+    return `<span class="kc${ring}" ${tilt}><span class="kc-ring"></span><span class="kc-jump"></span>
+      <svg class="kc-sparkle" viewBox="0 0 100 106" aria-hidden="true">
+        <defs><linearGradient id="${g}" x1=".2" y1=".15" x2=".8" y2=".85">${HOLO_STOPS}</linearGradient></defs>
+        <g transform="translate(0 4)">
+          <path d="${SPARKLE}" fill="rgba(255,255,255,.8)" stroke="rgba(255,255,255,.8)" stroke-width="10" stroke-linejoin="round"/>
+          <path d="${SPARKLE}" fill="url(#${g})"/>
+          <circle cx="50" cy="8" r="3" fill="#fff" stroke="rgba(0,0,0,.25)" stroke-width=".8"/>
+        </g></svg></span>`;
+  }
+  const text = (p.custom && s.text) ? s.text : a.text;
+  const inner = a.kind === 'emoji' ? `<span class="kc-emo">${a.emoji}</span>` : `<span class="kc-print">${esc(text)}</span>`;
+  const fg = a.fg || '#1C1530';
+  return `<span class="kc${ring}" ${tilt}><span class="kc-ring"></span><span class="kc-jump"></span>
+    <span class="kc-charm kc-${a.shape}" style="--c:${a.bg};--t:${fg}">${inner}</span></span>`;
+}
+
+function art(p, s = {}) {
+  const inner = p.type === 'keychain' ? keychainArt(p, s) : stickerArt(p.art, s);
+  return `<span class="art${s.finish === 'holo' ? ' is-holo' : ''}">${inner}</span>`;
+}
+
+/* ===== السعر والخيارات ===== */
+const defaults = p => Object.fromEntries(p.opts.map(k => [k, OPTIONS[k].choices[0].id]));
+const choice = (k, id) => OPTIONS[k].choices.find(c => c.id === id);
+const unitPrice = (p, sel) => p.price + p.opts.reduce((t, k) => t + (choice(k, sel[k])?.add || 0), 0);
+const hasRange = p => p.opts.some(k => OPTIONS[k].choices.some(c => c.add > 0));
+function metaOf(p) {
+  if (p.meta) return p.meta;
+  if (p.type === 'keychain') return 'أكريليك ٥ سم · طباعة وجهين';
+  return p.design ? 'فينيل · تقصيص على حدود تصميمك' : 'فينيل مقاوم للماء · من ٥ سم';
+}
+function optsText(line) {
+  const p = byId(line.id);
+  const parts = p.opts.map(k => choice(k, line[k])?.label).filter(Boolean);
+  if (p.custom && line.text) parts.unshift(`${p.custom.label}: ${line.text}`);
+  if (p.design) parts.push('التصميم يُرسل على واتساب');
+  return parts.join('، ');
+}
+
+/* ===== السلة ===== */
+let cart = store.get('lux-cart', []).filter(l => byId(l.id) && l.qty > 0);
+const lineKey = l => [l.id, l.size, l.finish, l.ring, l.text].join('|');
+
+function totals() {
+  let count = 0, sub = 0;
+  for (const l of cart) { count += l.qty; sub += unitPrice(byId(l.id), l) * l.qty; }
+  const ship = sub === 0 || sub >= STORE.freeShippingFrom ? 0 : STORE.shippingFee;
+  return { count, sub, ship, total: sub + ship };
+}
+
+function addToCart(line) {
+  const key = lineKey(line);
+  const found = cart.find(l => lineKey(l) === key);
+  if (found) found.qty = Math.min(99, found.qty + line.qty);
+  else cart.push(line);
+  saveCart();
+  const c = $('#cartCount'); c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump');
+  toast(`انضافت للسلة: ${byId(line.id).name}`);
+}
+
+function setQty(key, q) {
+  const l = cart.find(x => lineKey(x) === key);
+  if (!l) return;
+  if (q <= 0) cart = cart.filter(x => x !== l); else l.qty = Math.min(99, q);
+  saveCart();
+}
+
+function saveCart() { store.set('lux-cart', cart); renderCart(); }
+
+function renderCart() {
+  const t = totals();
+  $('#cartCount').textContent = ar(t.count);
+  $('#cartCount').setAttribute('aria-label', `في السلة ${pieces(t.count)}`);
+  $('#cartPieces').textContent = t.count ? `(${pieces(t.count)})` : '';
+  const empty = cart.length === 0;
+  $('#cartEmpty').hidden = !empty;
+  $('#cartFoot').hidden = empty;
+  $('#lines').hidden = empty;
+  $('#lines').innerHTML = cart.map(l => {
+    const p = byId(l.id), key = esc(lineKey(l));
+    return `<li class="line">
+      <div class="line-art">${art(p, l)}</div>
+      <div class="line-info">
+        <div class="line-top"><strong>${esc(p.name)}</strong><span class="price">${money(unitPrice(p, l) * l.qty)}</span></div>
+        <span class="line-opts">${esc(optsText(l)) || TYPES[p.type]}</span>
+        <div class="line-bot">
+          <div class="qty" role="group" aria-label="كمية ${esc(p.name)}">
+            <button type="button" data-q="${key}" data-d="1" aria-label="زيادة">+</button>
+            <output>${ar(l.qty)}</output>
+            <button type="button" data-q="${key}" data-d="-1" aria-label="إنقاص">−</button>
+          </div>
+          <button class="line-rm" type="button" data-rm="${key}">حذف</button>
+        </div>
+      </div></li>`;
+  }).join('');
+  const left = STORE.freeShippingFrom - t.sub;
+  const bar = $('#shipBar');
+  bar.classList.toggle('done', left <= 0);
+  $('#shipMsg').textContent = left <= 0 ? 'شحنك مجاني' : `باقي ${money(left)} ويصير شحنك مجاني`;
+  $('#shipFill').style.width = `${Math.min(100, (t.sub / STORE.freeShippingFrom) * 100)}%`;
+  $('#sumSub').textContent = money(t.sub);
+  $('#sumShip').textContent = t.ship ? money(t.ship) : 'مجاني';
+  $('#sumTotal').textContent = money(t.total);
+}
+
+/* ===== الكتالوج ===== */
+let filter = 'all';
+function renderChips() {
+  const counts = { all: PRODUCTS.length };
+  for (const p of PRODUCTS) counts[p.type] = (counts[p.type] || 0) + 1;
+  const list = [['all', 'الكل'], ...Object.entries(TYPES)];
+  $('#chips').innerHTML = list.map(([id, label]) =>
+    `<button class="chip" type="button" data-filter="${id}" aria-pressed="${filter === id}">${label} <small class="num">${ar(counts[id])}</small></button>`).join('');
+}
+function renderGrid() {
+  const list = PRODUCTS.filter(p => filter === 'all' || p.type === filter);
+  $('#grid').innerHTML = list.map(p => `
+    <article class="card">
+      <button class="card-art" type="button" data-open="${p.id}" aria-label="عرض ${esc(p.name)}">
+        ${art(p, defaults(p))}
+        ${p.tag ? `<span class="badge">${p.tag}</span>` : ''}
+      </button>
+      <div>
+        <h3>${esc(p.name)}</h3>
+        <p class="card-meta">${metaOf(p)}</p>
+      </div>
+      <div class="card-foot">
+        <span class="price">${hasRange(p) ? '<small>من</small>' : ''}${money(p.price)}</span>
+        <button class="add" type="button" data-add="${p.id}" aria-label="أضف ${esc(p.name)} للسلة">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+    </article>`).join('');
+}
+function setFilter(f) { filter = f; renderChips(); renderGrid(); }
+
+/* ===== نافذة المنتج ===== */
+const pd = { p: null, sel: {}, qty: 1, text: '' };
+function openProduct(id) {
+  const p = byId(id);
+  Object.assign(pd, { p, sel: defaults(p), qty: 1, text: '' });
+  $('#pdName').textContent = p.name;
+  $('#pdMeta').textContent = metaOf(p);
+  $('#pdDesc').textContent = p.desc;
+  let html = p.opts.map(k => `
+    <fieldset class="opt"><legend>${OPTIONS[k].label}</legend><div class="opt-row">
+      ${OPTIONS[k].choices.map(c => `<label><input type="radio" name="${k}" value="${c.id}" ${pd.sel[k] === c.id ? 'checked' : ''}>
+        <span>${c.label}${c.add ? ` <small class="num">+${ar(c.add)}</small>` : ''}</span></label>`).join('')}
+    </div></fieldset>`).join('');
+  if (p.custom) html += `
+    <div class="field">
+      <label for="pdText">${p.custom.label}</label>
+      <input id="pdText" maxlength="${p.custom.max}" placeholder="${p.custom.placeholder}" autocomplete="off" aria-describedby="pdTextHint">
+      <span class="hint" id="pdTextHint">${p.custom.hint}</span>
+      <span class="err" id="pdTextErr" hidden>اكتب ${p.custom.label} اللي تبيه على الميدالية.</span>
+    </div>`;
+  if (p.design) html += `<p class="note">بعد ما ترسل الطلب على واتساب، أرفق صورة التصميم في نفس المحادثة ونرسل لك بروفة قبل الطباعة.</p>`;
+  $('#pdOpts').innerHTML = html;
+  $('#pdOpts').hidden = !html;
+  renderProduct();
+  $('#pd').showModal();
+}
+function renderProduct() {
+  const { p, sel, qty, text } = pd;
+  $('#pdArt').innerHTML = art(p, { ...sel, text });
+  $('#pdQty').textContent = ar(qty);
+  $('#pdAdd').textContent = `أضف للسلة · ${money(unitPrice(p, sel) * qty)}`;
+}
+
+/* ===== إتمام الطلب ===== */
+let lastOrder = null;
+function openCheckout() {
+  const t = totals();
+  if (!t.count) return;
+  $('#cart').close();
+  $('#coForm').hidden = false; $('#coDone').hidden = true;
+  $('#coSummary').textContent = `${pieces(t.count)} · الإجمالي ${money(t.total)}${t.ship ? ` شامل الشحن ${money(t.ship)}` : ' والشحن مجاني'}`;
+  $('#co').showModal();
+}
+
+function validate(form) {
+  const v = Object.fromEntries(new FormData(form));
+  const phone = latin(v.phone || '').replace(/[\s-]/g, '').replace(/^(\+?966|00966)/, '0');
+  const checks = [
+    ['fName', 'eName', v.name.trim().length >= 2],
+    ['fPhone', 'ePhone', /^05\d{8}$/.test(phone)],
+    ['fCity', 'eCity', !!v.city],
+    ['fAddr', 'eAddr', v.address.trim().length >= 4],
+  ];
+  let first = null;
+  for (const [f, e, ok] of checks) {
+    $('#' + f).setAttribute('aria-invalid', String(!ok));
+    $('#' + e).hidden = ok;
+    if (!ok && !first) first = $('#' + f);
+  }
+  if (first) { first.focus(); return null; }
+  return { ...v, phone };
+}
+
+function orderMessage(id, info, lines, t) {
+  const rows = lines.map(l => {
+    const p = byId(l.id), o = optsText(l);
+    return `• ${p.name}${o ? ` (${o})` : ''} × ${ar(l.qty)} = ${money(unitPrice(p, l) * l.qty)}`;
+  });
+  return [
+    `طلب جديد من متجر ${STORE.name}`,
+    `رقم الطلب: ${id}`,
+    '',
+    ...rows,
+    '',
+    `المنتجات: ${money(t.sub)}`,
+    `الشحن: ${t.ship ? money(t.ship) : 'مجاني'}`,
+    `الإجمالي: ${money(t.total)}`,
+    '',
+    `الاسم: ${info.name.trim()}`,
+    `الجوال: ${info.phone}`,
+    `المدينة: ${info.city}`,
+    `العنوان: ${info.address.trim()}`,
+    `الدفع: ${info.pay}`,
+    ...(info.note.trim() ? [`ملاحظات: ${info.note.trim()}`] : []),
+    ...(lines.some(l => byId(l.id).design) ? ['', 'بأرفق صورة التصميم هنا.'] : []),
+  ].join('\n');
+}
+
+function showDone() {
+  const { id, msg } = lastOrder;
+  $('#coForm').hidden = true; $('#coDone').hidden = false;
+  $('#doneTitle').textContent = `طلب رقم ${id}`;
+  $('#orderText').value = msg;
+  const wa = $('#waLink');
+  if (STORE.whatsapp) {
+    wa.hidden = false;
+    wa.href = `https://wa.me/${STORE.whatsapp}?text=${encodeURIComponent(msg)}`;
+    $('#doneLead').textContent = 'اضغط «أرسل الطلب على واتساب» وبيوصلنا الطلب كامل. نرد عليك ونأكد المجموع وطريقة الدفع.';
+  } else {
+    wa.hidden = true;
+    $('#doneLead').textContent = 'انسخ نص الطلب وأرسله لنا على واتساب، ونرد عليك ونأكد المجموع وطريقة الدفع.';
+  }
+}
+
+/* ===== التنبيه ===== */
+let toastTimer;
+function toast(msg) {
+  $('#toastMsg').textContent = msg;
+  $('#toast').classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => $('#toast').classList.remove('show'), 2800);
+}
+
+/* ===== الواجهة ===== */
+function renderHero() {
+  $('#ruler').innerHTML = Array.from({ length: 60 }, (_, i) => `<span>${ar(i + 1)}</span>`).join('');
+  const P = id => byId(id);
+  const items = [
+    [P('k-lux'), { ring: 'gold' }, 'top:-2%;left:8%'],
+    [P('s-hala'), {}, 'top:12%;right:6%'],
+    [P('s-camel'), {}, 'top:34%;left:38%'],
+    [P('s-coffee'), {}, 'bottom:14%;right:2%'],
+    [P('s-mazaj'), {}, 'bottom:4%;left:34%'],
+    [{ type: 'sticker', art: { kind: 'sparkle', tilt: 12 } }, {}, 'top:2%;right:44%;font-size:.55em'],
+  ];
+  $('#board').innerHTML = items.map(([p, s, pos]) =>
+    `<div class="piece" style="${pos}">${p.type === 'keychain' ? keychainArt(p, s) : stickerArt(p.art, s)}</div>`).join('');
+  $('#emptyArt').innerHTML = stickerArt({ kind: 'pack' });
+  $('#perkShip').textContent = `شحن مجاني فوق ${money(STORE.freeShippingFrom)}`;
+  $('#perkShipSub').textContent = `وتحتها رسوم الشحن ${money(STORE.shippingFee)} لأي مدينة في المملكة.`;
+  $('#fCity').innerHTML = `<option value="">اختر المدينة</option>` + STORE.cities.map(c => `<option>${c}</option>`).join('');
+  $('#year').textContent = ar(new Date().getFullYear());
+}
+
+/* ===== الأحداث ===== */
+document.addEventListener('click', e => {
+  const t = e.target.closest('button, a');
+  if (!t) return;
+  if (t.dataset.open) return openProduct(t.dataset.open);
+  if (t.dataset.add) {
+    const p = byId(t.dataset.add);
+    if (p.custom || p.design) return openProduct(p.id);
+    return addToCart({ id: p.id, qty: 1, ...defaults(p) });
+  }
+  if (t.dataset.filter) return setFilter(t.dataset.filter);
+  if (t.dataset.jump) setFilter(t.dataset.jump);
+  if (t.dataset.close !== undefined) return t.closest('dialog').close();
+  if (t.dataset.step) { pd.qty = Math.max(1, Math.min(99, pd.qty + Number(t.dataset.step))); return renderProduct(); }
+  if (t.dataset.q) { const l = cart.find(x => lineKey(x) === t.dataset.q); return l && setQty(t.dataset.q, l.qty + Number(t.dataset.d)); }
+  if (t.dataset.rm) return setQty(t.dataset.rm, 0);
+});
+
+$('#pdOpts').addEventListener('change', e => {
+  if (e.target.type === 'radio') { pd.sel[e.target.name] = e.target.value; renderProduct(); }
+});
+$('#pdOpts').addEventListener('input', e => {
+  if (e.target.id === 'pdText') { pd.text = e.target.value.trim(); $('#pdTextErr').hidden = true; e.target.removeAttribute('aria-invalid'); renderProduct(); }
+});
+$('#pdForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const { p, sel, qty, text } = pd;
+  if (p.custom && !text) {
+    $('#pdTextErr').hidden = false; $('#pdText').setAttribute('aria-invalid', 'true'); $('#pdText').focus();
+    return;
+  }
+  addToCart({ id: p.id, qty, ...sel, ...(p.custom ? { text } : {}) });
+  $('#pd').close();
+});
+
+const openCart = () => { $('#toast').classList.remove('show'); renderCart(); $('#cart').showModal(); };
+$('#cartBtn').addEventListener('click', openCart);
+$('#toastCart').addEventListener('click', openCart);
+$('#browse').addEventListener('click', () => { $('#cart').close(); location.hash = 'shop'; });
+$('#checkoutBtn').addEventListener('click', openCheckout);
+
+$('#coForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const info = validate(e.target);
+  if (!info) return;
+  const t = totals();
+  const id = 'LX-' + String(Math.floor(1000 + Math.random() * 9000));
+  lastOrder = { id, msg: orderMessage(id, info, cart, t) };
+  cart = []; saveCart();
+  showDone();
+});
+$('#coForm').addEventListener('input', e => {
+  const err = { fName: 'eName', fPhone: 'ePhone', fCity: 'eCity', fAddr: 'eAddr' }[e.target.id];
+  if (err) { $('#' + err).hidden = true; e.target.removeAttribute('aria-invalid'); }
+});
+$('#co').addEventListener('close', () => { if (!$('#coDone').hidden) $('#coForm').reset(); });
+
+$('#copyBtn').addEventListener('click', () => {
+  const ta = $('#orderText'), btn = $('#copyBtn');
+  const done = () => { btn.textContent = 'انتسخ ✓'; setTimeout(() => (btn.textContent = 'انسخ نص الطلب'), 2000); };
+  const fallback = () => { ta.focus(); ta.select(); btn.textContent = 'النص محدد، انسخه من القائمة'; };
+  try { navigator.clipboard.writeText(ta.value).then(done, fallback); } catch { fallback(); }
+});
+
+/* إغلاق النافذة بالضغط على الخلفية */
+for (const d of document.querySelectorAll('dialog')) {
+  d.addEventListener('click', e => { if (e.target === d) d.close(); });
+}
+
+renderHero();
+setFilter('all');
+renderCart();
+</script>
+</body>
+</html>
