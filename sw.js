@@ -25,8 +25,6 @@ self.addEventListener('fetch', event => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
-  // صفحات ثانية داخل نفس المجلد (مثل ‎twin/‎) ما تخص اللعبة: نخليها للمتصفح.
-  if (url.pathname.startsWith(new URL('./twin/', self.location).pathname)) return;
 
   if (req.mode === 'navigate') {
     event.respondWith((async () => {
